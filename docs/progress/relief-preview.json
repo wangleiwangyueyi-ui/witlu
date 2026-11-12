@@ -1,0 +1,19 @@
+{
+  "version": "p2-relief-v1",
+  "stats": {
+    "minLuma": 0.10027529411764706,
+    "maxLuma": 0.33798117647058823,
+    "maxLuminance": 0.09484893089026088,
+    "wrongHuePixels": 0,
+    "tiles": 63,
+    "lumaSpan": 0.23770588235294116
+  },
+  "source": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_50m_land.geojson",
+  "sha256": "e874b27a51d146452be360cafb3cc50c86001074a67d534113e6534682f9826b",
+  "bounds": [
+    60,
+    0,
+    150,
+    60
+  ]
+}

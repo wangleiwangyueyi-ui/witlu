@@ -13,10 +13,7 @@ import { Refraction, supportsRefraction } from './components/Refraction';
 import { DebugConsole } from './components/DebugConsole';
 import { About } from './components/About';
 import { useReducedEffects } from './components/Glass';
-function MapReference() {
-  const { t } = useI18n();
-  return <div className="map-scene" role="img" aria-label={t('referenceHint')}><svg className="reference-desktop" viewBox="280 135 1050 510" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><clipPath id="reference-crop"><rect x="0" y="135" width="1100" height="510"/></clipPath></defs><image href="/assets/reference/v3_desktop.jpg" width="1376" height="768" clipPath="url(#reference-crop)"/></svg><svg className="reference-mobile" viewBox="450 225 610 415" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="/assets/reference/v3_desktop.jpg" width="1376" height="768"/></svg><div className="scene-vignette"/></div>;
-}
+import { TerrainCanvas } from './components/TerrainCanvas';
 export function App() {
   const { t, locale } = useI18n(); const state = useShell(); const reduced = useReducedEffects();
   const previousRoute = useRef({ locale, year: state.year });
@@ -29,7 +26,7 @@ export function App() {
   useEffect(() => { if (!state.playing) return; const timer = setInterval(() => useShell.getState().setYear(useShell.getState().year >= 280 ? 220 : addYears(useShell.getState().year, 1)), 1600); return () => clearInterval(timer); }, [state.playing]);
   const debug = new URLSearchParams(location.search).get('debug') === '1';
   return <MotionConfig reducedMotion={reduced ? 'always' : 'never'}><ToastProvider><div className="atlas-app" data-capture-root="true" data-quality={state.quality} data-highlight={state.highlight && !reduced} data-refraction={state.refraction && refractionSupported && state.quality !== 'eco' && !reduced} data-reduced-motion={reduced}>
-    <Refraction/><div className="app-content" inert={state.about}><MapReference/><Toolbar refractionSupported={refractionSupported}/><div className="map-legend" aria-hidden="true"><span className="legend-dot wei"/>{t('wei')}<span className="legend-dot shu"/>{t('shu')}<span className="legend-dot wu"/>{t('wu')}</div>{mobile ? <Sheet heading={<ChapterHeading mobile/>}><ChapterContent mobile/></Sheet> : <><ChapterPanel/><TimeDock/></>}<div className="legal-strip">{t('disclaimer')} <span>·</span> {t('credit')} {t('upstream')}</div><span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
+    <Refraction/><div className="app-content" inert={state.about}><TerrainCanvas/><Toolbar refractionSupported={refractionSupported}/>{mobile ? <Sheet heading={<ChapterHeading mobile/>}><ChapterContent mobile/></Sheet> : <><ChapterPanel/><TimeDock/></>}<div className="legal-strip">{t('disclaimer')} <span>·</span> {t('credit')} {t('upstream')} · Terrain: USGS / NOAA · Natural Earth</div><span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
     {debug && <DebugConsole snapshot={snapshot}/>} {state.about && <About/>}
   </div></ToastProvider></MotionConfig>;
 }

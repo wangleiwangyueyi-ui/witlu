@@ -30,4 +30,10 @@ CHGIS / Hartwell 衍生几何只由构建时读取 upstream/ 生成，不提交�
 
 字体：Adobe [Source Han Serif](https://github.com/adobe-fonts/source-han-serif) SC SemiBold（思源宋体），SIL Open Font License 1.1。网站使用重命名为 Witlu Song 的 WOFF2 标题子集，原始版权与许可证保留在 `packages/web/public/fonts/OFL-SourceHanSerif.txt`，源文件 URL 与 SHA-256 记录在同目录 manifest.json，生成步骤见 docs/FONTS.md。印章与界面图标为本项目自建 SVG；地图占位仅取自本仓库 docs/design/v3_desktop.jpg，不作为历史边界依据。
 
-本阶段提供本地界面和 Cloudflare Pages 连接说明，不修改域名或 DNS。后续新增 Natural Earth、Make Me a Hanzi 等资源时应补记实际取得的版本和许可。
+P2 地形由本仓库独立烘焙，不复用上游的地形渲染图。Terrarium 高程读取自 [AWS Terrain Tiles](https://registry.opendata.aws/terrain-tiles/)（访问于 2026-11-12），Mapzen / Tilezen 提供数据编排；东亚主要高程来源为 USGS SRTM、GMTED2010 和 NOAA ETOPO1。SRTM / GMTED2010 terrain data courtesy of the U.S. Geological Survey. ETOPO1 formal credit: DOC/NOAA/NESDIS/NCEI > National Centers for Environmental Information, NESDIS, NOAA, U.S. Department of Commerce. 美国政府原始数据不因本项目 GPL 许可而新增版权；本项目对其进行无损格式转换、设色与晕渲。低 zoom 瓦片覆盖到东亚之外，完整全球提供者声明保留于 [Tilezen attribution](https://github.com/tilezen/joerd/blob/master/docs/attribution.md)，不能把该集合所有地区一概称为无条件公有领域。
+
+海陆掩码：Made with Natural Earth，采用 `ne_50m_land.geojson`，其多边形外缘即海岸线；固定 [natural-earth-vector commit ca96624](https://github.com/nvkelso/natural-earth-vector/tree/ca96624a56bd078437bca8184e78163e5039ad19)，SHA-256 `e874b27a51d146452be360cafb3cc50c86001074a67d534113e6534682f9826b`。[Natural Earth 条款](https://www.naturalearthdata.com/about/terms-of-use/)声明数据为公有领域。地形及海岸线均是现代自然地理背景，不作为历史政权边界证据。
+
+本阶段提供本地界面和 Cloudflare Pages 连接说明，不修改域名或 DNS。
+
+Terrain Tiles 全球提供者的原始完整声明已于 2026-11-12 归档到 [docs/sources/terrain-attribution.md](docs/sources/terrain-attribution.md)，包括低 zoom 瓦片所覆盖的其他地区来源；对应原始地址为上方 Tilezen attribution 链接。

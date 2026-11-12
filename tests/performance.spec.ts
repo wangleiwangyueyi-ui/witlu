@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
-test('records bounded P1 shell frame samples', async ({ page }, info) => {
+test('records bounded shell regression frame samples', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop', 'One performance sample per run');
   await page.goto('/?debug=1&lang=en'); await page.evaluate(() => document.fonts.ready);
   await expect(page.getByTestId('data-status')).toHaveText('Complete source data loaded');
@@ -13,5 +13,6 @@ test('records bounded P1 shell frame samples', async ({ page }, info) => {
   await page.getByRole('tab', { name: 'High', exact: true }).click(); const high = await sample();
   await page.getByRole('tab', { name: 'Eco', exact: true }).click(); const eco = await sample();
   expect(high.samples).toBeGreaterThan(5); expect(eco.samples).toBeGreaterThan(5);
-  await fs.writeFile('docs/progress/P1-browser-metrics.json', JSON.stringify({ date: '2026-11-12', browser: 'Playwright Chromium, local Vite shell, 1440×900, no Three.js renderer', high, eco }, null, 2) + '\n');
+  await fs.mkdir('docs/progress/performance/P2', { recursive: true });
+  await fs.writeFile('docs/progress/performance/P2/shell-regression.json', JSON.stringify({ date: '2026-11-12', browser: 'Playwright Chromium, local Vite shell with P2 terrain, 1440×900; diagnostic only', high, eco }, null, 2) + '\n');
 });

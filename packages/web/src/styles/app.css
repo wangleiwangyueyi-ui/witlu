@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './tokens.css';
+@import './terrain.css';
 @font-face { font-family: 'Witlu Song'; src: url('/fonts/witlu-song-semibold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }

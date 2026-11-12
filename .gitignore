@@ -3,6 +3,7 @@ packages/*/dist/
 packages/web/public/data/
 packages/web/public/assets/audio/
 .cache/
+packages/web/public/tiles/
 test-results/
 playwright-report/
 *.tsbuildinfo

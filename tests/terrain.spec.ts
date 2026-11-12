@@ -1,0 +1,43 @@
+import fs from 'node:fs/promises';
+import { test, expect } from '@playwright/test';
+import type { EngineStats } from '../packages/engine/Renderer';
+const stats = async (page: import('@playwright/test').Page) => JSON.parse((await page.getByTestId('terrain').getAttribute('data-stats'))!) as EngineStats;
+test('real terrain renders and remains interactive in each viewport', async ({ page }, info) => {
+  const errors: string[] = []; page.on('pageerror', e => errors.push(e.message)); page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
+  await page.goto('/?lang=en'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  await expect.poll(async () => (await stats(page)).loading).toBe(0);
+  const initial = await stats(page); expect(initial.tiles).toBeGreaterThan(0); expect(initial.drawCalls).toBeLessThanOrEqual(250); expect(initial.pose.pitch).toBe(info.project.name === 'desktop' ? 45 : 40);
+  await fs.mkdir('docs/progress/screenshots/P2', { recursive: true }); await page.screenshot({ path: `docs/progress/screenshots/P2/${info.project.name}.png` });
+  const viewport = page.viewportSize()!, x = viewport.width * .45, y = viewport.height * .32;
+  await page.mouse.move(x, y); await page.mouse.down(); await page.mouse.move(x + 50, y + 20, { steps: 12 }); await page.mouse.up();
+  await expect.poll(async () => (await stats(page)).pose.lon).not.toBe(initial.pose.lon);
+  await page.mouse.move(x, y); await page.mouse.wheel(0, -360);
+  await expect.poll(async () => (await stats(page)).pose.distance).toBeLessThan(initial.pose.distance);
+  await page.mouse.click(x, y); await expect(page.getByTestId('terrain-pick')).toContainText('° E');
+  expect(errors).toEqual([]);
+});
+test('lab supports flyTo, switches, keyboard and WebGL context recovery', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'One engine lifecycle test');
+  await page.goto('/lab/terrain'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  await page.getByRole('button', { name: '飞往青藏', exact: true }).first().click();
+  await expect.poll(async () => (await stats(page)).pose.lon).toBeCloseTo(88.8, 1);
+  await expect.poll(async () => (await stats(page)).loading).toBe(0);
+  await page.screenshot({ path: 'docs/progress/screenshots/P2/terrain-lab-tibet.png' });
+  await page.getByRole('switch', { name: '高程位移', exact: true }).first().click(); await expect(page.getByRole('switch', { name: '高程位移', exact: true }).first()).toHaveAttribute('aria-checked', 'false');
+  await page.getByRole('button', { name: '复位视角', exact: true }).click(); await expect.poll(async () => (await stats(page)).pose.lon).toBeCloseTo(104, 1);
+  await page.getByTestId('terrain').focus(); await page.keyboard.press('+'); await expect.poll(async () => (await stats(page)).pose.distance).toBeLessThan(6800);
+  await page.evaluate(() => { const canvas = document.querySelector('canvas')!; const extension = canvas.getContext('webgl2')!.getExtension('WEBGL_lose_context')!; extension.loseContext(); setTimeout(() => extension.restoreContext(), 1200); });
+  await expect(page.getByTestId('terrain')).toHaveAttribute('data-context', 'lost');
+  await expect(page.getByTestId('terrain')).toHaveAttribute('data-context', 'ready', { timeout: 15000 });
+  await expect.poll(async () => (await stats(page)).fps).toBeGreaterThan(0);
+});
+test('two-finger touch pinches, rotates and inclines the terrain', async ({ page }, info) => {
+  test.skip(info.project.name === 'desktop', 'Touch devices only');
+  await page.goto('/'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  const initial = await stats(page); const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 130, y: 240, id: 1 }, { x: 230, y: 240, id: 2 }] });
+  for (let i = 1; i <= 10; i++) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 130 - i, y: 240 + i, id: 1 }, { x: 230 + i * 3, y: 240 + i * 3, id: 2 }] });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect.poll(async () => (await stats(page)).pose.distance).toBeLessThan(initial.pose.distance);
+  const pose = (await stats(page)).pose; expect(pose.bearing).not.toBe(0); expect(pose.pitch).toBeGreaterThan(40); expect(pose.pitch).toBeLessThanOrEqual(65);
+});

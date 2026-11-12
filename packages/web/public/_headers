@@ -14,3 +14,5 @@
   Cache-Control: public, max-age=3600
 /data/*
   Cache-Control: public, max-age=0, must-revalidate
+/tiles/*
+  Cache-Control: public, max-age=86400

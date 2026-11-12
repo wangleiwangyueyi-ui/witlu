@@ -37,6 +37,6 @@ test('loads complete data, credits, and the responsive atlas shell', async ({ pa
   expect(errors).toEqual([]);
   await page.evaluate(() => document.fonts.ready);
   if (info.project.name !== 'desktop') await expect.poll(async () => Math.abs((await page.locator('.chapter-sheet').boundingBox())!.y - page.viewportSize()!.height * .52)).toBeLessThan(2);
-  await fs.mkdir('docs/progress/screenshots/P1', { recursive: true });
-  await page.screenshot({ path: `docs/progress/screenshots/P1/${info.project.name}.png` });
+  await fs.mkdir('docs/progress/screenshots/P2/regression', { recursive: true });
+  await page.screenshot({ path: `docs/progress/screenshots/P2/regression/${info.project.name}.png` });
 });

@@ -1,0 +1,23 @@
+.terrain-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.terrain-canvas:active { cursor: grabbing; }
+.terrain-vignette { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, color-mix(in srgb, var(--sky) 60%, transparent), transparent 25%, transparent 80%, color-mix(in srgb, var(--sky) 40%, transparent)); }
+.terrain-status { position: absolute; top: 46%; left: 12%; right: 30%; text-align: center; color: var(--text-secondary); font-size: 13px; pointer-events: none; }
+.terrain-pick { position: absolute; left: 110px; bottom: 207px; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--glass-bottom); font-size: 11px; color: var(--text-secondary); pointer-events: none; }
+.terrain-pick:empty { display: none; }
+.terrain-lab-controls { position: absolute; left: 28px; top: 28px; width: 290px; padding: 24px; display: grid; gap: 14px; }
+.terrain-lab-controls h1 { font: 600 32px var(--font-title); }
+.terrain-lab-controls p, .terrain-lab-controls small { font-size: 12px; line-height: 1.7; color: var(--text-secondary); }
+.terrain-lab-controls a { font-size: 12px; }
+.terrain-switches { display: grid; gap: 4px; }
+.terrain-switches .glass-button { margin-top: 8px; }
+.engine-metrics { font-variant-numeric: tabular-nums; white-space: pre-line; font-size: 11px; line-height: 1.65; color: var(--text-secondary); }
+.terrain-lab .terrain-pick { bottom: 28px; left: 30px; }
+.terrain-lab .debug-console { left: auto; right: 28px; top: 28px; max-height: calc(100dvh - 56px); }
+@media (max-width: 767px) {
+  .terrain-pick { left: 14px; bottom: 166px; font-size: 10px; }
+  .terrain-lab-controls { left: 12px; top: 12px; width: 210px; padding: 14px; gap: 8px; }
+  .terrain-lab-controls h1 { font-size: 24px; }
+  .terrain-lab-controls .toggle-row { font-size: 11px; min-height: 32px; }
+  .terrain-status { left: 20px; right: 20px; top: 30%; }
+  .terrain-lab .debug-console { top: auto; right: 12px; bottom: 12px; max-height: 29dvh; width: calc(100% - 24px); }
+}

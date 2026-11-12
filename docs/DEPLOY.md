@@ -32,6 +32,8 @@ P1 代码放在本地 `codex/p1-liquid-glass` 分支。先完成下面的 Cloudf
 
 7. 展开 **Environment variables**，添加 `NODE_VERSION = 22.16.0` 和 `PNPM_VERSION = 10.20.0`。后续在 **Settings → Builds & deployments** 的环境变量编辑处，将这两个值同时配置到 **Production** 和 **Preview**。如界面使用 **Build / Variables and Secrets** 分栏，在对应构建环境填写相同值。
 8. 点 **Save and Deploy**。构建日志应依次完成依赖安装、印章资源构建、全量数据导入、198 快照几何与配色、parity、strict typecheck 和 Vite build。字体子集与许可证已提交，构建不需要 Python，也不从 Google Fonts 下载任何文件。
+
+   P2 起 `pnpm build` 还会运行 `pnpm tiles`：首次下载 AWS Terrarium z0–8、生成 Natural Earth 海岸掩码与 z3–8 黛青浮雕。约一万张 WebP 是构建产物，不提交 Git；全部随 `packages/web/dist/tiles/` 自托管。首次构建明显更慢，检查日志的 `DEM …/5242`、`Relief …/4728` 进度。后续若构建环境保留 `packages/web/public/tiles/` 与 `.cache/terrain/`，会校验后复用；不要假定 Pages 默认缓存这些自定义目录。构建环境必须可访问 AWS S3 和 GitHub raw，无 token。
 9. 成功后点 **Continue to project**。**Deployments** 页面会显示真实的 `*.pages.dev` 地址。将这个界面返回的实际链接保存下来，不要把文档示例地址当成已部署地址。
 
 ## 3. 让每次推送自动产生预览

@@ -10,15 +10,19 @@
   "scripts": {
     "data": "node scripts/import-upstream.mjs && node scripts/build-geometry.mjs && node scripts/build-colors.mjs && node scripts/build-events.mjs && node scripts/build-moods.mjs && node scripts/verify-parity.mjs",
     "dev": "pnpm --filter @witlu/web dev",
-    "build": "pnpm assets && pnpm data && pnpm typecheck && pnpm --filter @witlu/web build",
+    "build": "pnpm assets && pnpm data && pnpm tiles && pnpm typecheck && pnpm --filter @witlu/web build",
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json",
     "lint": "eslint packages scripts tests && stylelint \"packages/web/src/**/*.css\" && node scripts/lint-boundaries.mjs",
     "fonts": "node scripts/build-fonts.mjs",
+    "tiles": "node scripts/build-dem.mjs && node scripts/bake-relief.mjs",
+    "tiles:preview": "node scripts/build-dem.mjs --max-zoom 5 && node scripts/bake-relief.mjs --preview",
     "assets": "node scripts/build-brand.mjs",
     "test": "vitest run",
     "verify:parity": "node scripts/verify-parity.mjs",
+    "verify:terrain": "node scripts/verify-terrain.mjs",
     "test:smoke": "playwright test",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm test:smoke"
+    "test:performance": "node scripts/test-performance.mjs",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm verify:terrain && pnpm test:smoke"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

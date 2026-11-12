@@ -2,7 +2,7 @@
 
 198 个快照，mapshaper weighted 30% keep-shapes，共享弧保持拓扑。原始边界不改动；计数在简化后再次验证。面积使用简化前 WGS84 球面面积（km²）。
 
-本机生成耗时 14.39 秒；进程最高 RSS 849.4 MiB。
+本机生成耗时 15.66 秒；进程最高 RSS 844.5 MiB。
 
 所有 POLITY_PROFILES key 保留。同名以时间交集匹配；未收录政权使用 unprofiled:时期:名称。都城来自原始 isCapital / capitalPeriods 与政权档案 seatZh 的城池、地名录匹配；无迁都时间的记录标明 candidate，不把文字锚点当都城。无上游坐标证据的记录 capitals=[]，留待审校：
 
