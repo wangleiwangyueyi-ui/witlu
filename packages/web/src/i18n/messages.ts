@@ -1,4 +1,5 @@
 export const hans = {
+  waterMotion: '海水流动', moonlight: '冷色反光', coastWaves: '海岸光浪', currents: '洋流粒子', sky: '渐变天空', fog: '远景雾', lightCycle: '光照循环', clouds: '漂移云片', cloudShadows: '移动云影',
   app: '中国历代疆域', brand: '江山', chapter: '第五章 · 三国', chapterName: '三国', chapterRange: '220 — 280',
   intro: '一江山河，三分天下。', description: '汉室倾颓，群雄逐鹿。魏、蜀汉、吴相继立国，山川之间，新的秩序正在形成。',
   world: '此刻天下', chronicle: '并行纪事', overview: '章节概述', capital: '都城', ruler: '君主', area: '疆域',
@@ -22,7 +23,7 @@ export const hans = {
 } as const;
 export type MessageKey = keyof typeof hans;
 export const hant: Record<MessageKey, string> = {
-  ...hans, app: '中國歷代疆域', chapter: '第五章 · 三國', chapterName: '三國', intro: '一江山河，三分天下。', description: '漢室傾頹，群雄逐鹿。魏、蜀漢、吳相繼立國，山川之間，新的秩序正在形成。',
+  ...hans, waterMotion: '海水流動', moonlight: '冷色反光', coastWaves: '海岸光浪', currents: '洋流粒子', sky: '漸變天空', fog: '遠景霧', lightCycle: '光照循環', clouds: '漂移雲片', cloudShadows: '移動雲影', app: '中國歷代疆域', chapter: '第五章 · 三國', chapterName: '三國', intro: '一江山河，三分天下。', description: '漢室傾頹，群雄逐鹿。魏、蜀漢、吳相繼立國，山川之間，新的秩序正在形成。',
   world: '此刻天下', chronicle: '並行紀事', overview: '章節概述', capital: '都城', ruler: '君主', area: '疆域', shu: '蜀漢', wu: '吳', caorui: '曹叡', liushan: '劉禪', sunquan: '孫權', luoyang: '洛陽', jianye: '建業', shuEra: '建興八年', wuEra: '黃龍二年',
   weiEvent: '曹真伐蜀，因連日大雨退軍。', shuEvent: '諸葛亮北伐，魏蜀相持於秦嶺之間。', wuEvent: '孫權遣衛溫、諸葛直航海至夷洲。', main: '主紀年', rival: '並立政權', riverTitle: '歷史長河', year: '年份', bce: '公元前',
   search: '搜尋', searchPlaceholder: '搜尋此刻天下', noResults: '未找到匹配的政權', layers: '圖層', territories: '政權疆域', divisions: '一級政區', prefectures: '郡州府', modern: '現代省界', places: '城池與地名', playMusic: '播放古琴', pauseMusic: '暫停古琴', musicLoading: '正在載入古琴', musicError: '古琴暫未能播放，請重試',
@@ -33,6 +34,7 @@ export const hant: Record<MessageKey, string> = {
   expand: '展開章節', collapse: '收起章節', sheet: '章節抽屜', sheetPositions: '收起 / 半開 / 全開', dataReady: '全量史料已載入', loading: '正在讀取史料', dataError: '史料暫未能載入，請重新整理', prefsSaved: '已更新顯示偏好', chapterGuide: '章節導覽', uiSettings: '介面設定', selected: '已選取', caption: '循歷史長河，觀天下分合。', timescale: '三國紀年', inspect: '檢視資料', glossary: '35 個專題 · 18 個時期',
 };
 export const en: Record<MessageKey, string> = {
+  waterMotion: 'Water motion', moonlight: 'Moon reflection', coastWaves: 'Coastal waves', currents: 'Ocean currents', sky: 'Gradient sky', fog: 'Distant fog', lightCycle: 'Lighting cycle', clouds: 'Drifting clouds', cloudShadows: 'Cloud shadows',
   app: 'Historical Atlas of China', brand: 'Jiangshan', chapter: 'CHAPTER V · THREE KINGDOMS', chapterName: 'Three Kingdoms', chapterRange: '220 — 280 CE', intro: 'One realm. Three kingdoms.', description: 'As the Han order recedes, Wei, Shu Han and Wu take shape. Between mountains and rivers, a new balance emerges.',
   world: 'THE WORLD IN THIS YEAR', chronicle: 'PARALLEL CHRONICLES', overview: 'CHAPTER OVERVIEW', capital: 'Capital', ruler: 'Ruler', area: 'Territory', wei: 'Wei', shu: 'Shu Han', wu: 'Wu', caorui: 'Cao Rui', liushan: 'Liu Shan', sunquan: 'Sun Quan', luoyang: 'Luoyang', chengdu: 'Chengdu', jianye: 'Jianye', weiEra: 'Taihe 4', shuEra: 'Jianxing 8', wuEra: 'Huanglong 2', weiEvent: 'Cao Zhen’s campaign into Shu is halted by persistent rain.', shuEvent: 'Zhuge Liang’s northern campaigns contest the Qinling frontier.', wuEvent: 'Sun Quan sends Wei Wen and Zhuge Zhi by sea to Yizhou.',
   main: 'Main chronology', rival: 'Coexisting polity', riverTitle: 'RIVER OF TIME', year: 'Year', ce: 'CE', bce: 'BCE', search: 'Search', searchPlaceholder: 'Search the three kingdoms', noResults: 'No matching polity', layers: 'Layers', territories: 'Polities', divisions: 'Regional divisions', prefectures: 'Prefectures', modern: 'Modern provinces', rivers: 'Rivers & ancient lakes', places: 'Cities & place names', music: 'Guqin', playMusic: 'Play guqin', pauseMusic: 'Pause guqin', musicLoading: 'Loading guqin', musicError: 'Audio could not start. Please retry.', language: 'Language', share: 'Share', shareCopied: 'Link copied', shareFailed: 'Please copy the link from your address bar', play: 'Play', pause: 'Pause', previous: 'Previous year', next: 'Next year', reset: 'Reset / north', resetDone: '3D view reset', more: 'More', close: 'Close',

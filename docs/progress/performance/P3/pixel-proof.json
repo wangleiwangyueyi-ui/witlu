@@ -1,0 +1,17 @@
+{
+  "water": {
+    "meanChannelDelta": 0.0665895061728395,
+    "changedPixels": 5023,
+    "pixels": 1296000
+  },
+  "waves": {
+    "meanChannelDelta": 0.06834979423868313,
+    "changedPixels": 14957,
+    "pixels": 1296000
+  },
+  "shadows": {
+    "meanChannelDelta": 0.008150720164609054,
+    "changedPixels": 4366,
+    "pixels": 1296000
+  }
+}

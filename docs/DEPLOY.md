@@ -49,6 +49,8 @@ P1 代码放在本地 `codex/p1-liquid-glass` 分支。先完成下面的 Cloudf
 
 ## 4. 构建与验收排错
 
+P3 的 `pnpm tiles` 会在浮雕完成后生成海岸距离场、双层海水法线与云覆盖图（约 722KiB）。这些文件同样由构建产生，不需要单独上传。已有 P2 缓存时运行 `pnpm tiles:environment` 即可补齐；缺图或 SHA 不匹配会被 `pnpm verify:environment` 检出。预览可打开 `/lab/ocean`、`/lab/clouds`，主程序和实验页都支持 `?debug=1` 的环境开关。
+
 | 现象 | 检查 |
 |---|---|
 | 找不到 packages 或 scripts | Root directory 应留空；输出目录才是 `packages/web/dist` |

@@ -14,7 +14,7 @@
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json",
     "lint": "eslint packages scripts tests && stylelint \"packages/web/src/**/*.css\" && node scripts/lint-boundaries.mjs",
     "fonts": "node scripts/build-fonts.mjs",
-    "tiles": "node scripts/build-dem.mjs && node scripts/bake-relief.mjs",
+    "tiles": "node scripts/build-dem.mjs && node scripts/bake-relief.mjs && node scripts/bake-coast-distance.mjs",
     "tiles:preview": "node scripts/build-dem.mjs --max-zoom 5 && node scripts/bake-relief.mjs --preview",
     "assets": "node scripts/build-brand.mjs",
     "test": "vitest run",
@@ -22,7 +22,10 @@
     "verify:terrain": "node scripts/verify-terrain.mjs",
     "test:smoke": "playwright test",
     "test:performance": "node scripts/test-performance.mjs",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm verify:terrain && pnpm test:smoke"
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm verify:terrain && pnpm verify:environment && pnpm test:smoke",
+    "tiles:environment": "node scripts/bake-coast-distance.mjs",
+    "verify:environment": "node scripts/verify-environment.mjs",
+    "test:environment": "node scripts/test-environment.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

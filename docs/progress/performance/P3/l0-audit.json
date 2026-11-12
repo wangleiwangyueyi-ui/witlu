@@ -1,0 +1,22 @@
+[
+  {
+    "mode": "clouds",
+    "pixels": 1296000,
+    "minLuma": 0.0892407843137255,
+    "maxLuma": 0.3307043137254902,
+    "lumaSpan": 0.2414635294117647,
+    "maxLuminance": 0.09073591288830563,
+    "whiteContrast": 7.460782244211735,
+    "wrongHuePixels": 0
+  },
+  {
+    "mode": "ocean",
+    "pixels": 1296000,
+    "minLuma": 0.0892407843137255,
+    "maxLuma": 0.32568156862745096,
+    "lumaSpan": 0.23644078431372545,
+    "maxLuminance": 0.08826478751224129,
+    "whiteContrast": 7.594124425259309,
+    "wrongHuePixels": 0
+  }
+]

@@ -1,3 +1,4 @@
+import { environmentUniformsGLSL } from '../atmosphere/shared-shaders';
 export const terrainVertex = /* glsl */`
 uniform sampler2D heightMap;
 uniform float tileY;
@@ -22,6 +23,9 @@ void main() {
   gl_Position = projectionMatrix * view;
 }`;
 export const terrainFragment = /* glsl */`
+${environmentUniformsGLSL}
+uniform sampler2D heightMap;
+uniform float tileSize;
 uniform sampler2D reliefMap;
 uniform vec3 fogColor;
 uniform vec4 clipBounds;
@@ -31,30 +35,26 @@ uniform vec3 seaColor;
 varying vec2 vUv;
 varying vec3 vWorld;
 varying float vDistance;
+float elevation(vec2 uv) { return (dot(texture2D(heightMap, uv).rgb * 255.0, vec3(256.0, 1.0, 1.0/256.0)) - 32768.0) * .001; }
 void main() {
   if (vWorld.x < clipBounds.x || vWorld.z < clipBounds.y || vWorld.x > clipBounds.z || vWorld.z > clipBounds.w) discard;
   vec4 texel = texture2D(reliefMap, vUv);
   vec3 color = mix(mix(seaColor, landColor, step(254.5/255.0, texel.a)), texel.rgb, reliefEnabled);
+  if (envEnabled > .5) {
+    if (lightCycleEnabled > .5 && texel.a > 254.5/255.0) {
+      float dx = elevation(vUv + vec2(1.0/256.0,0.0)) - elevation(vUv - vec2(1.0/256.0,0.0));
+      float dz = elevation(vUv + vec2(0.0,1.0/256.0)) - elevation(vUv - vec2(0.0,1.0/256.0));
+      vec3 normal = normalize(vec3(-dx * 12.0, tileSize / 128.0, -dz * 12.0));
+      vec3 reference = normalize(vec3(-.42424,.75,-.50559));
+      color *= 1.0 + (dot(normal,sunDirection)-dot(normal,reference))*.2;
+    }
+    color *= cloudShadow(vWorld);
+    color = limitBackground(color);
+  }
   float edge = min(min(vWorld.x - clipBounds.x, clipBounds.z - vWorld.x), min(vWorld.z - clipBounds.y, clipBounds.w - vWorld.z));
-  float fog = max(smoothstep(8000.0, 20000.0, vDistance) * 0.55, 1.0 - smoothstep(0.0, 600.0, edge));
-  gl_FragColor = vec4(mix(color, fogColor, fog), 1.0);
-  #include <colorspace_fragment>
-}`;
-export const waterVertex = /* glsl */`
-varying vec2 vUv;
-varying vec3 vWorld;
-void main() { vUv = uv; vec4 p = modelMatrix * vec4(position, 1.0); vWorld = p.xyz; gl_Position = projectionMatrix * viewMatrix * p; }
-`;
-export const waterFragment = /* glsl */`
-uniform sampler2D reliefMap;
-uniform vec3 seaColor;
-uniform vec4 clipBounds;
-varying vec2 vUv;
-varying vec3 vWorld;
-void main() {
-  if (vWorld.x < clipBounds.x || vWorld.z < clipBounds.y || vWorld.x > clipBounds.z || vWorld.z > clipBounds.w) discard;
-  if (texture2D(reliefMap, vUv).a > 254.5/255.0) discard;
-  float edge = min(min(vWorld.x - clipBounds.x, clipBounds.z - vWorld.x), min(vWorld.z - clipBounds.y, clipBounds.w - vWorld.z));
-  gl_FragColor = vec4(seaColor, 0.16 * smoothstep(0.0, 600.0, edge));
+  float fog = max(smoothstep(8000.0, 20000.0, vDistance) * 0.55 * (envEnabled > .5 ? fogEnabled : 1.0), 1.0 - smoothstep(0.0, 600.0, edge));
+  vec3 fogTint = envEnabled > .5 ? mix(skyColor, horizonColor, .28) : fogColor;
+  color = mix(color, fogTint, fog * smoothstep(0.0,600.0,edge));
+  gl_FragColor = vec4(mix(fogColor,color,smoothstep(0.0,600.0,edge)), 1.0);
   #include <colorspace_fragment>
 }`;

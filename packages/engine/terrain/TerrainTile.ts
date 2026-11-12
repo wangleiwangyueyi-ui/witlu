@@ -1,9 +1,12 @@
 import { BufferGeometry, Color, DataTexture, Float32BufferAttribute, Group, LinearFilter, Mesh, MeshBasicMaterial, NoColorSpace, RGBAFormat, ShaderMaterial, SRGBColorSpace, Vector4 } from 'three';
 import type { DecodedImage } from '../platform/PlatformAdapter';
+import type { IUniform } from 'three';
+import type { EnvironmentPalette } from '../atmosphere/Environment';
 import { BOUNDS, elevationKm, latFromY, project, sampleHeight, tileBounds } from './geo';
 import type { TileId } from './geo';
-import { terrainFragment, terrainVertex, waterFragment, waterVertex } from './shaders';
-export interface TerrainPalette { sky: string; land: string; sea: string }
+import { terrainFragment, terrainVertex } from './shaders';
+import { oceanFragment, oceanVertex } from '../ocean/shaders';
+export interface TerrainPalette { sky: string; land: string; sea: string; environment?: EnvironmentPalette }
 
 function texture(image: DecodedImage, srgb: boolean) { const tex = new DataTexture(image.data, image.width, image.height, RGBAFormat); tex.colorSpace = srgb ? SRGBColorSpace : NoColorSpace; tex.minFilter = tex.magFilter = LinearFilter; tex.generateMipmaps = false; tex.flipY = false; tex.needsUpdate = true; return tex; }
 export class TerrainTile {
@@ -13,7 +16,7 @@ export class TerrainTile {
   private material: ShaderMaterial; private waterMaterial: ShaderMaterial;
   private originalPickHeights: Float32Array;
   lastUsed = 0;
-  constructor(readonly id: TileId, heights: DecodedImage, color: DecodedImage, segments: number, palette: TerrainPalette) {
+  constructor(readonly id: TileId, heights: DecodedImage, color: DecodedImage, segments: number, palette: TerrainPalette, environment: Record<string, IUniform> = {}) {
     const b = tileBounds(id), positions: number[] = [], uvs: number[] = [], skirts: number[] = [], indices: number[] = [], pickPositions: number[] = [];
     const add = (u: number, v: number, skirt = 0) => {
       const i = positions.length / 3, height = sampleHeight(heights.data, heights.width, heights.height, u, v), lat = latFromY((id.y + v) / 2 ** id.z);
@@ -31,13 +34,13 @@ export class TerrainTile {
     this.geometry = new BufferGeometry(); this.geometry.setAttribute('position', new Float32BufferAttribute(positions, 3)); this.geometry.setAttribute('uv', new Float32BufferAttribute(uvs, 2)); this.geometry.setAttribute('skirt', new Float32BufferAttribute(skirts, 1)); this.geometry.setIndex(indices);
     this.dem = texture(heights, false); this.relief = texture(color, true);
     const nw = project(BOUNDS.west, BOUNDS.north), se = project(BOUNDS.east, BOUNDS.south), clip = new Vector4(nw.x, nw.z, se.x, se.z);
-    this.material = new ShaderMaterial({ vertexShader: terrainVertex, fragmentShader: terrainFragment, uniforms: { heightMap: { value: this.dem }, reliefMap: { value: this.relief }, tileY: { value: id.y }, zoomScale: { value: 2 ** id.z }, displacement: { value: 1 }, reliefEnabled: { value: 1 }, fogColor: { value: new Color(palette.sky) }, landColor: { value: new Color(palette.land) }, seaColor: { value: new Color(palette.sea) }, clipBounds: { value: clip } } });
+    this.material = new ShaderMaterial({ vertexShader: terrainVertex, fragmentShader: terrainFragment, uniforms: { ...environment, heightMap: { value: this.dem }, reliefMap: { value: this.relief }, tileSize: { value: b.size }, tileY: { value: id.y }, zoomScale: { value: 2 ** id.z }, displacement: { value: 1 }, reliefEnabled: { value: 1 }, fogColor: { value: new Color(palette.sky) }, landColor: { value: new Color(palette.land) }, seaColor: { value: new Color(palette.sea) }, clipBounds: { value: clip } } });
     const mesh = new Mesh(this.geometry, this.material); mesh.frustumCulled = false; this.group.add(mesh);
     const pickGeometry = new BufferGeometry(); pickGeometry.setAttribute('position', new Float32BufferAttribute(surfacePositions, 3)); pickGeometry.setIndex(surfaceIndices); pickGeometry.computeBoundingSphere(); pickGeometry.computeBoundingBox();
     this.originalPickHeights = surfacePositions;
     this.pickMesh = new Mesh(pickGeometry, new MeshBasicMaterial()); this.pickMesh.position.set(b.x, 0, b.z); this.pickMesh.updateMatrixWorld();
     this.waterGeometry = new BufferGeometry(); this.waterGeometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, b.size, 0, 0, 0, 0, b.size, b.size, 0, b.size], 3)); this.waterGeometry.setAttribute('uv', new Float32BufferAttribute([0, 0, 1, 0, 0, 1, 1, 1], 2)); this.waterGeometry.setIndex([0, 2, 1, 1, 2, 3]);
-    this.waterMaterial = new ShaderMaterial({ vertexShader: waterVertex, fragmentShader: waterFragment, transparent: true, depthWrite: false, uniforms: { reliefMap: { value: this.relief }, seaColor: { value: new Color(palette.sea) }, clipBounds: { value: clip } } });
+    this.waterMaterial = new ShaderMaterial({ vertexShader: oceanVertex, fragmentShader: oceanFragment, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -4, uniforms: { ...environment, heightMap: { value: this.dem }, reliefMap: { value: this.relief }, seaColor: { value: new Color(palette.sea) }, clipBounds: { value: clip } } });
     const water = new Mesh(this.waterGeometry, this.waterMaterial); water.frustumCulled = false; water.renderOrder = 1; this.group.add(water); this.group.position.set(b.x, 0, b.z);
   }
   effects(displacement: boolean, relief: boolean, water: boolean) {

@@ -1,0 +1,38 @@
+{
+  "version": "p3-environment-v1",
+  "recipe": "f7f397b1f839c0881252a6bf4ac14fcf69d838e7a2536c15fbbcf6855a0f9330",
+  "coastSource": {
+    "source": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_50m_land.geojson",
+    "sha256": "e874b27a51d146452be360cafb3cc50c86001074a67d534113e6534682f9826b",
+    "license": "Natural Earth public domain"
+  },
+  "sourceZoom": 6,
+  "width": 2176,
+  "height": 1792,
+  "maxDistanceKm": 160,
+  "encoding": "distanceKm=(R*256+G)/65535*160; B=landmask",
+  "mercator": {
+    "x": 0.65625,
+    "y": 0.28125,
+    "width": 0.265625,
+    "height": 0.21875
+  },
+  "assets": {
+    "coast-distance.webp": {
+      "bytes": 665652,
+      "sha256": "6fac42996092d2dab86ee2c2196f1fe74dab050df68a57d7d9c2eaba1c29f5f2"
+    },
+    "water-normal-a.webp": {
+      "bytes": 46044,
+      "sha256": "cc3efc149c2289cd6ca5b8f0d835f1a6fa248dfc8787a8af7c58fcb77e33a1e8"
+    },
+    "water-normal-b.webp": {
+      "bytes": 23770,
+      "sha256": "a8179f55df32c6ac66cabf0370fea918e53ea621ca720897cf65c30afe19a6ef"
+    },
+    "cloud-coverage.webp": {
+      "bytes": 3922,
+      "sha256": "542961c855f5ff29fb8e20095da2dda34091541c74a67702c5bb19caf8b1ce8c"
+    }
+  }
+}

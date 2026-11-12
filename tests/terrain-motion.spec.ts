@@ -21,5 +21,5 @@ test('records terrain pan zoom rotate tilt and reset', async ({ browser }, info)
     }
     await page.waitForTimeout(1000); await page.getByRole('button', { name: '复位 / 指北', exact: true }).click(); await page.waitForTimeout(1400);
   } finally { await context.close(); }
-  await fs.mkdir('docs/progress/recordings/P2', { recursive: true }); await video.saveAs(`docs/progress/recordings/P2/${info.project.name}-terrain.webm`);
+  await fs.mkdir('docs/progress/recordings/P3/regression', { recursive: true }); await video.saveAs(`docs/progress/recordings/P3/regression/${info.project.name}-terrain.webm`);
 });

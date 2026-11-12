@@ -1,4 +1,4 @@
-import type { PerspectiveCamera, Scene } from 'three';
+import type { IUniform, PerspectiveCamera, Scene } from 'three';
 import type { PlatformAdapter } from '../platform/PlatformAdapter';
 import type { Quality } from '../Quality';
 import { QUALITY } from '../Quality';
@@ -15,7 +15,7 @@ export class TerrainManager {
   visible: TerrainTile[] = []; loading = 0; errors = 0;
   effects = { displacement: true, relief: true, water: true };
   private needed = new Set<string>(); private jobs: TileId[] = [];
-  constructor(private platform: PlatformAdapter, private scene: Scene, private palette: TerrainPalette, private quality: Quality, private mobile: boolean) {}
+  constructor(private platform: PlatformAdapter, private scene: Scene, private palette: TerrainPalette, private quality: Quality, private mobile: boolean, private environment: Record<string, IUniform> = {}) {}
   setQuality(quality: Quality) {
     if (quality === this.quality) return;
     this.quality = quality;
@@ -49,7 +49,7 @@ export class TerrainManager {
       this.pending.add(key); this.loading = this.pending.size; const generation = this.generation;
       void Promise.all(['dem', 'relief'].map(kind => this.platform.readBytes(`/tiles/${kind}/${key}.webp`).then(bytes => this.platform.decodeImage(bytes)))).then(([dem, relief]) => {
         if (this.disposed || generation !== this.generation) return;
-        const resource = new TerrainTile(tile, dem!, relief!, QUALITY[this.quality].segments, this.palette); resource.group.visible = false; this.scene.add(resource.group); this.cache.set(key, resource); this.failures.delete(key);
+        const resource = new TerrainTile(tile, dem!, relief!, QUALITY[this.quality].segments, this.palette, this.environment); resource.group.visible = false; this.scene.add(resource.group); this.cache.set(key, resource); this.failures.delete(key);
       }).catch(() => { if (!this.disposed) { const tries = (this.failures.get(key)?.tries ?? 0) + 1; this.failures.set(key, { tries, retryAfter: this.clock + 2000 * tries }); this.errors++; } }).finally(() => { this.pending.delete(key); this.loading = this.pending.size; if (!this.disposed) this.pump(); });
     }
   }
