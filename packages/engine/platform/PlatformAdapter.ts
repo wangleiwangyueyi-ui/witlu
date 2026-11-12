@@ -6,7 +6,8 @@ export interface InputHandlers {
   down(event: PointerInput): void; move(event: PointerInput): void; up(event: PointerInput): void; cancel(): void;
   wheel(delta: number): void; key(key: string): void;
 }
-export interface PlatformAdapter<Canvas = unknown, Worker = unknown, Audio = unknown> {
+export interface WorkerPort { post(message:unknown,transfer?:ArrayBuffer[]):void; onMessage(fn:(value:unknown)=>void):()=>void; onError(fn:(message:string)=>void):()=>void; terminate():void }
+export interface PlatformAdapter<Canvas = unknown, Worker = WorkerPort, Audio = unknown> {
   canvas: Canvas;
   requestFrame(callback: (timestamp: number) => void): number;
   cancelFrame(handle: number): void;

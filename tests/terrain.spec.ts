@@ -7,7 +7,7 @@ test('real terrain renders and remains interactive in each viewport', async ({ p
   await page.goto('/?lang=en'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
   await expect.poll(async () => (await stats(page)).loading).toBe(0);
   const initial = await stats(page); expect(initial.tiles).toBeGreaterThan(0); expect(initial.drawCalls).toBeLessThanOrEqual(250); expect(initial.pose.pitch).toBe(info.project.name === 'desktop' ? 45 : 40);
-  await fs.mkdir('docs/progress/screenshots/P3/regression', { recursive: true }); await page.screenshot({ path: `docs/progress/screenshots/P3/regression/${info.project.name}.png` });
+  await fs.mkdir('docs/progress/screenshots/P4/regression', { recursive: true }); await page.screenshot({ path: `docs/progress/screenshots/P4/regression/${info.project.name}.png` });
   const viewport = page.viewportSize()!, x = viewport.width * .45, y = viewport.height * .32;
   await page.mouse.move(x, y); await page.mouse.down(); await page.mouse.move(x + 50, y + 20, { steps: 12 }); await page.mouse.up();
   await expect.poll(async () => (await stats(page)).pose.lon).not.toBe(initial.pose.lon);
@@ -22,7 +22,7 @@ test('lab supports flyTo, switches, keyboard and WebGL context recovery', async 
   await page.getByRole('button', { name: '飞往青藏', exact: true }).first().click();
   await expect.poll(async () => (await stats(page)).pose.lon).toBeCloseTo(88.8, 1);
   await expect.poll(async () => (await stats(page)).loading).toBe(0);
-  await page.screenshot({ path: 'docs/progress/screenshots/P3/regression/terrain-lab-tibet.png' });
+  await page.screenshot({ path: 'docs/progress/screenshots/P4/regression/terrain-lab-tibet.png' });
   await page.getByRole('switch', { name: '高程位移', exact: true }).first().click(); await expect(page.getByRole('switch', { name: '高程位移', exact: true }).first()).toHaveAttribute('aria-checked', 'false');
   await page.getByRole('button', { name: '复位视角', exact: true }).click(); await expect.poll(async () => (await stats(page)).pose.lon).toBeCloseTo(104, 1);
   await page.getByTestId('terrain').focus(); await page.keyboard.press('+'); await expect.poll(async () => (await stats(page)).pose.distance).toBeLessThan(6800);

@@ -10,11 +10,11 @@ test('glass button presses to 0.96 and springs back', async ({ browser }, info) 
     await button.hover(); const original = (await button.boundingBox())!;
     await page.mouse.down();
     await expect.poll(async () => (await button.boundingBox())!.width / original.width).toBeLessThan(.98);
-    await fs.mkdir('docs/progress/screenshots/P3/regression/p1', { recursive: true });
-    await page.screenshot({ path: `docs/progress/screenshots/P3/regression/p1/${info.project.name}-pressed.png` });
+    await fs.mkdir('docs/progress/screenshots/P4/regression/p1', { recursive: true });
+    await page.screenshot({ path: `docs/progress/screenshots/P4/regression/p1/${info.project.name}-pressed.png` });
     await page.mouse.move(5, 5); await page.mouse.up();
     await expect.poll(async () => Math.abs((await button.boundingBox())!.width - original.width)).toBeLessThan(.2);
   } finally { await context.close(); }
-  await fs.mkdir('docs/progress/recordings/P3/regression/p1', { recursive: true });
-  await video.saveAs(`docs/progress/recordings/P3/regression/p1/${info.project.name}-button-press.webm`);
+  await fs.mkdir('docs/progress/recordings/P4/regression/p1', { recursive: true });
+  await video.saveAs(`docs/progress/recordings/P4/regression/p1/${info.project.name}-button-press.webm`);
 });

@@ -54,6 +54,7 @@ export class TerrainManager {
     }
   }
   get cacheSize() { return this.cache.size; }
+  heightAt(x:number,z:number){for(const tile of this.visible){const height=tile.heightAt(x,z);if(height!==null)return height;}return 0;}
   get maxZoom() { return Math.max(0, ...this.visible.map(t => t.id.z)); }
   restore() { this.cache.forEach(tile => tile.restore()); }
   dispose() { this.disposed = true; this.generation++; this.cache.forEach(tile => tile.dispose()); this.cache.clear(); }

@@ -14,6 +14,7 @@ import { DebugConsole } from './components/DebugConsole';
 import { About } from './components/About';
 import { useReducedEffects } from './components/Glass';
 import { TerrainCanvas } from './components/TerrainCanvas';
+import { MorphTimeline } from './components/MorphTimeline';
 export function App() {
   const { t, locale } = useI18n(); const state = useShell(); const reduced = useReducedEffects();
   const previousRoute = useRef({ locale, year: state.year });
@@ -26,7 +27,7 @@ export function App() {
   useEffect(() => { if (!state.playing) return; const timer = setInterval(() => useShell.getState().setYear(useShell.getState().year >= 280 ? 220 : addYears(useShell.getState().year, 1)), 1600); return () => clearInterval(timer); }, [state.playing]);
   const debug = new URLSearchParams(location.search).get('debug') === '1';
   return <MotionConfig reducedMotion={reduced ? 'always' : 'never'}><ToastProvider><div className="atlas-app" data-capture-root="true" data-quality={state.quality} data-highlight={state.highlight && !reduced} data-refraction={state.refraction && refractionSupported && state.quality !== 'eco' && !reduced} data-reduced-motion={reduced}>
-    <Refraction/><div className="app-content" inert={state.about}><TerrainCanvas environment/><Toolbar refractionSupported={refractionSupported}/>{mobile ? <Sheet heading={<ChapterHeading mobile/>}><ChapterContent mobile/></Sheet> : <><ChapterPanel/><TimeDock/></>}<div className="legal-strip">{t('disclaimer')} <span>·</span> {t('credit')} {t('upstream')} · Terrain: USGS / NOAA · Natural Earth</div><span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
+    <Refraction/><div className="app-content" inert={state.about}><TerrainCanvas environment territories/><MorphTimeline phases={phases}/><Toolbar refractionSupported={refractionSupported}/>{mobile ? <Sheet heading={<ChapterHeading mobile/>}><ChapterContent mobile/></Sheet> : <><ChapterPanel/><TimeDock/></>}<div className="legal-strip">{t('disclaimer')} <span>·</span> {t('credit')} {t('upstream')} · Terrain: USGS / NOAA · Natural Earth</div><span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
     {debug && <DebugConsole snapshot={snapshot}/>} {state.about && <About/>}
   </div></ToastProvider></MotionConfig>;
 }

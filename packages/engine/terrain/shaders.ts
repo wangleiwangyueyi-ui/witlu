@@ -1,4 +1,5 @@
 import { environmentUniformsGLSL } from '../atmosphere/shared-shaders';
+import { territoryGLSL } from '../morph/shaders';
 export const terrainVertex = /* glsl */`
 uniform sampler2D heightMap;
 uniform float tileY;
@@ -24,6 +25,7 @@ void main() {
 }`;
 export const terrainFragment = /* glsl */`
 ${environmentUniformsGLSL}
+${territoryGLSL}
 uniform sampler2D heightMap;
 uniform float tileSize;
 uniform sampler2D reliefMap;
@@ -51,6 +53,7 @@ void main() {
     color *= cloudShadow(vWorld);
     color = limitBackground(color);
   }
+  if(texel.a>254.5/255.0)color=territoryColor(color,vWorld);
   float edge = min(min(vWorld.x - clipBounds.x, clipBounds.z - vWorld.x), min(vWorld.z - clipBounds.y, clipBounds.w - vWorld.z));
   float fog = max(smoothstep(8000.0, 20000.0, vDistance) * 0.55 * (envEnabled > .5 ? fogEnabled : 1.0), 1.0 - smoothstep(0.0, 600.0, edge));
   vec3 fogTint = envEnabled > .5 ? mix(skyColor, horizonColor, .28) : fogColor;

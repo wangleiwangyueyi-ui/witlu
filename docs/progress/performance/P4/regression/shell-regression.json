@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-12",
+  "browser": "Playwright Chromium, local Vite shell with P2 terrain, 1440×900; diagnostic only",
+  "high": {
+    "quality": "high",
+    "samples": 58,
+    "meanFrameMs": 33.90689655172414,
+    "p95FrameMs": 83.29999999999995,
+    "meanFps": 29.492525170344756,
+    "usedJSHeapBytes": 81400000
+  },
+  "eco": {
+    "quality": "eco",
+    "samples": 40,
+    "meanFrameMs": 48.7475,
+    "p95FrameMs": 83.30000000000018,
+    "meanFps": 20.51387250628237,
+    "usedJSHeapBytes": 81400000
+  }
+}

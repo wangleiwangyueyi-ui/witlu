@@ -1,0 +1,72 @@
+[
+  {
+    "file": "desktop-1945-1946.webm",
+    "frames": 234,
+    "minLuma": 0.1468596317401954,
+    "maxLuma": 0.1514176032475483,
+    "maxAdjacentLumaChange": 0.0017603851102941381
+  },
+  {
+    "file": "desktop-ba-shu.webm",
+    "frames": 234,
+    "minLuma": 0.14334759344362633,
+    "maxLuma": 0.14788582414215573,
+    "maxAdjacentLumaChange": 0.0018417254901958446
+  },
+  {
+    "file": "desktop-han-three-kingdoms.webm",
+    "frames": 234,
+    "minLuma": 0.14422793535539097,
+    "maxLuma": 0.14827629350490115,
+    "maxAdjacentLumaChange": 0.0018695045955882117
+  },
+  {
+    "file": "desktop-jin-sixteen-states.webm",
+    "frames": 234,
+    "minLuma": 0.14463317953431287,
+    "maxLuma": 0.14854619852941106,
+    "maxAdjacentLumaChange": 0.0015780260416665137
+  },
+  {
+    "file": "desktop-ming-qing.webm",
+    "frames": 234,
+    "minLuma": 0.14542199295343058,
+    "maxLuma": 0.1499131038602934,
+    "maxAdjacentLumaChange": 0.0018440459558824451
+  },
+  {
+    "file": "desktop-nanbei-sui.webm",
+    "frames": 234,
+    "minLuma": 0.14468087224264609,
+    "maxLuma": 0.14814191758578324,
+    "maxAdjacentLumaChange": 0.0014575962009804322
+  },
+  {
+    "file": "desktop-qin-chuhan.webm",
+    "frames": 234,
+    "minLuma": 0.14400462530637098,
+    "maxLuma": 0.1479897604166655,
+    "maxAdjacentLumaChange": 0.0012773612132352952
+  },
+  {
+    "file": "desktop-qin-conquests.webm",
+    "frames": 234,
+    "minLuma": 0.14362792340686137,
+    "maxLuma": 0.14738763051470452,
+    "maxAdjacentLumaChange": 0.0025054577205883277
+  },
+  {
+    "file": "desktop-song-south.webm",
+    "frames": 234,
+    "minLuma": 0.14545064031862662,
+    "maxLuma": 0.1494027830882344,
+    "maxAdjacentLumaChange": 0.0015184056372547772
+  },
+  {
+    "file": "desktop-tang-anxi.webm",
+    "frames": 234,
+    "minLuma": 0.1463279457720578,
+    "maxLuma": 0.1510794068627442,
+    "maxAdjacentLumaChange": 0.001769603553921667
+  }
+]

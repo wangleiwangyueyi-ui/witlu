@@ -1,8 +1,8 @@
 import type { PlatformAdapter } from '@witlu/engine';
-import type { InputHandlers, PointerInput } from '../../../engine/platform/PlatformAdapter';
+import type { InputHandlers, PointerInput, WorkerPort } from '../../../engine/platform/PlatformAdapter';
 
 /** The only browser-facing boundary of the rendering engine. */
-export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Worker, HTMLAudioElement> {
+export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, WorkerPort, HTMLAudioElement> {
   private abort = new AbortController();
   constructor(readonly canvas: HTMLCanvasElement) {}
   requestFrame(callback: (timestamp: number) => void) { return requestAnimationFrame(callback); }
@@ -18,7 +18,10 @@ export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Wo
     return { width: pixels.width, height: pixels.height, data: new Uint8Array(pixels.data.buffer) };
   }
   viewport() { const box = this.canvas.getBoundingClientRect(); return { width: box.width, height: box.height, pixelRatio: devicePixelRatio, mobile: matchMedia('(pointer: coarse)').matches || box.width < 768 }; }
-  createWorker(path: string) { return new Worker(path, { type: 'module' }); }
+  createWorker(path: string):WorkerPort {
+    const worker=path==='growth'?new Worker(new URL('../workers/growth.worker.ts',import.meta.url),{type:'module'}):new Worker(path,{type:'module'});
+    return{post:(message,transfer=[])=>worker.postMessage(message,transfer),onMessage:fn=>{const listener=(e:MessageEvent<unknown>)=>fn(e.data);worker.addEventListener('message',listener);return()=>worker.removeEventListener('message',listener);},onError:fn=>{const listener=(e:ErrorEvent)=>fn(e.message);worker.addEventListener('error',listener);return()=>worker.removeEventListener('error',listener);},terminate:()=>worker.terminate()};
+  }
   storage = { get: (key: string) => { try { return localStorage.getItem(key); } catch { return null; } }, set: (key: string, value: string) => { try { localStorage.setItem(key, value); } catch { /* Storage is optional. */ } } };
   createAudio(path: string) { return new Audio(path); }
   onResize(callback: () => void) { const observer = new ResizeObserver(callback); observer.observe(this.canvas); return () => observer.disconnect(); }

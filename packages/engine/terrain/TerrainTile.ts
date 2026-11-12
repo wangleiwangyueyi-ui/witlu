@@ -2,11 +2,12 @@ import { BufferGeometry, Color, DataTexture, Float32BufferAttribute, Group, Line
 import type { DecodedImage } from '../platform/PlatformAdapter';
 import type { IUniform } from 'three';
 import type { EnvironmentPalette } from '../atmosphere/Environment';
+import type { MorphPalette } from '../morph/Morph';
 import { BOUNDS, elevationKm, latFromY, project, sampleHeight, tileBounds } from './geo';
 import type { TileId } from './geo';
 import { terrainFragment, terrainVertex } from './shaders';
 import { oceanFragment, oceanVertex } from '../ocean/shaders';
-export interface TerrainPalette { sky: string; land: string; sea: string; environment?: EnvironmentPalette }
+export interface TerrainPalette { sky: string; land: string; sea: string; environment?: EnvironmentPalette; morph?:MorphPalette }
 
 function texture(image: DecodedImage, srgb: boolean) { const tex = new DataTexture(image.data, image.width, image.height, RGBAFormat); tex.colorSpace = srgb ? SRGBColorSpace : NoColorSpace; tex.minFilter = tex.magFilter = LinearFilter; tex.generateMipmaps = false; tex.flipY = false; tex.needsUpdate = true; return tex; }
 export class TerrainTile {
@@ -16,7 +17,7 @@ export class TerrainTile {
   private material: ShaderMaterial; private waterMaterial: ShaderMaterial;
   private originalPickHeights: Float32Array;
   lastUsed = 0;
-  constructor(readonly id: TileId, heights: DecodedImage, color: DecodedImage, segments: number, palette: TerrainPalette, environment: Record<string, IUniform> = {}) {
+  constructor(readonly id: TileId, private heights: DecodedImage, color: DecodedImage, segments: number, palette: TerrainPalette, environment: Record<string, IUniform> = {}) {
     const b = tileBounds(id), positions: number[] = [], uvs: number[] = [], skirts: number[] = [], indices: number[] = [], pickPositions: number[] = [];
     const add = (u: number, v: number, skirt = 0) => {
       const i = positions.length / 3, height = sampleHeight(heights.data, heights.width, heights.height, u, v), lat = latFromY((id.y + v) / 2 ** id.z);
@@ -53,5 +54,6 @@ export class TerrainTile {
     this.material.uniforms.reliefEnabled!.value = Number(relief); this.group.children[1]!.visible = water;
   }
   restore() { this.dem.needsUpdate = this.relief.needsUpdate = true; this.material.needsUpdate = this.waterMaterial.needsUpdate = true; }
+  heightAt(x:number,z:number){const b=tileBounds(this.id),u=(x-b.x)/b.size,v=(z-b.z)/b.size;if(u<0||u>1||v<0||v>1)return null;return elevationKm(sampleHeight(this.heights.data,this.heights.width,this.heights.height,u,v),latFromY((this.id.y+v)/2**this.id.z),Boolean(this.material.uniforms.displacement!.value));}
   dispose() { this.group.removeFromParent(); this.geometry.dispose(); this.waterGeometry.dispose(); this.pickMesh.geometry.dispose(); (this.pickMesh.material as MeshBasicMaterial).dispose(); this.dem.dispose(); this.relief.dispose(); this.material.dispose(); this.waterMaterial.dispose(); }
 }

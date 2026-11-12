@@ -1,0 +1,308 @@
+{
+  "proof": {
+    "immediate": {
+      "enabled": true,
+      "ready": true,
+      "preparing": false,
+      "error": null,
+      "snapshotA": "s_zhanguo_a2",
+      "snapshotB": "s_zhanguo_b0",
+      "t": 0.2,
+      "playing": true,
+      "mode": "crossfade",
+      "labelSize": 4096,
+      "fieldSize": 1024,
+      "preparationMs": 2868,
+      "rasterMs": 354.5,
+      "workerMs": 1964.300000011921,
+      "resolveMs": 0.5,
+      "changedPixels": 6769,
+      "involved": 5,
+      "fieldBytes": 21056112,
+      "cacheHit": false,
+      "cacheBytes": 21056112,
+      "prefetched": false,
+      "capitalFallbacks": 0,
+      "seedSources": [
+        {
+          "id": 3,
+          "x": 529.1469333333334,
+          "y": 419.7486189804072,
+          "source": "capital",
+          "polity": "ba_state"
+        },
+        {
+          "id": 80,
+          "x": 500.9300444444448,
+          "y": 435.5864163997083,
+          "source": "capital",
+          "polity": "shu_state"
+        }
+      ],
+      "fillOpacity": 0.4,
+      "effects": {
+        "fill": true,
+        "boundaries": true,
+        "growth": true,
+        "front": true,
+        "ink": true,
+        "particles": true,
+        "trails": true
+      }
+    },
+    "settled": {
+      "enabled": true,
+      "ready": true,
+      "preparing": false,
+      "error": null,
+      "snapshotA": "s_zhanguo_a2",
+      "snapshotB": "s_zhanguo_b0",
+      "t": 0.8,
+      "playing": false,
+      "mode": "crossfade",
+      "labelSize": 4096,
+      "fieldSize": 1024,
+      "preparationMs": 2868,
+      "rasterMs": 354.5,
+      "workerMs": 1964.300000011921,
+      "resolveMs": 0.20000000298023224,
+      "changedPixels": 6769,
+      "involved": 5,
+      "fieldBytes": 21056112,
+      "cacheHit": false,
+      "cacheBytes": 21056112,
+      "prefetched": false,
+      "capitalFallbacks": 0,
+      "seedSources": [
+        {
+          "id": 3,
+          "x": 529.1469333333334,
+          "y": 419.7486189804072,
+          "source": "capital",
+          "polity": "ba_state"
+        },
+        {
+          "id": 80,
+          "x": 500.9300444444448,
+          "y": 435.5864163997083,
+          "source": "capital",
+          "polity": "shu_state"
+        }
+      ],
+      "fillOpacity": 0.4,
+      "effects": {
+        "fill": true,
+        "boundaries": true,
+        "growth": true,
+        "front": true,
+        "ink": true,
+        "particles": true,
+        "trails": true
+      }
+    },
+    "cached": {
+      "enabled": true,
+      "ready": true,
+      "preparing": false,
+      "error": null,
+      "snapshotA": "s_zhanguo_a2",
+      "snapshotB": "s_zhanguo_b0",
+      "t": 0,
+      "playing": false,
+      "mode": "sdf",
+      "labelSize": 4096,
+      "fieldSize": 1024,
+      "preparationMs": 1084.5,
+      "rasterMs": 124.70000000298023,
+      "workerMs": 9.400000005960464,
+      "resolveMs": 1.0999999940395355,
+      "changedPixels": 6769,
+      "involved": 5,
+      "fieldBytes": 21056112,
+      "cacheHit": true,
+      "cacheBytes": 25250416,
+      "prefetched": false,
+      "capitalFallbacks": 0,
+      "seedSources": [
+        {
+          "id": 3,
+          "x": 529.1469333333334,
+          "y": 419.7486189804072,
+          "source": "capital",
+          "polity": "ba_state"
+        },
+        {
+          "id": 80,
+          "x": 500.9300444444448,
+          "y": 435.5864163997083,
+          "source": "capital",
+          "polity": "shu_state"
+        }
+      ],
+      "fillOpacity": 0.4,
+      "effects": {
+        "fill": true,
+        "boundaries": true,
+        "growth": true,
+        "front": true,
+        "ink": true,
+        "particles": true,
+        "trails": true
+      }
+    },
+    "before": {
+      "t": 0.4,
+      "pixels": 1048576,
+      "gaps": 0,
+      "invalid": 0,
+      "mismatches": 0,
+      "hash": 3002404118
+    },
+    "superseded": {
+      "enabled": true,
+      "ready": true,
+      "preparing": false,
+      "error": null,
+      "snapshotA": "s_zhanguo_a2",
+      "snapshotB": "s_zhanguo_a2",
+      "t": 0,
+      "playing": false,
+      "mode": "sdf",
+      "labelSize": 4096,
+      "fieldSize": 1024,
+      "preparationMs": 327.70000000298023,
+      "rasterMs": 85,
+      "workerMs": 98.5,
+      "resolveMs": 0.20000000298023224,
+      "changedPixels": 0,
+      "involved": 0,
+      "fieldBytes": 4194304,
+      "cacheHit": false,
+      "cacheBytes": 25250416,
+      "prefetched": false,
+      "capitalFallbacks": 0,
+      "seedSources": [],
+      "fillOpacity": 0.4,
+      "effects": {
+        "fill": true,
+        "boundaries": true,
+        "growth": true,
+        "front": true,
+        "ink": true,
+        "particles": true,
+        "trails": true
+      }
+    }
+  },
+  "reduced": {
+    "enabled": true,
+    "ready": true,
+    "preparing": false,
+    "error": null,
+    "snapshotA": "s_zhanguo_a2",
+    "snapshotB": "s_zhanguo_b0",
+    "t": 1,
+    "playing": false,
+    "mode": "crossfade",
+    "labelSize": 4096,
+    "fieldSize": 1024,
+    "preparationMs": 1084.5,
+    "rasterMs": 124.70000000298023,
+    "workerMs": 9.400000005960464,
+    "resolveMs": 0.29999999701976776,
+    "changedPixels": 6769,
+    "involved": 5,
+    "fieldBytes": 21056112,
+    "cacheHit": true,
+    "cacheBytes": 25250416,
+    "prefetched": true,
+    "capitalFallbacks": 0,
+    "seedSources": [
+      {
+        "id": 3,
+        "x": 529.1469333333334,
+        "y": 419.7486189804072,
+        "source": "capital",
+        "polity": "ba_state"
+      },
+      {
+        "id": 80,
+        "x": 500.9300444444448,
+        "y": 435.5864163997083,
+        "source": "capital",
+        "polity": "shu_state"
+      }
+    ],
+    "fillOpacity": 0.4,
+    "effects": {
+      "fill": true,
+      "boundaries": true,
+      "growth": true,
+      "front": true,
+      "ink": true,
+      "particles": true,
+      "trails": true
+    },
+    "front": 0,
+    "ink": 0,
+    "particles": 0
+  },
+  "after": {
+    "t": 0.4,
+    "pixels": 1048576,
+    "gaps": 0,
+    "invalid": 0,
+    "mismatches": 0,
+    "hash": 3002404118
+  },
+  "modern": {
+    "enabled": true,
+    "ready": true,
+    "preparing": false,
+    "error": null,
+    "snapshotA": "s_roc_d",
+    "snapshotB": "s_prc",
+    "t": 0,
+    "playing": false,
+    "mode": "sdf",
+    "labelSize": 4096,
+    "fieldSize": 1024,
+    "preparationMs": 2114.2999999970198,
+    "rasterMs": 334.3999999910593,
+    "workerMs": 1497.7999999970198,
+    "resolveMs": 25.599999994039536,
+    "changedPixels": 189768,
+    "involved": 3,
+    "fieldBytes": 12678912,
+    "cacheHit": false,
+    "cacheBytes": 46359280,
+    "prefetched": false,
+    "capitalFallbacks": 0,
+    "seedSources": [
+      {
+        "id": 269,
+        "x": 641.2180444444448,
+        "y": 590.9474876653522,
+        "source": "capital",
+        "polity": "unprofiled:prc:中华人民共和国"
+      },
+      {
+        "id": 358,
+        "x": 668.5247111111112,
+        "y": 459.2562725951218,
+        "source": "capital",
+        "polity": "unprofiled:roc:中华民国"
+      }
+    ],
+    "fillOpacity": 0.4,
+    "effects": {
+      "fill": true,
+      "boundaries": true,
+      "growth": true,
+      "front": true,
+      "ink": true,
+      "particles": true,
+      "trails": true
+    }
+  }
+}

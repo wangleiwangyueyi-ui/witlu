@@ -204,7 +204,22 @@ input::-webkit-inner-spin-button, input::-webkit-outer-spin-button { appearance:
 .environment-lab-controls p { color: var(--text-secondary); }.environment-lab-controls details { margin: 16px 0; }.environment-lab-controls summary { cursor: pointer; margin-bottom: 12px; }
 .environment-views { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }.environment-views .glass-button { font-size: 11px; padding: 6px 10px; min-height: 32px; }
 .environment-switches { padding-top: 12px; }.environment-lab .debug-console { right: 24px; left: auto; top: 24px; }
+.morph-lab-controls { position: absolute; left: 24px; top: 24px; z-index: 30; width: 320px; padding: 20px; max-height: calc(100dvh - 48px); overflow-y: auto; }
+.morph-lab-controls h1 { font: 30px var(--font-title); margin: 10px 0 20px; }.morph-lab-controls label { display: grid; gap: 7px; font-size: 11px; margin: 10px 0; }
+.morph-lab-controls select, .morph-preview select { width: 100%; min-width: 0; padding: 8px; color: var(--text); background: var(--sea-deep); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); font: inherit; }
+.morph-preview { display: grid; gap: 12px; padding: 12px 0; font-size: 12px; }
+.morph-lab-controls input, .morph-opacity input { width: 100%; accent-color: var(--polity-main); }.morph-actions { display: flex; gap: 8px; }.morph-actions .glass-button { padding: 8px 14px; font-size: 12px; }
+.morph-lab-controls output { display: block; font-size: 10px; color: var(--text-secondary); line-height: 1.7; margin: 16px 0; }.morph-lab-controls summary, .morph-lab-controls a { font-size: 12px; }.morph-lab-controls details { margin: 16px 0; }.morph-lab .debug-console { top: 24px; right: 24px; left: auto; }
 @media (width <= 767px) {
+  .morph-lab-controls { display: flex; flex-direction: column; }
+  .morph-lab-controls .eyebrow { display: none; }
+  .morph-lab-controls label { margin: 6px 0; }
+  .morph-lab-controls output { margin: 6px 0; }
+  .morph-snapshots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; order: 2; }
+  .morph-snapshots label { min-width: 0; }
+  .morph-lab-controls details { order: 3; }
+  .morph-lab-controls a { order: 4; }
+  .morph-lab-controls { top: auto; bottom: calc(12px + var(--space-safe-bottom)); left: 12px; width: calc(100% - 24px); max-height: 43dvh; padding: 14px; }.morph-lab-controls h1 { font-size: 22px; margin: 6px 0; }.morph-lab .debug-console { top: 12px; right: 12px; max-height: 25dvh; }
   .environment-lab-controls { top: auto; bottom: calc(16px + var(--space-safe-bottom)); left: 16px; width: calc(100% - 32px); padding: 16px; max-height: 45dvh; }
   .environment-lab-controls h1 { font-size: 24px; margin: 6px 0; }.environment-lab-controls details { margin: 10px 0; }
   .environment-lab .debug-console { top: calc(16px + var(--space-safe-top)); right: 16px; max-height: 28dvh; }
