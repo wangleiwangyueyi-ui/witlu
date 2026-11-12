@@ -28,4 +28,6 @@ CHGIS / Hartwell 衍生几何只由构建时读取 upstream/ 生成，不提交�
 
 历史疆域为示意性近似，非测绘边界。main 标注沿用上游按《资治通鉴》纪年惯例确定的主政权，不代表正统评价。
 
-本阶段只构建本地数据与工程，不执行部署。后续新增 Natural Earth、Make Me a Hanzi 等资源时应补记实际取得的版本和许可。
+字体：Adobe [Source Han Serif](https://github.com/adobe-fonts/source-han-serif) SC SemiBold（思源宋体），SIL Open Font License 1.1。网站使用重命名为 Witlu Song 的 WOFF2 标题子集，原始版权与许可证保留在 `packages/web/public/fonts/OFL-SourceHanSerif.txt`，源文件 URL 与 SHA-256 记录在同目录 manifest.json，生成步骤见 docs/FONTS.md。印章与界面图标为本项目自建 SVG；地图占位仅取自本仓库 docs/design/v3_desktop.jpg，不作为历史边界依据。
+
+本阶段提供本地界面和 Cloudflare Pages 连接说明，不修改域名或 DNS。后续新增 Natural Earth、Make Me a Hanzi 等资源时应补记实际取得的版本和许可。

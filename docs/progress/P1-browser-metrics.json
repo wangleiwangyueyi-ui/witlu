@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-12",
+  "browser": "Playwright Chromium, local Vite shell, 1440×900, no Three.js renderer",
+  "high": {
+    "quality": "high",
+    "samples": 109,
+    "meanFrameMs": 18.195412844036696,
+    "p95FrameMs": 16.800000000000182,
+    "meanFps": 54.95890687238441,
+    "usedJSHeapBytes": 11900000
+  },
+  "eco": {
+    "quality": "eco",
+    "samples": 107,
+    "meanFrameMs": 18.379439252336446,
+    "p95FrameMs": 33.30000000000018,
+    "meanFps": 54.408624021153265,
+    "usedJSHeapBytes": 11900000
+  }
+}

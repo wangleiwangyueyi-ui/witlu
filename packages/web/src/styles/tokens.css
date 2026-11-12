@@ -5,4 +5,25 @@
   --polity-main: #F2C46D; --polity-coral: #FF8A7A; --polity-jade: #5FD3B5; --polity-blue: #7DB8FF; --polity-purple: #B79CFF;
   --neighbor: #8FB0D8; --text: #FFFFFF; --text-secondary: rgb(255 255 255 / 72%); --text-muted: rgb(255 255 255 / 50%);
   --cinnabar: #E8553E; --gold-glow: #FFD27A; --link: #6CB4FF;
+  --glass-top: color-mix(in srgb, var(--sea-deep) 94%, transparent);
+  --glass-bottom: color-mix(in srgb, var(--sky) 96%, transparent);
+  --glass-border: color-mix(in srgb, var(--land-snow) 28%, transparent);
+  --glass-edge: color-mix(in srgb, var(--text) 24%, transparent);
+  --glass-light: color-mix(in srgb, var(--text) 4%, transparent);
+  --glass-reflect: color-mix(in srgb, var(--sea-flow) 12%, transparent);
+  --shadow-blue: color-mix(in srgb, var(--sky) 64%, transparent);
+  --shadow-panel: inset 0 1px 0 var(--glass-edge), inset 0 -10px 20px var(--glass-reflect), 0 16px 40px var(--shadow-blue);
+  --shadow-button: inset 0 1px 0 var(--glass-edge), 0 6px 16px var(--shadow-blue);
+  --radius-sm: 12px; --radius-md: 18px; --radius-lg: 28px; --radius-pill: 999px;
+  --duration-press: 120ms; --duration-ui: 240ms; --duration-panel: 420ms; --duration-weather: 1200ms;
+  --ease-out: cubic-bezier(.16, 1, .3, 1); --ease-spring: cubic-bezier(.22, 1.2, .36, 1);
+  --glass-blur: 24px; --glass-saturation: 130%; --press-scale: .96;
+  --space-safe-top: env(safe-area-inset-top, 0px); --space-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --font-ui: -apple-system, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-title: 'Witlu Song', 'Songti SC', SimSun, serif;
+}
+[data-quality='high'] { --glass-blur: 18px; }
+[data-quality='eco'] { --glass-blur: 10px; --glass-saturation: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-press: 0ms; --duration-ui: 0ms; --duration-panel: 0ms; --press-scale: 1; }
 }

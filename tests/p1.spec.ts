@@ -1,0 +1,88 @@
+import fs from 'node:fs/promises';
+import { test, expect } from '@playwright/test';
+test('language, quality, popovers and debug console work', async ({ page }, info) => {
+  await page.goto('/?debug=1&lang=en&year=240&embed=1');
+  await expect(page.getByRole('complementary', { name: 'Acceptance console' })).toBeVisible();
+  await expect(page.getByTestId('snapshot')).toHaveText('s_sanguo');
+  await expect.poll(async () => Number(await page.getByTestId('fps').textContent())).toBeGreaterThan(0);
+  await page.getByRole('tab', { name: 'Eco', exact: true }).click();
+  await expect(page.locator('.atlas-app')).toHaveAttribute('data-quality', 'eco');
+  await expect(page.locator('.atlas-app')).toHaveAttribute('data-refraction', 'false');
+  await page.getByRole('button', { name: 'Language', exact: true }).click();
+  await page.getByRole('tab', { name: '繁', exact: true }).click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-Hant');
+  await expect(page.getByRole('heading', { name: '三國', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get('embed')).toBe('1');
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: '一鍵截圖', exact: true }).click();
+  const capture = await download;
+  await fs.mkdir('docs/progress/screenshots/P1', { recursive: true });
+  await capture.saveAs(`docs/progress/screenshots/P1/${info.project.name}-capture.png`);
+  expect((await fs.stat(`docs/progress/screenshots/P1/${info.project.name}-capture.png`)).size).toBeGreaterThan(10_000);
+  await expect(page.getByRole('status').filter({ hasText: '截圖已儲存' })).toBeVisible();
+  await page.screenshot({ path: `docs/progress/screenshots/P1/${info.project.name}-debug.png` });
+});
+test('sheet settles across all three states and handles a swipe', async ({ page }, info) => {
+  test.skip(info.project.name === 'desktop', 'Phone sheet only');
+  await page.goto('/');
+  const handle = page.getByRole('slider', { name: '收起 / 半开 / 全开' });
+  await handle.focus(); await page.keyboard.press('Home');
+  await expect(page.locator('.chapter-sheet')).toHaveAttribute('data-snap', '0');
+  await page.keyboard.press('End'); await expect(page.locator('.chapter-sheet')).toHaveAttribute('data-snap', '2');
+  await expect.poll(async () => Math.abs((await page.locator('.chapter-sheet').boundingBox())!.y - 144)).toBeLessThan(2);
+  const box = (await handle.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2, page.viewportSize()!.height - 100, { steps: 12 }); await page.mouse.up();
+  await expect(page.locator('.chapter-sheet')).toHaveAttribute('data-snap', '0');
+  expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true);
+});
+test('reduced motion disables refraction and moving highlights', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' }); await page.goto('/?debug=1');
+  await expect(page.locator('.atlas-app')).toHaveAttribute('data-refraction', 'false');
+  await expect(page.locator('.atlas-app')).toHaveAttribute('data-highlight', 'false');
+});
+test('liquid press has an independent effect switch', async ({ page }) => {
+  await page.goto('/?lang=en');
+  await page.getByRole('button', { name: 'More', exact: true }).click();
+  await page.getByRole('switch', { name: 'Liquid press', exact: true }).click();
+  await expect(page.getByRole('switch', { name: 'Liquid press', exact: true })).toHaveAttribute('aria-checked', 'false');
+  await page.keyboard.press('Escape'); await expect(page.getByRole('dialog')).toHaveCount(0);
+  const button = page.getByRole('button', { name: 'Share', exact: true }); await button.hover();
+  const width = (await button.boundingBox())!.width; await page.mouse.down(); await page.waitForTimeout(180);
+  expect((await button.boundingBox())!.width).toBeCloseTo(width, 1);
+  await page.mouse.move(5, 5); await page.mouse.up();
+});
+test('preserves upstream single-year and multi-year URLs on initial load', async ({ page }) => {
+  await page.goto('/?debug=1&year=819&place=蓝关&person=hanyu&embed=1');
+  await expect(page.getByTestId('data-status')).toHaveText('全量史料已载入');
+  await expect(page.getByTestId('snapshot')).toHaveText(/^s_tang/);
+  expect(new URL(page.url()).searchParams.get('year')).toBe('819');
+  expect(new URL(page.url()).searchParams.get('place')).toBe('蓝关');
+  await page.goto('/?year=1079,1080&place=湖州,黄州&person=sushi');
+  await expect(page.getByTestId('data-status')).toHaveText('全量史料已载入');
+  expect(new URL(page.url()).searchParams.get('year')).toBe('1079,1080');
+  expect(new URL(page.url()).searchParams.get('person')).toBe('sushi');
+});
+test('tablet and phone landscape use the side panel', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'One layout sweep');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/'); await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator('.chapter-panel')).toBeVisible();
+  await page.screenshot({ path: 'docs/progress/screenshots/P1/tablet.png' });
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(page.locator('.chapter-panel')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: 'docs/progress/screenshots/P1/landscape.png' });
+});
+test('isolated glass lab exposes all required icons and a working toast', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'One component gallery check');
+  await page.goto('/lab/glass');
+  await expect(page.locator('.lab-icons figure')).toHaveCount(12);
+  const panel = page.locator('.lab-specimen');
+  await panel.hover({ position: { x: 30, y: 20 } });
+  expect(await panel.evaluate(node => node.style.getPropertyValue('--mx'))).not.toBe('');
+  await page.getByRole('button', { name: '按压与提示' }).click();
+  await expect(page.getByRole('status')).toHaveText('玻璃组件已就绪');
+  await page.screenshot({ path: 'docs/progress/screenshots/P1/glass-lab.png' });
+});

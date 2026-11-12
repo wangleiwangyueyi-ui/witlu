@@ -1,17 +1,22 @@
 import fs from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
-test('loads complete data, credits, and a responsive P0 shell', async ({ page, request }, info) => {
+test('loads complete data, credits, and the responsive atlas shell', async ({ page, request }, info) => {
   const errors: string[] = [];
   page.on('pageerror', e => errors.push(e.message));
   const response = await request.get('/data/manifest.json');
   expect(response.ok()).toBeTruthy();
   const manifest = await response.json() as { upstreamCommit: string; counts: Record<string, number> };
   await page.goto('/');
-  await expect(page.getByRole('status')).toHaveText('全部图层与史料已导入');
-  await expect(page.locator('.metric')).toHaveCount(Object.keys(manifest.counts).length);
-  await page.getByText('关于与数据出处', { exact: true }).click();
+  await expect(page.getByTestId('data-status')).toHaveText('全量史料已载入');
+  await expect(page.getByRole('heading', { name: '三国', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '更多', exact: true }).click();
+  await page.getByRole('button', { name: /关于与致谢/ }).click();
   await expect(page.getByText(/不代表正统评价/)).toBeVisible();
-  await expect(page.locator('footer')).toContainText('CHGIS, Version: 6.');
+  await expect(page.getByRole('dialog', { name: '关于与致谢' })).toContainText('CHGIS, Version: 6.');
+  await page.getByRole('button', { name: '关闭', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.locator('.map-scene').click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
   const snapshots = await (await request.get('/data/snapshots.json')).json() as { key: string; file: string; counts: Record<string, number> }[];
   for (const key of ['s_sanguo', 's_prc']) {
@@ -30,7 +35,8 @@ test('loads complete data, credits, and a responsive P0 shell', async ({ page, r
   expect(sensitive.length).toBeGreaterThan(0);
   expect(sensitive.every(e => e.mood === 'solemn')).toBeTruthy();
   expect(errors).toEqual([]);
-  await fs.mkdir('docs/progress/screenshots/P0', { recursive: true });
-  await page.evaluate(() => scrollTo(0, 0));
-  await page.screenshot({ path: `docs/progress/screenshots/P0/${info.project.name}.png` });
+  await page.evaluate(() => document.fonts.ready);
+  if (info.project.name !== 'desktop') await expect.poll(async () => Math.abs((await page.locator('.chapter-sheet').boundingBox())!.y - page.viewportSize()!.height * .52)).toBeLessThan(2);
+  await fs.mkdir('docs/progress/screenshots/P1', { recursive: true });
+  await page.screenshot({ path: `docs/progress/screenshots/P1/${info.project.name}.png` });
 });

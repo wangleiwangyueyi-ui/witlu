@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import sharp from 'sharp';
+import { ROOT } from './lib/upstream.mjs';
+const css = fs.readFileSync(path.join(ROOT, 'packages/web/src/styles/tokens.css'), 'utf8');
+const color = key => css.match(new RegExp(`--${key}:\\s*(#[a-fA-F0-9]{6})`))[1];
+const gold = color('polity-main'), red = color('cinnabar'), deep = color('sea-deep'), white = color('text');
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="body" x2=".8" y2="1"><stop stop-color="${red}" stop-opacity=".9"/><stop offset="1" stop-color="${deep}"/></linearGradient><linearGradient id="edge" x2="0" y2="1"><stop stop-color="${white}" stop-opacity=".65"/><stop offset="1" stop-color="${gold}" stop-opacity=".4"/></linearGradient></defs><rect x="18" y="22" width="92" height="94" rx="25" fill="${deep}"/><rect x="14" y="12" width="100" height="100" rx="26" fill="url(#body)" stroke="url(#edge)" stroke-width="2"/><rect x="25" y="23" width="78" height="78" rx="14" fill="none" stroke="${gold}" stroke-opacity=".5"/><path d="M31 34Q62 20 98 32" fill="none" stroke="${white}" stroke-opacity=".4" stroke-width="3" stroke-linecap="round"/><g fill="none" stroke="${gold}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M35 49l5 3m-7 10 5 2m-5 16 8-10m4-19h20m-10 0v29m-12 0h24M77 55v26h22V55M88 47v34"/></g></svg>`;
+const out = path.join(ROOT, 'packages/web/public/brand'); fs.mkdirSync(out, { recursive: true });
+fs.writeFileSync(path.join(out, 'seal.svg'), svg);
+for (const size of [32, 180, 192, 512]) await sharp(Buffer.from(svg)).resize(size, size).png().toFile(path.join(out, `seal-${size}.png`));
+const reference = path.join(ROOT, 'packages/web/public/assets/reference'); fs.mkdirSync(reference, { recursive: true });
+fs.copyFileSync(path.join(ROOT, 'docs/design/v3_desktop.jpg'), path.join(reference, 'v3_desktop.jpg'));
+fs.writeFileSync(path.join(ROOT, 'packages/web/public/manifest.webmanifest'), JSON.stringify({ name: '江山 · 中国历代疆域', short_name: '江山', start_url: '/', display: 'standalone', background_color: color('sky'), theme_color: deep, icons: [192, 512].map(size => ({ src: `/brand/seal-${size}.png`, sizes: `${size}x${size}`, type: 'image/png', purpose: 'any' })) }, null, 2) + '\n');
+console.log('Built glass seal SVG, PNGs, manifest and self-hosted visual reference');

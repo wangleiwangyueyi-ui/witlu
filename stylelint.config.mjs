@@ -1,0 +1,1 @@
+export default { plugins: ['./scripts/stylelint/token-colors.mjs'], rules: { 'witlu/token-colors': true, 'color-no-invalid-hex': true, 'block-no-empty': true, 'declaration-block-no-duplicate-properties': true } };

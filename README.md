@@ -1,6 +1,6 @@
 # witlu · 中国历代疆域
 
-Three.js + React 的静态历史地图重制。当前阶段 P0：工程、全量史料管线与时间模型。视觉与完整交互按 docs/PLAN.md 后续阶段实现。
+Three.js + React 的静态历史地图重制。当前完成 P0 数据基座和 P1 深色 Liquid Glass 界面。地图仍使用指定视觉参考占位，真实渲染与完整交互按 docs/PLAN.md 后续阶段接入。
 
 需要 Node >=22.12、pnpm 10.20、Git。首次使用：
 
@@ -12,6 +12,8 @@ pnpm data
 pnpm verify
 pnpm dev
 ```
+
+开发页 `?debug=1` 可打开验收控制台，支持画质切换和一键导出截图。更多菜单包含高光、折射与减少动态开关。手机章节抽屉支持三档拖动与键盘操作。`pnpm fonts` 更新自托管思源宋体标题子集（见 [FONTS.md](docs/FONTS.md)）；`pnpm assets` 重建印章 SVG / PNG。Cloudflare Pages 首次连接和自动分支预览步骤见 [DEPLOY.md](docs/DEPLOY.md)。
 
 `pnpm build` 会先运行完整数据管线与类型检查，再生成 `packages/web/dist`。`pnpm verify` 包含 strict 类型检查、ESLint、层边界与颜色规则、Vitest、parity 和三个 Chromium 模拟视口的 Playwright 冒烟。移动端模拟不等于真机 Safari / 微信测试。
 
