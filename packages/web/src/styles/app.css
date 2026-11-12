@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+@import './tokens.css';
+body { margin: 0; background: var(--sky); color: var(--text); font-family: -apple-system, 'Microsoft YaHei', sans-serif; }
+main { max-width: 1100px; margin: auto; padding: clamp(24px, 6vw, 80px); min-height: 100dvh; box-sizing: border-box; }
+h1 { font-family: 'Songti SC', SimSun, serif; font-size: clamp(32px, 6vw, 60px); color: var(--polity-main); }
+p { line-height: 1.8; color: var(--text-secondary); }
+.status { color: var(--polity-jade); }
+.counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-block: 32px; }
+.metric { background: var(--sea-deep); border: 1px solid var(--land-ridge); padding: 18px; border-radius: 16px; }
+.metric strong { display: block; font-size: 28px; color: var(--polity-main); }
+details { padding-block: 16px; } a { color: var(--link); } footer { margin-top: 40px; font-size: 12px; line-height: 1.8; }

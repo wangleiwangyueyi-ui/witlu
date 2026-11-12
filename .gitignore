@@ -1,0 +1,8 @@
+node_modules/
+packages/*/dist/
+packages/web/public/data/
+packages/web/public/assets/audio/
+.cache/
+test-results/
+playwright-report/
+*.tsbuildinfo

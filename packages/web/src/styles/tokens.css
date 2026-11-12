@@ -1,0 +1,8 @@
+:root {
+  --sea-deep: #0B1F3A; --sea-shelf: #12345C; --sea-coast: #1C4F80; --sea-flow: #4F8FD6; --coastline: #6FB3FF;
+  --land-low: #1A2E3B; --land-high: #26404F; --land-ridge: #3D5E72; --land-snow: #9CC0D6; --terrain-shadow: #0F1E28;
+  --river: #3C7FBF; --sky: #0A1830; --horizon: #2C5A8C;
+  --polity-main: #F2C46D; --polity-coral: #FF8A7A; --polity-jade: #5FD3B5; --polity-blue: #7DB8FF; --polity-purple: #B79CFF;
+  --neighbor: #8FB0D8; --text: #FFFFFF; --text-secondary: rgb(255 255 255 / 72%); --text-muted: rgb(255 255 255 / 50%);
+  --cinnabar: #E8553E; --gold-glow: #FFD27A; --link: #6CB4FF;
+}

@@ -1,0 +1,11 @@
+{
+  "viewport": [
+    1440,
+    900
+  ],
+  "documentWidth": 1425,
+  "metrics": 26,
+  "medianFrameMs": 16.69999999999709,
+  "p95FrameMs": 16.80000000000291,
+  "loadMs": 840.7999999988824
+}

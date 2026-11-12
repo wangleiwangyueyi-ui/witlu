@@ -1,0 +1,11 @@
+import { defineConfig, devices } from '@playwright/test';
+export default defineConfig({
+  testDir: './tests', fullyParallel: true,
+  use: { baseURL: 'http://127.0.0.1:4173', trace: 'retain-on-failure' },
+  webServer: { command: 'pnpm --filter @witlu/web dev --port 4173', url: 'http://127.0.0.1:4173', reuseExistingServer: !process.env.CI },
+  projects: [
+    { name: 'desktop', use: { browserName: 'chromium', viewport: { width: 1440, height: 900 } } },
+    { name: 'iPhone-14', use: { ...devices['iPhone 14'], defaultBrowserType: 'chromium' } },
+    { name: 'Pixel-7', use: { ...devices['Pixel 7'] } }
+  ]
+});
