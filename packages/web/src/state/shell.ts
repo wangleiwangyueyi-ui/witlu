@@ -28,6 +28,7 @@ export const useShell = create<ShellState>(set => ({
   togglePlaying: () => set(s => ({ playing: !s.playing })), setAbout: value => set({ about: value }),
   toggle: key => set(s => ({ [key]: !s[key] })), toggleLayer: key => set(s => ({ layers: { ...s.layers, [key]: !s.layers[key] } }))
 }));
-useShell.subscribe(s => {
+useShell.subscribe((s, previous) => {
+  if (s.locale === previous.locale && s.quality === previous.quality && s.highlight === previous.highlight && s.refraction === previous.refraction && s.pressMotion === previous.pressMotion && s.reducedMotion === previous.reducedMotion) return;
   try { localStorage.setItem('witlu-ui', JSON.stringify({ locale: s.locale, quality: s.quality, highlight: s.highlight, refraction: s.refraction, pressMotion: s.pressMotion, reducedMotion: s.reducedMotion })); } catch { /* Private browsing can deny storage. */ }
 });

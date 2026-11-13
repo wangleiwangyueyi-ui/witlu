@@ -1,0 +1,242 @@
+
+> witlu@ verify D:\Google IDE\witlu
+> pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm verify:terrain && pnpm verify:environment && pnpm verify:morph && pnpm test:smoke
+
+
+> witlu@ typecheck D:\Google IDE\witlu
+> pnpm -r typecheck && tsc -p tsconfig.json
+
+Scope: 3 of 4 workspace projects
+packages/core typecheck$ tsc -p tsconfig.json
+packages/core typecheck: Done
+packages/engine typecheck$ tsc -p tsconfig.json
+packages/engine typecheck: Done
+packages/web typecheck$ tsc -p tsconfig.json
+packages/web typecheck: Done
+
+> witlu@ lint D:\Google IDE\witlu
+> eslint packages scripts tests && stylelint "packages/web/src/**/*.css" && node scripts/lint-boundaries.mjs
+
+Portable layer boundaries and color tokens verified
+
+> witlu@ test D:\Google IDE\witlu
+> vitest run
+
+
+ RUN  v3.2.7 D:/Google IDE/witlu
+
+ ✓ packages/core/edt/edt.test.ts (4 tests) 105ms
+ ✓ packages/core/time/time.test.ts (20 tests) 137ms
+ ✓ packages/engine/atmosphere/model.test.ts (5 tests) 47ms
+ ✓ scripts/lib/distance-field.test.mjs (2 tests) 21ms
+ ✓ packages/core/morph/morph.test.ts (2 tests) 355ms
+   ✓ has exact endpoints, no uncovered cracks and symmetric forward/reverse ownership  346ms
+ ✓ packages/web/src/styles/contrast.test.ts (2 tests) 12ms
+ ✓ packages/web/src/components/sheet-model.test.ts (2 tests) 12ms
+ ✓ packages/core/time/chronology.test.ts (22 tests) 417ms
+   ✓ data-driven tributaries > preserves exact area ratios and excludes neighboring countries  366ms
+ ✓ scripts/lib/terrain.test.mjs (4 tests) 72ms
+ ✓ scripts/lib/pipeline.test.mjs (21 tests) 64ms
+ ✓ packages/engine/terrain/terrain.test.ts (20 tests) 132ms
+ ✓ scripts/stylelint/tokens.test.mjs (7 tests) 2473ms
+   ✓ P1 actual color linters > rejects literal neutral gray in TSX through ESLint  2270ms
+
+ Test Files  12 passed (12)
+      Tests  111 passed (111)
+   Start at  10:12:48
+   Duration  6.73s (transform 1.73s, setup 0ms, collect 7.84s, tests 3.85s, environment 8ms, prepare 7.88s)
+
+
+> witlu@ verify:parity D:\Google IDE\witlu
+> node scripts/verify-parity.mjs
+
+| 项目 | 固定上游 | 新站产物 | 结果 |
+|---|---:|---:|---|
+| 快照 | 198 | 198 | 通过 |
+| 时期 | 18 | 18 | 通过 |
+| 阶段 | 198 | 198 | 通过 |
+| 大事 | 526 | 526 | 通过 |
+| 城池 | 1761 | 1761 | 通过 |
+| 走廊 | 16 | 16 | 通过 |
+| 人物 | 126 | 126 | 通过 |
+| 人物详情 | 126 | 126 | 通过 |
+| 行迹 | 7 | 7 | 通过 |
+| 行迹站点 | 76 | 76 | 通过 |
+| 雄关 | 20 | 20 | 通过 |
+| 名胜 | 186 | 186 | 通过 |
+| 名城题记 | 87 | 87 | 通过 |
+| 政权小传 | 110 | 110 | 通过 |
+| 政权档案 | 110 | 110 | 通过 |
+| 定点大事 | 726 | 726 | 通过 |
+| 年号 | 523 | 523 | 通过 |
+| 专题页 | 35 | 35 | 通过 |
+| 郡州府要素 | 28436 | 28436 | 通过 |
+| 一级政区要素 | 4636 | 4636 | 通过 |
+| 政权要素 | 5100 | 5100 | 通过 |
+| 现代省界 | 35 | 35 | 通过 |
+| 河流 | 198 | 198 | 通过 |
+| 湖泊 | 62 | 62 | 通过 |
+| 古海岸线 | 9 | 9 | 通过 |
+| 古琴 | 5 | 5 | 通过 |
+
+> witlu@ verify:terrain D:\Google IDE\witlu
+> node scripts/verify-terrain.mjs
+
+Terrain verified: 9970 WebP tiles; DEM 0–8, relief 3–8; luma span 23.80%; no off-palette pixels
+
+> witlu@ verify:environment D:\Google IDE\witlu
+> node scripts/verify-environment.mjs
+
+Coast atlas: 2423281 land, 1476111 sea, 192334 nearshore pixels
+Environment assets verified: Natural Earth coast distance + two seamless normals + shared cloud coverage
+
+> witlu@ verify:morph D:\Google IDE\witlu
+> node scripts/verify-morph.mjs
+
+Morph parity: 198 snapshots, 5100 polity features, 104 interior rings; exact match to full geometry
+
+> witlu@ test:smoke D:\Google IDE\witlu
+> playwright test
+
+[WebServer] (node:36392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `pnpm --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 126 tests using 1 worker
+
+(node:44604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -    1 [desktop] › tests\environment-acceptance.spec.ts:9:1 › P3 continuous 32 second environment recording and frame sample
+  -    2 [desktop] › tests\environment-acceptance.spec.ts:36:1 › isolates actual water, wave and cloud shadow pixel changes
+  -    3 [desktop] › tests\environment-acceptance.spec.ts:53:1 › composited L0 stays blue, below 25 percent luma span and above 7:1 white contrast
+  ok   4 [desktop] › tests\environment.spec.ts:11:1 › ocean and cloud labs compile and render in all viewports (40.2s)
+  ok   5 [desktop] › tests\environment.spec.ts:21:1 › all sea regions and independent environment controls work (30.5s)
+  -    6 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ba-shu
+  -    7 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-conquests
+  -    8 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-chuhan
+  -    9 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance han-three-kingdoms
+  -   10 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance jin-sixteen-states
+  -   11 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance nanbei-sui
+  -   12 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance tang-anxi
+  -   13 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance song-south
+  -   14 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ming-qing
+  -   15 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance 1945-1946
+  -   16 [desktop] › tests\morph-sequence.spec.ts:3:1 › P4 Qin conquest chronology includes all six intermediate stages
+  ok  17 [desktop] › tests\morph.spec.ts:4:1 › morph lab prepares GPU labels and renders reversible states (16.3s)
+  ok  18 [desktop] › tests\morph.spec.ts:25:1 › morph lifecycle, caching, reduced motion and rapid drag fallback (18.8s)
+  ok  19 [desktop] › tests\morph.spec.ts:76:1 › main timeline prepares real snapshot pairs and exposes morph controls (14.9s)
+  ok  20 [desktop] › tests\motion.spec.ts:3:1 › glass button presses to 0.96 and springs back (9.5s)
+  ok  21 [desktop] › tests\p1.spec.ts:3:1 › language, quality, popovers and debug console work (12.0s)
+  -   22 [desktop] › tests\p1.spec.ts:27:1 › sheet settles across all three states and handles a swipe
+  ok  23 [desktop] › tests\p1.spec.ts:41:1 › reduced motion disables refraction and moving highlights (2.3s)
+  ok  24 [desktop] › tests\p1.spec.ts:46:1 › liquid press has an independent effect switch (4.6s)
+  ok  25 [desktop] › tests\p1.spec.ts:57:1 › preserves upstream single-year and multi-year URLs on initial load (2.8s)
+  ok  26 [desktop] › tests\p1.spec.ts:68:1 › tablet and phone landscape use the side panel (3.3s)
+  ok  27 [desktop] › tests\p1.spec.ts:78:1 › isolated glass lab exposes all required icons and a working toast (2.0s)
+  -   28 [desktop] › tests\performance-report.spec.ts:3:1 › exports the P2 measured Performance report
+  ok  29 [desktop] › tests\performance.spec.ts:3:1 › records bounded shell regression frame samples (8.1s)
+  ok  30 [desktop] › tests\smoke.spec.ts:3:1 › loads complete data, credits, and the responsive atlas shell (6.9s)
+  ok  31 [desktop] › tests\terrain-motion.spec.ts:3:1 › records terrain pan zoom rotate tilt and reset (19.0s)
+  -   32 [desktop] › tests\terrain-performance.spec.ts:6:1 › P2 drag and zoom sustain at least 50 fps
+  ok  33 [desktop] › tests\terrain.spec.ts:5:1 › real terrain renders and remains interactive in each viewport (10.2s)
+  ok  34 [desktop] › tests\terrain.spec.ts:19:1 › lab supports flyTo, switches, keyboard and WebGL context recovery (9.7s)
+  -   35 [desktop] › tests\terrain.spec.ts:34:1 › two-finger touch pinches, rotates and inclines the terrain
+  -   36 [desktop] › tests\timeline-acceptance.spec.ts:4:1 › P5 recorded river interactions and frame samples
+  ok  37 [desktop] › tests\timeline.spec.ts:4:1 › year input, ambiguity, BCE boundary and keyboard controls (3.7s)
+  ok  38 [desktop] › tests\timeline.spec.ts:34:1 › real tributaries and area ratios at four divided periods (2.9s)
+  ok  39 [desktop] › tests\timeline.spec.ts:44:1 › playback speed, pause, inertia, zoom reset and touch targets (4.8s)
+  -   40 [desktop] › tests\timeline.spec.ts:78:1 › two-finger zoom and reduced motion switches
+  -   41 [desktop] › tests\timeline.spec.ts:96:1 › Android dynasty boundary haptic respects the independent switch
+  ok  42 [desktop] › tests\timeline.spec.ts:109:1 › main continuous timeline drives the engine and cloud passage (13.8s)
+(node:42940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -   43 [iPhone-14] › tests\environment-acceptance.spec.ts:9:1 › P3 continuous 32 second environment recording and frame sample
+  -   44 [iPhone-14] › tests\environment-acceptance.spec.ts:36:1 › isolates actual water, wave and cloud shadow pixel changes
+  -   45 [iPhone-14] › tests\environment-acceptance.spec.ts:53:1 › composited L0 stays blue, below 25 percent luma span and above 7:1 white contrast
+  ok  46 [iPhone-14] › tests\environment.spec.ts:11:1 › ocean and cloud labs compile and render in all viewports (9.1s)
+  -   47 [iPhone-14] › tests\environment.spec.ts:21:1 › all sea regions and independent environment controls work
+  -   48 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ba-shu
+  -   49 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-conquests
+  -   50 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-chuhan
+  -   51 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance han-three-kingdoms
+  -   52 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance jin-sixteen-states
+  -   53 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance nanbei-sui
+  -   54 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance tang-anxi
+  -   55 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance song-south
+  -   56 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ming-qing
+  -   57 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance 1945-1946
+  -   58 [iPhone-14] › tests\morph-sequence.spec.ts:3:1 › P4 Qin conquest chronology includes all six intermediate stages
+  ok  59 [iPhone-14] › tests\morph.spec.ts:4:1 › morph lab prepares GPU labels and renders reversible states (12.4s)
+  -   60 [iPhone-14] › tests\morph.spec.ts:25:1 › morph lifecycle, caching, reduced motion and rapid drag fallback
+  ok  61 [iPhone-14] › tests\morph.spec.ts:76:1 › main timeline prepares real snapshot pairs and exposes morph controls (10.9s)
+  ok  62 [iPhone-14] › tests\motion.spec.ts:3:1 › glass button presses to 0.96 and springs back (9.4s)
+  ok  63 [iPhone-14] › tests\p1.spec.ts:3:1 › language, quality, popovers and debug console work (10.8s)
+  ok  64 [iPhone-14] › tests\p1.spec.ts:27:1 › sheet settles across all three states and handles a swipe (5.2s)
+  ok  65 [iPhone-14] › tests\p1.spec.ts:41:1 › reduced motion disables refraction and moving highlights (1.6s)
+  ok  66 [iPhone-14] › tests\p1.spec.ts:46:1 › liquid press has an independent effect switch (4.2s)
+  ok  67 [iPhone-14] › tests\p1.spec.ts:57:1 › preserves upstream single-year and multi-year URLs on initial load (3.5s)
+  -   68 [iPhone-14] › tests\p1.spec.ts:68:1 › tablet and phone landscape use the side panel
+  -   69 [iPhone-14] › tests\p1.spec.ts:78:1 › isolated glass lab exposes all required icons and a working toast
+  -   70 [iPhone-14] › tests\performance-report.spec.ts:3:1 › exports the P2 measured Performance report
+  -   71 [iPhone-14] › tests\performance.spec.ts:3:1 › records bounded shell regression frame samples
+  ok  72 [iPhone-14] › tests\smoke.spec.ts:3:1 › loads complete data, credits, and the responsive atlas shell (7.2s)
+  ok  73 [iPhone-14] › tests\terrain-motion.spec.ts:3:1 › records terrain pan zoom rotate tilt and reset (16.8s)
+  -   74 [iPhone-14] › tests\terrain-performance.spec.ts:6:1 › P2 drag and zoom sustain at least 50 fps
+  ok  75 [iPhone-14] › tests\terrain.spec.ts:5:1 › real terrain renders and remains interactive in each viewport (7.4s)
+  -   76 [iPhone-14] › tests\terrain.spec.ts:19:1 › lab supports flyTo, switches, keyboard and WebGL context recovery
+  ok  77 [iPhone-14] › tests\terrain.spec.ts:34:1 › two-finger touch pinches, rotates and inclines the terrain (6.0s)
+  -   78 [iPhone-14] › tests\timeline-acceptance.spec.ts:4:1 › P5 recorded river interactions and frame samples
+  ok  79 [iPhone-14] › tests\timeline.spec.ts:4:1 › year input, ambiguity, BCE boundary and keyboard controls (4.4s)
+  ok  80 [iPhone-14] › tests\timeline.spec.ts:34:1 › real tributaries and area ratios at four divided periods (4.7s)
+  ok  81 [iPhone-14] › tests\timeline.spec.ts:44:1 › playback speed, pause, inertia, zoom reset and touch targets (4.8s)
+  ok  82 [iPhone-14] › tests\timeline.spec.ts:78:1 › two-finger zoom and reduced motion switches (2.8s)
+  -   83 [iPhone-14] › tests\timeline.spec.ts:96:1 › Android dynasty boundary haptic respects the independent switch
+  ok  84 [iPhone-14] › tests\timeline.spec.ts:109:1 › main continuous timeline drives the engine and cloud passage (10.8s)
+(node:22800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -   85 [Pixel-7] › tests\environment-acceptance.spec.ts:9:1 › P3 continuous 32 second environment recording and frame sample
+  -   86 [Pixel-7] › tests\environment-acceptance.spec.ts:36:1 › isolates actual water, wave and cloud shadow pixel changes
+  -   87 [Pixel-7] › tests\environment-acceptance.spec.ts:53:1 › composited L0 stays blue, below 25 percent luma span and above 7:1 white contrast
+  ok  88 [Pixel-7] › tests\environment.spec.ts:11:1 › ocean and cloud labs compile and render in all viewports (10.0s)
+  -   89 [Pixel-7] › tests\environment.spec.ts:21:1 › all sea regions and independent environment controls work
+  -   90 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ba-shu
+  -   91 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-conquests
+  -   92 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-chuhan
+  -   93 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance han-three-kingdoms
+  -   94 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance jin-sixteen-states
+  -   95 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance nanbei-sui
+  -   96 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance tang-anxi
+  -   97 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance song-south
+  -   98 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ming-qing
+  -   99 [Pixel-7] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance 1945-1946
+  -  100 [Pixel-7] › tests\morph-sequence.spec.ts:3:1 › P4 Qin conquest chronology includes all six intermediate stages
+  ok 101 [Pixel-7] › tests\morph.spec.ts:4:1 › morph lab prepares GPU labels and renders reversible states (11.2s)
+  -  102 [Pixel-7] › tests\morph.spec.ts:25:1 › morph lifecycle, caching, reduced motion and rapid drag fallback
+  ok 103 [Pixel-7] › tests\morph.spec.ts:76:1 › main timeline prepares real snapshot pairs and exposes morph controls (13.5s)
+  ok 104 [Pixel-7] › tests\motion.spec.ts:3:1 › glass button presses to 0.96 and springs back (9.8s)
+  ok 105 [Pixel-7] › tests\p1.spec.ts:3:1 › language, quality, popovers and debug console work (12.9s)
+  ok 106 [Pixel-7] › tests\p1.spec.ts:27:1 › sheet settles across all three states and handles a swipe (6.1s)
+  ok 107 [Pixel-7] › tests\p1.spec.ts:41:1 › reduced motion disables refraction and moving highlights (2.4s)
+  ok 108 [Pixel-7] › tests\p1.spec.ts:46:1 › liquid press has an independent effect switch (5.3s)
+  ok 109 [Pixel-7] › tests\p1.spec.ts:57:1 › preserves upstream single-year and multi-year URLs on initial load (3.9s)
+  -  110 [Pixel-7] › tests\p1.spec.ts:68:1 › tablet and phone landscape use the side panel
+  -  111 [Pixel-7] › tests\p1.spec.ts:78:1 › isolated glass lab exposes all required icons and a working toast
+  -  112 [Pixel-7] › tests\performance-report.spec.ts:3:1 › exports the P2 measured Performance report
+  -  113 [Pixel-7] › tests\performance.spec.ts:3:1 › records bounded shell regression frame samples
+  ok 114 [Pixel-7] › tests\smoke.spec.ts:3:1 › loads complete data, credits, and the responsive atlas shell (6.4s)
+  ok 115 [Pixel-7] › tests\terrain-motion.spec.ts:3:1 › records terrain pan zoom rotate tilt and reset (21.1s)
+  -  116 [Pixel-7] › tests\terrain-performance.spec.ts:6:1 › P2 drag and zoom sustain at least 50 fps
+  ok 117 [Pixel-7] › tests\terrain.spec.ts:5:1 › real terrain renders and remains interactive in each viewport (9.8s)
+  -  118 [Pixel-7] › tests\terrain.spec.ts:19:1 › lab supports flyTo, switches, keyboard and WebGL context recovery
+  ok 119 [Pixel-7] › tests\terrain.spec.ts:34:1 › two-finger touch pinches, rotates and inclines the terrain (9.5s)
+  -  120 [Pixel-7] › tests\timeline-acceptance.spec.ts:4:1 › P5 recorded river interactions and frame samples
+  ok 121 [Pixel-7] › tests\timeline.spec.ts:4:1 › year input, ambiguity, BCE boundary and keyboard controls (5.4s)
+  ok 122 [Pixel-7] › tests\timeline.spec.ts:34:1 › real tributaries and area ratios at four divided periods (5.8s)
+  ok 123 [Pixel-7] › tests\timeline.spec.ts:44:1 › playback speed, pause, inertia, zoom reset and touch targets (5.5s)
+  ok 124 [Pixel-7] › tests\timeline.spec.ts:78:1 › two-finger zoom and reduced motion switches (3.4s)
+  ok 125 [Pixel-7] › tests\timeline.spec.ts:96:1 › Android dynasty boundary haptic respects the independent switch (3.1s)
+  ok 126 [Pixel-7] › tests\timeline.spec.ts:109:1 › main continuous timeline drives the engine and cloud passage (11.7s)
+
+  68 skipped
+  58 passed (9.3m)

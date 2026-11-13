@@ -12,7 +12,7 @@ test('P3 continuous 32 second environment recording and frame sample',async({bro
   const context=await browser.newContext({viewport,baseURL:'http://127.0.0.1:4173',deviceScaleFactor:profile.deviceScaleFactor??1,isMobile:profile.isMobile??false,hasTouch:profile.hasTouch??false,...(profile.userAgent?{userAgent:profile.userAgent}:{}),recordVideo:{dir:'test-results/videos',size:viewport}});
   const page=await context.newPage(),video=page.video()!,errors:string[]=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('console',e=>{if(e.type()==='error')errors.push(e.text());});
-  await fs.mkdir('docs/progress/recordings/P4/regression',{recursive:true});await fs.mkdir('docs/progress/performance/P4/regression',{recursive:true});await fs.mkdir('docs/progress/screenshots/P4/regression',{recursive:true});
+  await fs.mkdir('docs/progress/recordings/P5/regression/p4/regression',{recursive:true});await fs.mkdir('docs/progress/performance/P5/regression/p4/regression',{recursive:true});await fs.mkdir('docs/progress/screenshots/P5/regression/p4/regression',{recursive:true});
   try{
     await page.goto('/lab/ocean');await ready(page);await page.waitForTimeout(1500);
     const environment=await page.evaluate(()=>{const gl=document.querySelector('canvas')!.getContext('webgl2')!,ext=gl.getExtension('WEBGL_debug_renderer_info');return{userAgent:navigator.userAgent,renderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) as string:gl.getParameter(gl.RENDERER) as string,cores:navigator.hardwareConcurrency,dpr:devicePixelRatio};});
@@ -22,16 +22,16 @@ test('P3 continuous 32 second environment recording and frame sample',async({bro
     }));
     const before=await page.getByTestId('terrain').screenshot();await page.waitForTimeout(8000);const after=await page.getByTestId('terrain').screenshot();
     const motion=await difference(before,after);expect(motion.changedPixels).toBeGreaterThan(100);
-    await page.screenshot({path:`docs/progress/screenshots/P4/regression/${info.project.name}-ocean-motion.png`});
+    await page.screenshot({path:`docs/progress/screenshots/P5/regression/p4/regression/${info.project.name}-ocean-motion.png`});
     await page.waitForTimeout(4000);await page.getByRole('button',{name:'山河云影',exact:true}).click();await expect.poll(async()=>(await stats(page)).pose.lon).toBeCloseTo(104,1);await ready(page);
-    await page.waitForTimeout(10000);await page.screenshot({path:`docs/progress/screenshots/P4/regression/${info.project.name}-clouds-motion.png`});
+    await page.waitForTimeout(10000);await page.screenshot({path:`docs/progress/screenshots/P5/regression/p4/regression/${info.project.name}-clouds-motion.png`});
     const sample=await samplePromise;const result={viewport:info.project.name,browserVersion:browser.version(),environment,...sample,stats:sample.stats as EngineStats[],motion,videoSeconds:sample.elapsedMs/1000};
-    await fs.writeFile(`docs/progress/performance/P4/regression/${info.project.name}.json`,JSON.stringify(result,null,2)+'\n');
+    await fs.writeFile(`docs/progress/performance/P5/regression/p4/regression/${info.project.name}.json`,JSON.stringify(result,null,2)+'\n');
     console.log(JSON.stringify({device:info.project.name,fps:sample.meanFps,p95:sample.p95FrameMs,motion,qualities:[...new Set(result.stats.map(s=>s.quality))]}));
     expect(sample.elapsedMs).toBeGreaterThanOrEqual(32000);expect(sample.meanFps).toBeGreaterThanOrEqual(50);expect(result.stats.every(s=>s.environment.ready&&s.environment.error===null&&s.drawCalls<=250)).toBe(true);expect(errors).toEqual([]);
-    await page.goto('/?debug=1&lang=en');await ready(page);await page.screenshot({path:`docs/progress/screenshots/P4/regression/${info.project.name}-debug.png`});
-    await page.goto('/?lang=en');await ready(page);await page.screenshot({path:`docs/progress/screenshots/P4/regression/${info.project.name}.png`});
-  }finally{await context.close();await video.saveAs(`docs/progress/recordings/P4/regression/${info.project.name}-ocean-clouds.webm`);}
+    await page.goto('/?debug=1&lang=en');await ready(page);await page.screenshot({path:`docs/progress/screenshots/P5/regression/p4/regression/${info.project.name}-debug.png`});
+    await page.goto('/?lang=en');await ready(page);await page.screenshot({path:`docs/progress/screenshots/P5/regression/p4/regression/${info.project.name}.png`});
+  }finally{await context.close();await video.saveAs(`docs/progress/recordings/P5/regression/p4/regression/${info.project.name}-ocean-clouds.webm`);}
 });
 test('isolates actual water, wave and cloud shadow pixel changes',async({page},info)=>{
   test.skip(!process.env.P3_ACCEPTANCE||info.project.name!=='desktop','One isolated pixel audit');test.setTimeout(90000);
@@ -47,8 +47,8 @@ test('isolates actual water, wave and cloud shadow pixel changes',async({page},i
   await configure({...off,clouds:true});const cloudOnly=await page.getByTestId('terrain').screenshot();await configure({cloudShadows:true});const withShadow=await page.getByTestId('terrain').screenshot();
   const proof={water:await difference(base,flowing),waves:await difference(base,waves),shadows:await difference(cloudOnly,withShadow)};
   for(const result of Object.values(proof))expect(result.changedPixels).toBeGreaterThan(50);
-  await fs.writeFile('docs/progress/performance/P4/regression/pixel-proof.json',JSON.stringify(proof,null,2)+'\n');
-  await fs.writeFile('docs/progress/screenshots/P4/regression/shadow-off.png',cloudOnly);await fs.writeFile('docs/progress/screenshots/P4/regression/shadow-on.png',withShadow);
+  await fs.writeFile('docs/progress/performance/P5/regression/p4/regression/pixel-proof.json',JSON.stringify(proof,null,2)+'\n');
+  await fs.writeFile('docs/progress/screenshots/P5/regression/p4/regression/shadow-off.png',cloudOnly);await fs.writeFile('docs/progress/screenshots/P5/regression/p4/regression/shadow-on.png',withShadow);
 });
 test('composited L0 stays blue, below 25 percent luma span and above 7:1 white contrast',async({page},info)=>{
   test.skip(!process.env.P3_ACCEPTANCE||info.project.name!=='desktop','One rendered pixel audit');
@@ -64,5 +64,5 @@ test('composited L0 stays blue, below 25 percent luma span and above 7:1 white c
     const result={mode,pixels:image.length/3,minLuma,maxLuma,lumaSpan:maxLuma-minLuma,maxLuminance,whiteContrast:1.05/(maxLuminance+.05),wrongHuePixels};reports.push(result);
     expect(result.lumaSpan).toBeLessThanOrEqual(.25);expect(result.whiteContrast).toBeGreaterThanOrEqual(7);expect(result.wrongHuePixels).toBe(0);
   }
-  await fs.writeFile('docs/progress/performance/P4/regression/l0-audit.json',JSON.stringify(reports,null,2)+'\n');
+  await fs.writeFile('docs/progress/performance/P5/regression/p4/regression/l0-audit.json',JSON.stringify(reports,null,2)+'\n');
 });

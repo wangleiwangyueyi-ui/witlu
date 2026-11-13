@@ -1,9 +1,12 @@
 import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles/app.css';
+import './styles/timeline.css';
 import { App } from './App';
+const TimeFlightLab = lazy(() => import('./lab/TimeFlightLab'));
+const TimelineLab = lazy(() => import('./lab/TimelineLab'));
 const GlassLab = lazy(() => import('./lab/GlassLab'));
 const TerrainLab = lazy(() => import('./lab/TerrainLab'));
 const EnvironmentLab = lazy(() => import('./lab/EnvironmentLab'));
 const MorphLab = lazy(() => import('./lab/MorphLab'));
-createRoot(document.getElementById('root')!).render(<StrictMode><Suspense fallback={null}>{location.pathname === '/lab/glass' ? <GlassLab/> : location.pathname === '/lab/terrain' ? <TerrainLab/> : location.pathname === '/lab/ocean' ? <EnvironmentLab mode="ocean"/> : location.pathname === '/lab/clouds' ? <EnvironmentLab mode="clouds"/> : location.pathname === '/lab/morph' ? <MorphLab/> : <App/>}</Suspense></StrictMode>);
+createRoot(document.getElementById('root')!).render(<StrictMode><Suspense fallback={null}>{location.pathname === '/lab/time-flight' ? <TimeFlightLab/> : location.pathname === '/lab/timeline' ? <TimelineLab/> : location.pathname === '/lab/glass' ? <GlassLab/> : location.pathname === '/lab/terrain' ? <TerrainLab/> : location.pathname === '/lab/ocean' ? <EnvironmentLab mode="ocean"/> : location.pathname === '/lab/clouds' ? <EnvironmentLab mode="clouds"/> : location.pathname === '/lab/morph' ? <MorphLab/> : <App/>}</Suspense></StrictMode>);

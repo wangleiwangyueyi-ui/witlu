@@ -1,0 +1,24 @@
+
+> witlu@ test:timeline D:\Google IDE\witlu
+> node scripts/test-timeline.mjs
+
+[WebServer] (node:40564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `pnpm --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:12840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [desktop] › tests\timeline-acceptance.spec.ts:4:1 › P5 recorded river interactions and frame samples (1.6m)
+(node:12060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [iPhone-14] › tests\timeline-acceptance.spec.ts:4:1 › P5 recorded river interactions and frame samples (1.2m)
+(node:41588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [Pixel-7] › tests\timeline-acceptance.spec.ts:4:1 › P5 recorded river interactions and frame samples (1.1m)
+
+  3 passed (4.1m)
+(node:46756) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)

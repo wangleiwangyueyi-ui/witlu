@@ -26,6 +26,6 @@ test('P4 Qin conquest chronology includes all six intermediate stages',async({br
       return results;
     });
     expect(results).toHaveLength(12);expect(results.every(r=>r.preparation.error===null)).toBe(true);expect(errors).toEqual([]);
-    await fs.writeFile(`docs/progress/performance/P4/${info.project.name}-qin-sequence.json`,JSON.stringify({results,errors},null,2)+'\n');
-  }finally{await context.close();await video.saveAs(`docs/progress/recordings/P4/${info.project.name}-qin-sequence.webm`);}
+    await fs.writeFile(`docs/progress/performance/P5/regression/p4/${info.project.name}-qin-sequence.json`,JSON.stringify({results,errors},null,2)+'\n');
+  }finally{await context.close();await video.saveAs(`docs/progress/recordings/P5/regression/p4/${info.project.name}-qin-sequence.webm`);}
 });

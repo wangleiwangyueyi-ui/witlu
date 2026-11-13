@@ -1,0 +1,57 @@
+.time-dock { align-items: center; padding-block: 14px; gap: 24px; }
+.time-dock-year { display: flex; align-items: center; gap: 24px; }
+.time-controls { display: flex; align-items: center; gap: 12px; }
+.year-form { position: relative; width: 126px; }
+.year-form label { display: block; font-size: 11px; color: var(--text-secondary); }
+.year-entry { display: flex; border-bottom: 1px solid var(--glass-edge); }
+.year-entry input { color: var(--text); background: transparent; border: 0; width: 82px; min-height: 44px; }
+.year-entry button, .river-zoom button, .time-effects button { min-width: 44px; min-height: 44px; background: var(--glass-light); color: var(--text); border-radius: var(--radius-sm); }
+.year-results { position: absolute; bottom: 100%; padding: 12px; width: 260px; background: var(--sea-deep); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); z-index: 30; max-height: 260px; overflow: auto; }
+.year-results button { display: block; width: 100%; min-height: 44px; background: transparent; text-align: left; }
+.playback .icon-button { min-width: 44px; min-height: 44px; }
+.playback select { color: var(--text); background: var(--sea-deep); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); min-height: 44px; width: 58px; }
+.rolling-year { display: flex; font: 600 42px/1.15 var(--font-title); font-variant-numeric: tabular-nums; align-items: center; }
+.rolling-year small { font-size: 16px; margin-right: 4px; }
+.digit-window { display: block; height: 1.15em; overflow: hidden; }
+.digit-window > span { display: flex; flex-direction: column; transition: transform var(--duration-ui) var(--ease-out); }
+.digit-window b { height: 1.15em; font-weight: inherit; }
+.river-canvas-wrap { position: relative; }
+.history-river { display: block; width: 100%; height: 88px; touch-action: none; cursor: ew-resize; }
+.river-seal { position: absolute; top: 50%; transform: translate(-50%, -50%); pointer-events: none; border: 1px solid var(--glass-edge); background: color-mix(in srgb, var(--cinnabar) 75%, var(--sea-deep)); border-radius: 5px; box-shadow: var(--shadow-button); padding: 3px; font: 600 14px var(--font-title); }
+.river-zoom { display: flex; justify-content: center; gap: 4px; }
+.river-zoom button { background: transparent; font-size: 12px; }
+.chronicle-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.chronicle-breadcrumb button { background: transparent; min-height: 44px; }
+.era-tracks { display: grid; gap: 8px; margin: 14px 0 22px; }
+.era-tracks article { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 10px; border-left: 2px solid var(--polity-main); background: var(--glass-light); font-size: 12px; border-radius: var(--radius-sm); }
+.era-tracks strong { width: 100%; }
+.chronicle-event { display: flex; gap: 10px; text-align: left; background: transparent; line-height: 1.8; min-height: 44px; padding: 10px 0; font-size: 12px; }
+.chronicle-event time { color: var(--polity-main); min-width: 36px; }
+.time-effects { display: flex; flex-wrap: wrap; gap: 8px; }
+.timeline-lab { padding: 30px; min-height: 100dvh; overflow: auto; }
+.timeline-lab .time-dock { position: relative; inset: auto; margin-top: 20px; }
+.timeline-lab .lab-presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.timeline-lab .lab-presets button { min-height: 44px; background: var(--glass-light); border-radius: var(--radius-sm); padding: 10px; }
+@media (max-width: 1100px) {
+  .time-dock-year { gap: 8px; flex-direction: column; }.time-controls { gap: 6px; }
+  .time-dock .rolling-year { font-size: 28px; }
+}
+@media (max-width: 767px) and (orientation: portrait) {
+  .history-river { height: 56px; }.chapter-sheet[data-snap='2'] .history-river { height: 100px; }
+  .river-control.compact { margin: 0 0 8px; }.time-controls { flex-wrap: wrap; justify-content: space-between; }
+  .playback { gap: 4px; }.playback .play-button { width: 44px; height: 44px; }
+  .year-form { width: 108px; }.year-entry input { width: 64px; }
+  .mobile-heading .rolling-year { font-size: 26px; }.chronicle-breadcrumb { margin-block: 8px; }
+  .timeline-lab { padding: 12px; }.timeline-lab .time-dock { display: block; }.timeline-lab .time-controls { justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { .digit-window > span { transition: none; } }
+[data-reduced-motion='true'] .digit-window > span { transition: none; }
+.river-legend { display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; max-width: 100%; font-size: 10px; margin-top: 6px; padding-block: 3px; }
+.river-legend span { border-left: 3px solid var(--polity-main); padding-left: 5px; }
+.chapter-sheet[data-snap='0'] .river-years, .chapter-sheet[data-snap='0'] .river-legend, .chapter-sheet[data-snap='0'] .river-zoom { display: none; }
+@media (min-width: 768px) { .camera-controls { bottom: 310px; } }
+@media (max-height: 520px) and (min-width: 768px) { .camera-controls { top: 110px; bottom: auto; }.time-dock .history-river { height: 56px; }.time-dock .river-legend { display: none; } }
+.timeline-lab { height: 100dvh; }
+.time-flight-lab { position: relative; height: 100dvh; }
+.flight-lab-controls { position: absolute; bottom: 24px; left: 24px; right: 24px; padding: 18px; display: grid; gap: 12px; }
+@media (max-width: 767px) { .flight-lab-controls { left: 12px; right: 12px; } }

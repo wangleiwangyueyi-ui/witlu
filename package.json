@@ -27,7 +27,8 @@
     "verify:environment": "node scripts/verify-environment.mjs",
     "test:environment": "node scripts/test-environment.mjs",
     "test:morph": "node scripts/test-morph.mjs",
-    "verify:morph": "node scripts/verify-morph.mjs"
+    "verify:morph": "node scripts/verify-morph.mjs",
+    "test:timeline": "node scripts/test-timeline.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

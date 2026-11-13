@@ -13,6 +13,6 @@ test('records bounded shell regression frame samples', async ({ page }, info) =>
   await page.getByRole('tab', { name: 'High', exact: true }).click(); const high = await sample();
   await page.getByRole('tab', { name: 'Eco', exact: true }).click(); const eco = await sample();
   expect(high.samples).toBeGreaterThan(5); expect(eco.samples).toBeGreaterThan(5);
-  await fs.mkdir('docs/progress/performance/P4/regression', { recursive: true });
-  await fs.writeFile('docs/progress/performance/P4/regression/shell-regression.json', JSON.stringify({ date: '2026-11-12', browser: 'Playwright Chromium, local Vite shell with P2 terrain, 1440×900; diagnostic only', high, eco }, null, 2) + '\n');
+  await fs.mkdir('docs/progress/performance/P5/regression/p4/regression', { recursive: true });
+  await fs.writeFile('docs/progress/performance/P5/regression/p4/regression/shell-regression.json', JSON.stringify({ date: '2026-11-12', browser: 'Playwright Chromium, local Vite shell with P2 terrain, 1440×900; diagnostic only', high, eco }, null, 2) + '\n');
 });

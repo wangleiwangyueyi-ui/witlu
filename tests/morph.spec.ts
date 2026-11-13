@@ -13,11 +13,11 @@ test('morph lab prepares GPU labels and renders reversible states', async ({ pag
     await expect.poll(async () => (await stats()).morph.ready, { timeout: 45000 }).toBe(true);
     expect((await stats()).morph.error).toBeNull();
     expect((await stats()).morph.labelSize).toBe(info.project.name === 'desktop' ? 4096 : 2048);
-    await fs.mkdir('docs/progress/screenshots/P4', { recursive: true });
-    await page.screenshot({ path: `docs/progress/screenshots/P4/${info.project.name}-start.png` });
+    await fs.mkdir('docs/progress/screenshots/P5/regression/p4', { recursive: true });
+    await page.screenshot({ path: `docs/progress/screenshots/P5/regression/p4/${info.project.name}-start.png` });
     await page.getByRole('button', { name: '正放', exact: true }).click();
     await expect.poll(async () => (await stats()).morph.t).toBe(1);
-    await page.screenshot({ path: `docs/progress/screenshots/P4/${info.project.name}-end.png` });
+    await page.screenshot({ path: `docs/progress/screenshots/P5/regression/p4/${info.project.name}-end.png` });
     await page.getByRole('button', { name: '倒放', exact: true }).click();
     await expect.poll(async () => (await stats()).morph.t).toBe(0);
     expect(errors).toEqual([]);
@@ -70,8 +70,8 @@ test('morph lifecycle, caching, reduced motion and rapid drag fallback', async (
     expect(after.gaps).toBe(0);
     const modern:EngineStats['morph']=await page.evaluate(async()=>{const {terrainBridge}=await import('/src/state/terrain.ts' as string);const m=terrainBridge.engine!.morph;await m.prepare('s_roc_d','s_prc');return m.stats();});
     expect(modern.seedSources.find(s=>s.polity==='unprofiled:prc:中华人民共和国')?.source).toBe('capital');
-    await fs.mkdir('docs/progress/performance/P4', { recursive: true });
-    await fs.writeFile('docs/progress/performance/P4/lifecycle.json', JSON.stringify({ proof, reduced, after, modern }, null, 2) + '\n');
+    await fs.mkdir('docs/progress/performance/P5/regression/p4', { recursive: true });
+    await fs.writeFile('docs/progress/performance/P5/regression/p4/lifecycle.json', JSON.stringify({ proof, reduced, after, modern }, null, 2) + '\n');
 });
 test('main timeline prepares real snapshot pairs and exposes morph controls', async ({ page }, info) => {
     test.setTimeout(90000);
@@ -87,9 +87,9 @@ test('main timeline prepares real snapshot pairs and exposes morph controls', as
     await expect.poll(async () => (await stats()).morph.effects.fill).toBe(false);
     await toggle.click();
     await page.getByText('Effect toggles', { exact: true }).click();
-    await fs.mkdir('docs/progress/screenshots/P4', { recursive: true });
-    await page.screenshot({ path: `docs/progress/screenshots/P4/${info.project.name}-debug.png` });
+    await fs.mkdir('docs/progress/screenshots/P5/regression/p4', { recursive: true });
+    await page.screenshot({ path: `docs/progress/screenshots/P5/regression/p4/${info.project.name}-debug.png` });
     await page.goto('/?year=230&lang=en');
     await expect.poll(async () => (await stats()).morph?.ready, { timeout: 45000 }).toBe(true);
-    await page.screenshot({ path: `docs/progress/screenshots/P4/${info.project.name}-main.png` });
+    await page.screenshot({ path: `docs/progress/screenshots/P5/regression/p4/${info.project.name}-main.png` });
 });

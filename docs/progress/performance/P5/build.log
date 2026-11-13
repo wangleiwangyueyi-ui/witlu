@@ -1,0 +1,192 @@
+
+> witlu@ build D:\Google IDE\witlu
+> pnpm assets && pnpm data && pnpm tiles && pnpm typecheck && pnpm --filter @witlu/web build
+
+
+> witlu@ assets D:\Google IDE\witlu
+> node scripts/build-brand.mjs
+
+Built glass seal SVG, PNGs, manifest and self-hosted visual reference
+
+> witlu@ data D:\Google IDE\witlu
+> node scripts/import-upstream.mjs && node scripts/build-geometry.mjs && node scripts/build-territories.mjs && node scripts/build-colors.mjs && node scripts/build-events.mjs && node scripts/build-moods.mjs && node scripts/verify-parity.mjs
+
+Imported all upstream datasets into D:\Google IDE\witlu\packages\web\public\data
+Built 198 topology-preserving snapshots; 637 polity records
+Built lightweight polity views without CHGIS payloads
+Colored 198 snapshots, at most five saturated fills
+Attributed 1328 events (23 require review)
+Classified 1328 events for manual mood review
+| 项目 | 固定上游 | 新站产物 | 结果 |
+|---|---:|---:|---|
+| 快照 | 198 | 198 | 通过 |
+| 时期 | 18 | 18 | 通过 |
+| 阶段 | 198 | 198 | 通过 |
+| 大事 | 526 | 526 | 通过 |
+| 城池 | 1761 | 1761 | 通过 |
+| 走廊 | 16 | 16 | 通过 |
+| 人物 | 126 | 126 | 通过 |
+| 人物详情 | 126 | 126 | 通过 |
+| 行迹 | 7 | 7 | 通过 |
+| 行迹站点 | 76 | 76 | 通过 |
+| 雄关 | 20 | 20 | 通过 |
+| 名胜 | 186 | 186 | 通过 |
+| 名城题记 | 87 | 87 | 通过 |
+| 政权小传 | 110 | 110 | 通过 |
+| 政权档案 | 110 | 110 | 通过 |
+| 定点大事 | 726 | 726 | 通过 |
+| 年号 | 523 | 523 | 通过 |
+| 专题页 | 35 | 35 | 通过 |
+| 郡州府要素 | 28436 | 28436 | 通过 |
+| 一级政区要素 | 4636 | 4636 | 通过 |
+| 政权要素 | 5100 | 5100 | 通过 |
+| 现代省界 | 35 | 35 | 通过 |
+| 河流 | 198 | 198 | 通过 |
+| 湖泊 | 62 | 62 | 通过 |
+| 古海岸线 | 9 | 9 | 通过 |
+| 古琴 | 5 | 5 | 通过 |
+
+> witlu@ tiles D:\Google IDE\witlu
+> node scripts/build-dem.mjs && node scripts/bake-relief.mjs && node scripts/bake-coast-distance.mjs
+
+DEM 100/5242: downloaded 0, resumed 100
+DEM 200/5242: downloaded 0, resumed 200
+DEM 300/5242: downloaded 0, resumed 300
+DEM 400/5242: downloaded 0, resumed 400
+DEM 500/5242: downloaded 0, resumed 500
+DEM 600/5242: downloaded 0, resumed 600
+DEM 700/5242: downloaded 0, resumed 700
+DEM 800/5242: downloaded 0, resumed 800
+DEM 900/5242: downloaded 0, resumed 900
+DEM 1000/5242: downloaded 0, resumed 1000
+DEM 1100/5242: downloaded 0, resumed 1100
+DEM 1200/5242: downloaded 0, resumed 1200
+DEM 1300/5242: downloaded 0, resumed 1300
+DEM 1400/5242: downloaded 0, resumed 1400
+DEM 1500/5242: downloaded 0, resumed 1500
+DEM 1600/5242: downloaded 0, resumed 1600
+DEM 1700/5242: downloaded 0, resumed 1700
+DEM 1800/5242: downloaded 0, resumed 1800
+DEM 1900/5242: downloaded 0, resumed 1900
+DEM 2000/5242: downloaded 0, resumed 2000
+DEM 2100/5242: downloaded 0, resumed 2100
+DEM 2200/5242: downloaded 0, resumed 2200
+DEM 2300/5242: downloaded 0, resumed 2300
+DEM 2400/5242: downloaded 0, resumed 2400
+DEM 2500/5242: downloaded 0, resumed 2500
+DEM 2600/5242: downloaded 0, resumed 2600
+DEM 2700/5242: downloaded 0, resumed 2700
+DEM 2800/5242: downloaded 0, resumed 2800
+DEM 2900/5242: downloaded 0, resumed 2900
+DEM 3000/5242: downloaded 0, resumed 3000
+DEM 3100/5242: downloaded 0, resumed 3100
+DEM 3200/5242: downloaded 0, resumed 3200
+DEM 3300/5242: downloaded 0, resumed 3300
+DEM 3400/5242: downloaded 0, resumed 3400
+DEM 3500/5242: downloaded 0, resumed 3500
+DEM 3600/5242: downloaded 0, resumed 3600
+DEM 3700/5242: downloaded 0, resumed 3700
+DEM 3800/5242: downloaded 0, resumed 3800
+DEM 3900/5242: downloaded 0, resumed 3900
+DEM 4000/5242: downloaded 0, resumed 4000
+DEM 4100/5242: downloaded 0, resumed 4100
+DEM 4200/5242: downloaded 0, resumed 4200
+DEM 4300/5242: downloaded 0, resumed 4300
+DEM 4400/5242: downloaded 0, resumed 4400
+DEM 4500/5242: downloaded 0, resumed 4500
+DEM 4600/5242: downloaded 0, resumed 4600
+DEM 4700/5242: downloaded 0, resumed 4700
+DEM 4800/5242: downloaded 0, resumed 4800
+DEM 4900/5242: downloaded 0, resumed 4900
+DEM 5000/5242: downloaded 0, resumed 5000
+DEM 5100/5242: downloaded 0, resumed 5100
+DEM 5200/5242: downloaded 0, resumed 5200
+DEM 5242/5242: downloaded 0, resumed 5242
+Relief 100/4728 (100 resumed)
+Relief 200/4728 (200 resumed)
+Relief 300/4728 (300 resumed)
+Relief 400/4728 (400 resumed)
+Relief 500/4728 (500 resumed)
+Relief 600/4728 (600 resumed)
+Relief 700/4728 (700 resumed)
+Relief 800/4728 (800 resumed)
+Relief 900/4728 (900 resumed)
+Relief 1000/4728 (1000 resumed)
+Relief 1100/4728 (1100 resumed)
+Relief 1200/4728 (1200 resumed)
+Relief 1300/4728 (1300 resumed)
+Relief 1400/4728 (1400 resumed)
+Relief 1500/4728 (1500 resumed)
+Relief 1600/4728 (1600 resumed)
+Relief 1700/4728 (1700 resumed)
+Relief 1800/4728 (1800 resumed)
+Relief 1900/4728 (1900 resumed)
+Relief 2000/4728 (2000 resumed)
+Relief 2100/4728 (2100 resumed)
+Relief 2200/4728 (2200 resumed)
+Relief 2300/4728 (2300 resumed)
+Relief 2400/4728 (2400 resumed)
+Relief 2500/4728 (2500 resumed)
+Relief 2600/4728 (2600 resumed)
+Relief 2700/4728 (2700 resumed)
+Relief 2800/4728 (2800 resumed)
+Relief 2900/4728 (2900 resumed)
+Relief 3000/4728 (3000 resumed)
+Relief 3100/4728 (3100 resumed)
+Relief 3200/4728 (3200 resumed)
+Relief 3300/4728 (3300 resumed)
+Relief 3400/4728 (3400 resumed)
+Relief 3500/4728 (3500 resumed)
+Relief 3600/4728 (3600 resumed)
+Relief 3700/4728 (3700 resumed)
+Relief 3800/4728 (3800 resumed)
+Relief 3900/4728 (3900 resumed)
+Relief 4000/4728 (4000 resumed)
+Relief 4100/4728 (4100 resumed)
+Relief 4200/4728 (4200 resumed)
+Relief 4300/4728 (4300 resumed)
+Relief 4400/4728 (4400 resumed)
+Relief 4500/4728 (4500 resumed)
+Relief 4600/4728 (4600 resumed)
+Relief 4700/4728 (4700 resumed)
+Relief 4728/4728 (4728 resumed)
+{"minLuma":0.1000078431372549,"maxLuma":0.33798117647058823,"maxLuminance":0.0949824181663688,"wrongHuePixels":0,"tiles":4728,"lumaSpan":0.23797333333333331}
+Environment maps: coast distance, two normals and cloud coverage resumed
+
+> witlu@ typecheck D:\Google IDE\witlu
+> pnpm -r typecheck && tsc -p tsconfig.json
+
+Scope: 3 of 4 workspace projects
+packages/core typecheck$ tsc -p tsconfig.json
+packages/core typecheck: Done
+packages/engine typecheck$ tsc -p tsconfig.json
+packages/engine typecheck: Done
+packages/web typecheck$ tsc -p tsconfig.json
+packages/web typecheck: Done
+
+> @witlu/web@0.0.0 build D:\Google IDE\witlu\packages\web
+> vite build
+
+vite v7.3.8 building client environment for production...
+transforming...
+✓ 511 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                           0.75 kB │ gzip:   0.48 kB
+dist/assets/growth.worker-JAwdsuHv.js     4.31 kB
+dist/assets/index-DiMhz749.css           42.69 kB │ gzip:   9.57 kB
+dist/assets/TimelineLab-O-N_FYRA.js       0.68 kB │ gzip:   0.52 kB
+dist/assets/TimeFlightLab-BT2x9Nzp.js     0.74 kB │ gzip:   0.47 kB
+dist/assets/TerrainLab-B3twwzTX.js        1.10 kB │ gzip:   0.71 kB
+dist/assets/EnvironmentLab-CvJ8ti-f.js    1.52 kB │ gzip:   0.90 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+dist/assets/GlassLab-BJBHFirj.js          2.25 kB │ gzip:   1.12 kB
+dist/assets/MorphLab-ANSKp9Zm.js          3.51 kB │ gzip:   1.71 kB
+dist/assets/es-BeoRn2gJ.js               13.73 kB │ gzip:   5.41 kB
+dist/assets/index-Cmxu-BkX.js           421.72 kB │ gzip: 138.99 kB
+dist/assets/engine-CkC_wnl4.js          547.28 kB │ gzip: 142.78 kB
+✓ built in 18.24s

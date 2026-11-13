@@ -56,7 +56,7 @@ for (const [index, c] of cases.entries())
                 await frame();
                 return { forward: result, reverse };
             }, c);
-            await page.screenshot({ path: `docs/progress/screenshots/P4/${stem}-mid.png` });
+            await page.screenshot({ path: `docs/progress/screenshots/P5/regression/p4/${stem}-mid.png` });
             for (const sample of [...proof.forward, proof.reverse]) {
                 expect(sample.gaps).toBe(0);
                 expect(sample.invalid).toBe(0);
@@ -103,13 +103,13 @@ for (const [index, c] of cases.entries())
                 });
             });
             const result = { case: c, viewport: info.project.name, browserVersion: browser.version(), environment, preparation: initial.morph, proof, performance, errors };
-            await fs.writeFile(`docs/progress/performance/P4/${stem}.json`, JSON.stringify(result, null, 2) + '\n');
+            await fs.writeFile(`docs/progress/performance/P5/regression/p4/${stem}.json`, JSON.stringify(result, null, 2) + '\n');
             console.log(JSON.stringify({ case: stem, preparationMs: initial.morph.preparationMs, fps: performance.meanFps, p95: performance.p95FrameMs, proof: proof.reverse.hash }));
             expect(performance.drawCalls).toBeLessThanOrEqual(250);
             expect(errors).toEqual([]);
         }
         finally {
             await context.close();
-            await video.saveAs(`docs/progress/recordings/P4/${stem}.webm`);
+            await video.saveAs(`docs/progress/recordings/P5/regression/p4/${stem}.webm`);
         }
     });

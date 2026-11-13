@@ -18,11 +18,11 @@ test('language, quality, popovers and debug console work', async ({ page }, info
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: '一鍵截圖', exact: true }).click();
   const capture = await download;
-  await fs.mkdir('docs/progress/screenshots/P4/regression/p1', { recursive: true });
-  await capture.saveAs(`docs/progress/screenshots/P4/regression/p1/${info.project.name}-capture.png`);
-  expect((await fs.stat(`docs/progress/screenshots/P4/regression/p1/${info.project.name}-capture.png`)).size).toBeGreaterThan(10_000);
+  await fs.mkdir('docs/progress/screenshots/P5/regression/p4/regression/p1', { recursive: true });
+  await capture.saveAs(`docs/progress/screenshots/P5/regression/p4/regression/p1/${info.project.name}-capture.png`);
+  expect((await fs.stat(`docs/progress/screenshots/P5/regression/p4/regression/p1/${info.project.name}-capture.png`)).size).toBeGreaterThan(10_000);
   await expect(page.getByRole('status').filter({ hasText: '截圖已儲存' })).toBeVisible();
-  await page.screenshot({ path: `docs/progress/screenshots/P4/regression/p1/${info.project.name}-debug.png` });
+  await page.screenshot({ path: `docs/progress/screenshots/P5/regression/p4/regression/p1/${info.project.name}-debug.png` });
 });
 test('sheet settles across all three states and handles a swipe', async ({ page }, info) => {
   test.skip(info.project.name === 'desktop', 'Phone sheet only');
@@ -69,11 +69,11 @@ test('tablet and phone landscape use the side panel', async ({ page }, info) => 
   test.skip(info.project.name !== 'desktop', 'One layout sweep');
   await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/'); await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('.chapter-panel')).toBeVisible();
-  await page.screenshot({ path: 'docs/progress/screenshots/P4/regression/p1/tablet.png' });
+  await page.screenshot({ path: 'docs/progress/screenshots/P5/regression/p4/regression/p1/tablet.png' });
   await page.setViewportSize({ width: 844, height: 390 });
   await expect(page.locator('.chapter-panel')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: 'docs/progress/screenshots/P4/regression/p1/landscape.png' });
+  await page.screenshot({ path: 'docs/progress/screenshots/P5/regression/p4/regression/p1/landscape.png' });
 });
 test('isolated glass lab exposes all required icons and a working toast', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop', 'One component gallery check');
@@ -84,5 +84,5 @@ test('isolated glass lab exposes all required icons and a working toast', async 
   expect(await panel.evaluate(node => node.style.getPropertyValue('--mx'))).not.toBe('');
   await page.getByRole('button', { name: '按压与提示' }).click();
   await expect(page.getByRole('status')).toHaveText('玻璃组件已就绪');
-  await page.screenshot({ path: 'docs/progress/screenshots/P4/regression/p1/glass-lab.png' });
+  await page.screenshot({ path: 'docs/progress/screenshots/P5/regression/p4/regression/p1/glass-lab.png' });
 });

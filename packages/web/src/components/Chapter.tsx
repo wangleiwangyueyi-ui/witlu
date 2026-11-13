@@ -1,24 +1,37 @@
-import { GlassChip, GlassPanel, SegmentedControl } from './Glass';
+import { eraAt, yearToIndex } from '@witlu/core/time';
+import { GlassPanel } from './Glass';
 import { useI18n } from '../i18n';
-import type { MessageKey } from '../i18n/messages';
 import { useShell } from '../state/shell';
-import type { Regime } from '../state/shell';
 import { Credits } from './Credits';
 import { River } from './River';
-const regimes: { key: Regime; ruler: MessageKey; capital: MessageKey; era: MessageKey; event: MessageKey; initial: string }[] = [
-  { key: 'wei', ruler: 'caorui', capital: 'luoyang', era: 'weiEra', event: 'weiEvent', initial: '壹' },
-  { key: 'shu', ruler: 'liushan', capital: 'chengdu', era: 'shuEra', event: 'shuEvent', initial: '貳' },
-  { key: 'wu', ruler: 'sunquan', capital: 'jianye', era: 'wuEra', event: 'wuEvent', initial: '叁' }
-];
-export function ChapterHeading({ mobile = false }: { mobile?: boolean }) { const { t } = useI18n(); const year = useShell(s => s.year); return <div className={`chapter-heading ${mobile ? 'mobile-heading' : ''}`}><p className="eyebrow">{t('chapter')}</p><div className="chapter-title">{mobile && <span className="sheet-year">{year}</span>}<h1>{t('chapterName')}</h1><span className="chapter-stamp" aria-hidden="true">江山</span></div>{!mobile && <p className="chapter-range">{t('chapterRange')}</p>}</div>; }
-export function ChapterContent({ mobile = false }: { mobile?: boolean }) {
-  const { t } = useI18n(); const regime = useShell(s => s.regime), select = useShell(s => s.setRegime);
-  return <div className="chapter-content">
-    {mobile && <><SegmentedControl label={t('world')} value={regime} onChange={select} options={regimes.map(r => ({ value: r.key, label: t(r.key) }))}/><River compact/></>}
-    <section className="chapter-intro"><h2>{t('intro')}</h2><p>{t('description')}</p></section>
-    <section className="world-section"><div className="section-heading"><h2>{t('world')}</h2><span>230 {t('ce')}</span></div><div className="regime-list">{regimes.map(r => <button type="button" className={`regime-card regime-${r.key}`} key={r.key} data-selected={regime === r.key} aria-pressed={regime === r.key} onClick={() => select(r.key)}><span className="polity-mark" aria-hidden="true"/><span className="regime-info"><strong>{t(r.key)}</strong><span>{t(r.ruler)} · {t(r.era)}</span></span><span className="regime-capital"><small>{t('capital')}</small>{t(r.capital)}</span></button>)}</div></section>
-    <section className="chronicle-section"><div className="section-heading"><h2>{t('chronicle')}</h2><span>230</span></div>{regimes.filter(r => r.key === regime).map(r => <div className={`chronicle regime-${r.key}`} key={r.key}><span className="chronicle-dot"/><p>{t(r.event)}</p><GlassChip>{t(r.key)}</GlassChip></div>)}</section>
-    <p className="source-note">{t('referenceHint')}</p><Credits/>
+import { RollingYear, TimeControls } from './TimeDock';
+import { useChronicle } from '../store/chronicle';
+import { resetTimeView, seekYear } from '../store/time';
+export function ChapterHeading({ mobile = false }: {
+    mobile?: boolean;
+}) {
+    const { t, locale } = useI18n(), { data } = useChronicle(), year = useShell(s => s.year);
+    const dynasty = data?.dynasties.slice().reverse().find(d => d.fromYear <= year && d.toYear >= year);
+    const title = dynasty?.title ?? t('chapterName');
+    return <div className={`chapter-heading ${mobile ? 'mobile-heading' : ''}`}><p className="eyebrow">历史章节 · {dynasty?.title}</p><div className="chapter-title">{mobile && <RollingYear />}<h1>{locale === 'zh-Hant' && title === '三国' ? '三國' : title}</h1><span className="chapter-stamp" aria-hidden="true">江山</span></div>{!mobile && <p className="chapter-range">{dynasty?.fromYear} — {dynasty?.toYear}</p>}</div>;
+}
+export function ChapterContent({ mobile = false }: {
+    mobile?: boolean;
+}) {
+    const { data, error } = useChronicle(), year = useShell(s => s.year), { locale } = useI18n();
+    const phase = data?.phases.slice().reverse().find(p => p.from <= year), dynasty = data?.dynasties.find(d => d.key === phase?.dynastyKey);
+    const eras = data ? [{ regime: '主纪年', value: eraAt(yearToIndex(year), data.eras.main) }, ...data.eras.regional.map(r => ({ regime: r.regime, value: eraAt(yearToIndex(year), r.spans, r.until) }))].filter(r => r.value) : [];
+    const events = data?.events.filter(e => e.kind === 'milestone' && Math.abs(e.year - year) < 8).sort((a, b) => Math.abs(a.year - year) - Math.abs(b.year - year)).slice(0, 6) ?? [];
+    return <div className="chapter-content">
+    {mobile && <><River compact/><TimeControls /></>}
+    <nav className="chronicle-breadcrumb" aria-label="历史位置"><span>中国历代</span><span>›</span><button onClick={() => { if (dynasty) {
+        seekYear(dynasty.fromYear);
+        resetTimeView();
+    } }}>{dynasty?.title}</button><span>› {year < 0 ? `前${-year}` : year}年</span></nav>
+    <section><h2>此刻天下 · 君主与年号</h2><div className="era-tracks">{eras.map(r => <article key={r.regime}><strong>{r.regime}</strong><span>{locale === 'en' ? r.value!.rulerEn : r.value!.ruler}</span><span>{r.value!.name}{r.value!.ordinal}年</span></article>)}</div></section>
+    <section className="chapter-intro"><h2>时代概述</h2><p>{phase?.overview ?? dynasty?.summary}</p></section>
+    <section className="chronicle-section"><h2>附近大事</h2>{events.map(e => <button className="chronicle-event" key={e.id} onClick={() => seekYear(e.year)}><time>{e.year < 0 ? `前${-e.year}` : e.year}</time><span>{e.title}</span></button>)}</section>
+    {error && <p role="alert">{error}</p>}<Credits />
   </div>;
 }
-export function ChapterPanel() { return <GlassPanel className="chapter-panel"><ChapterHeading/><div className="chapter-scroll"><ChapterContent/></div></GlassPanel>; }
+export function ChapterPanel() { return <GlassPanel className="chapter-panel"><ChapterHeading /><div className="chapter-scroll"><ChapterContent /></div></GlassPanel>; }

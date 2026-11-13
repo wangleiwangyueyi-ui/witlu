@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { MotionConfig } from 'motion/react';
-import { phaseAtYear, addYears } from '@witlu/core/time';
+import { phaseAtYear } from '@witlu/core/time';
 import type { Phase } from '@witlu/core/time';
 import { useShell } from './state/shell';
 import { useI18n } from './i18n';
@@ -14,6 +14,7 @@ import { DebugConsole } from './components/DebugConsole';
 import { About } from './components/About';
 import { useReducedEffects } from './components/Glass';
 import { TerrainCanvas } from './components/TerrainCanvas';
+import { TimeDriver } from './components/TimeDriver';
 import { MorphTimeline } from './components/MorphTimeline';
 export function App() {
   const { t, locale } = useI18n(); const state = useShell(); const reduced = useReducedEffects();
@@ -24,10 +25,9 @@ export function App() {
   useEffect(() => { const query = matchMedia('(max-width: 767px) and (orientation: portrait)'); const change = () => setMobile(query.matches); query.addEventListener('change', change); return () => query.removeEventListener('change', change); }, []);
   useEffect(() => { const controller = new AbortController(); Promise.all([fetch('/data/phases.json', { signal: controller.signal }).then(r => { if (!r.ok) throw new Error('phases'); return r.json() as Promise<Phase[]>; }), fetch('/data/manifest.json', { signal: controller.signal }).then(r => { if (!r.ok) throw new Error('manifest'); return r.json(); })]).then(([p]) => { setPhases(p); setStatus('ready'); }).catch((e: Error) => { if (e.name !== 'AbortError') setStatus('error'); }); return () => controller.abort(); }, []);
   useEffect(() => { document.documentElement.lang = locale; document.title = `${t('brand')} · ${t('app')}`; const url = new URL(location.href); let changed = false; if (previousRoute.current.locale !== locale) { url.searchParams.set('lang', locale); changed = true; } if (previousRoute.current.year !== state.year) { url.searchParams.set('year', String(state.year)); changed = true; } if (changed) history.replaceState(null, '', url); previousRoute.current = { locale, year: state.year }; }, [locale, state.year, t]);
-  useEffect(() => { if (!state.playing) return; const timer = setInterval(() => useShell.getState().setYear(useShell.getState().year >= 280 ? 220 : addYears(useShell.getState().year, 1)), 1600); return () => clearInterval(timer); }, [state.playing]);
   const debug = new URLSearchParams(location.search).get('debug') === '1';
   return <MotionConfig reducedMotion={reduced ? 'always' : 'never'}><ToastProvider><div className="atlas-app" data-capture-root="true" data-quality={state.quality} data-highlight={state.highlight && !reduced} data-refraction={state.refraction && refractionSupported && state.quality !== 'eco' && !reduced} data-reduced-motion={reduced}>
-    <Refraction/><div className="app-content" inert={state.about}><TerrainCanvas environment territories/><MorphTimeline phases={phases}/><Toolbar refractionSupported={refractionSupported}/>{mobile ? <Sheet heading={<ChapterHeading mobile/>}><ChapterContent mobile/></Sheet> : <><ChapterPanel/><TimeDock/></>}<div className="legal-strip">{t('disclaimer')} <span>·</span> {t('credit')} {t('upstream')} · Terrain: USGS / NOAA · Natural Earth</div><span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
+    <TimeDriver/><Refraction/><div className="app-content" inert={state.about}><TerrainCanvas environment territories/><MorphTimeline phases={phases}/><Toolbar refractionSupported={refractionSupported}/>{mobile ? <Sheet heading={<ChapterHeading mobile/>}><ChapterContent mobile/></Sheet> : <><ChapterPanel/><TimeDock/></>}<div className="legal-strip">{t('disclaimer')} <span>·</span> {t('credit')} {t('upstream')} · Terrain: USGS / NOAA · Natural Earth</div><span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
     {debug && <DebugConsole snapshot={snapshot}/>} {state.about && <About/>}
   </div></ToastProvider></MotionConfig>;
 }

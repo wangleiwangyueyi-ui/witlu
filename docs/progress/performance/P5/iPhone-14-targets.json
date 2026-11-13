@@ -1,0 +1,52 @@
+[
+  {
+    "label": "年份",
+    "width": 64,
+    "height": 44
+  },
+  {
+    "label": "跳转年份",
+    "width": 44,
+    "height": 44
+  },
+  {
+    "label": "上一年",
+    "width": 44,
+    "height": 44
+  },
+  {
+    "label": "播放",
+    "width": 44,
+    "height": 44
+  },
+  {
+    "label": "下一年",
+    "width": 44,
+    "height": 44
+  },
+  {
+    "label": "播放倍速",
+    "width": 58,
+    "height": 44
+  },
+  {
+    "label": "历史长河 · 左右键逐年，Shift 十年，双击复原",
+    "width": 318,
+    "height": 56
+  },
+  {
+    "label": "缩小时间范围",
+    "width": 44,
+    "height": 44
+  },
+  {
+    "label": null,
+    "width": 44,
+    "height": 44
+  },
+  {
+    "label": "扩大时间范围",
+    "width": 44,
+    "height": 44
+  }
+]

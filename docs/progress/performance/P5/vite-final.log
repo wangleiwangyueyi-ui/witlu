@@ -1,0 +1,27 @@
+
+> @witlu/web@0.0.0 build D:\Google IDE\witlu\packages\web
+> vite build
+
+vite v7.3.8 building client environment for production...
+transforming...
+✓ 511 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                           0.75 kB │ gzip:   0.48 kB
+dist/assets/growth.worker-JAwdsuHv.js     4.31 kB
+dist/assets/index-DiMhz749.css           42.69 kB │ gzip:   9.57 kB
+dist/assets/TimelineLab-DFb0FXFB.js       0.68 kB │ gzip:   0.52 kB
+dist/assets/TimeFlightLab-BkAfJ9el.js     0.74 kB │ gzip:   0.48 kB
+dist/assets/TerrainLab-CYG5pcK7.js        1.10 kB │ gzip:   0.71 kB
+dist/assets/EnvironmentLab-bNUQ6mgm.js    1.52 kB │ gzip:   0.90 kB
+dist/assets/GlassLab-a4vK1_nY.js          2.25 kB │ gzip:   1.12 kB
+dist/assets/MorphLab-BsLR6zhP.js          3.51 kB │ gzip:   1.71 kB
+dist/assets/es-BeoRn2gJ.js               13.73 kB │ gzip:   5.41 kB
+dist/assets/index-Cd_Nku81.js           421.95 kB │ gzip: 139.09 kB
+dist/assets/engine-CkC_wnl4.js          547.28 kB │ gzip: 142.78 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 48.70s

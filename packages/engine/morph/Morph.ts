@@ -264,10 +264,10 @@ export class Morph {
         this.flight = { start: this.platform.now(), from: this.progress, to: Math.max(0, Math.min(1, t)), duration: this.crossfade ? 120 : Math.max(900, Math.min(1400, duration)) };
         this.effectUntil = this.platform.now() + this.flight.duration;
     }
-    async play(a: string,b: string,duration=1200) {
+    async play(a: string,b: string,duration=1200,target=1) {
         const pending=this.prepare(a,b),generation=this.generation;
         await pending;
-        if(this.alive&&generation===this.generation&&!this.error)this.animateTo(1,duration);
+        if(this.alive&&generation===this.generation&&!this.error)this.animateTo(target,duration);
     }
     playPrepared(reverse=false,duration=1200) {
         if(!this.ready||this.preparing)return;
