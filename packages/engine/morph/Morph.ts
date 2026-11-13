@@ -31,6 +31,11 @@ export class Morph {
     private client: GrowthClient | null = null;
     private raster: Rasterizer;
     private data = new Map<string, PolityGeometry>();
+    private preparingTargets = new Set<WebGLRenderTarget>();
+    private warmingTarget: WebGLRenderTarget | null = null;
+    private targetCache = new Map<string, WebGLRenderTarget>();
+    private preview = false;
+    private rasterHits = 0;
     private labelCache = new Map<string, Uint16Array>();
     private initPromise: Promise<void> | null = null;
     private targetA: WebGLRenderTarget | null = null;
@@ -95,7 +100,7 @@ export class Morph {
         this.field.needsUpdate = true;
         this.paletteTexture = new DataTexture(new Float32Array(1024 * 4 * 4), 1024, 4, RGBAFormat, FloatType);
         this.paletteTexture.needsUpdate = true;
-        this.uniforms = { territoryEnabled: { value: 0 }, polityA: { value: dummy }, polityB: { value: dummy }, polityCurrent: { value: this.current.texture }, polityPalette: { value: this.paletteTexture }, territoryBounds: { value: territoryTransform }, territoryProgress: { value: 0 }, territoryCrossfade: { value: 0 }, territoryOpacity: { value: .4 }, territoryFront: { value: 0 }, territoryInk: { value: 0 }, territoryGold: { value: new Color(palette.gold) }, particleEnabled: { value: 0 }, particleRatio: { value: 1 } };
+        this.uniforms = { polityFocus: { value: 0 }, territoryEdges: { value: 0 }, territoryEnabled: { value: 0 }, polityA: { value: dummy }, polityB: { value: dummy }, polityCurrent: { value: this.current.texture }, polityPalette: { value: this.paletteTexture }, territoryBounds: { value: territoryTransform }, territoryProgress: { value: 0 }, territoryCrossfade: { value: 0 }, territoryOpacity: { value: .4 }, territoryFront: { value: 0 }, territoryInk: { value: 0 }, territoryGold: { value: new Color(palette.gold) }, particleEnabled: { value: 0 }, particleRatio: { value: 1 } };
         const material = new ShaderMaterial({ glslVersion: GLSL3, depthTest: false, depthWrite: false, uniforms: { fields: { value: this.field }, labelsA: { value: dummy }, labelsB: { value: dummy }, palette: { value: this.paletteTexture }, progress: { value: 0 }, count: { value: 0 }, ids: { value: new Float32Array(96) } }, vertexShader: resolveVertex, fragmentShader: resolveFragment });
         this.resolveMesh = new Mesh(new PlaneGeometry(2, 2), material);
         this.resolveScene.add(this.resolveMesh);
@@ -110,6 +115,7 @@ export class Morph {
             }[]>('/data/polities.json')]); if (!this.alive)
             return; this.snapshots = snapshots; this.colors = colors; this.modernCapitals=registry.flatMap(p=>p.occurrences.filter(o=>o.snapshot==='s_prc').flatMap(o=>o.capitals)); registry.map(p => p.key).sort().forEach((key, i) => this.ids.set(key, i + 1)); if (registry.length >= 1024)
             throw new Error('Polity palette needs a larger ID table'); this.client = new GrowthClient(this.platform); })(); await this.initPromise; }
+    focusPolity(key: string | null) { this.uniforms.polityFocus!.value = key ? this.ids.get(key) ?? 0 : 0; }
     private styles(key: string) { return this.colors.find(c => c.snapshot === key)?.colors ?? []; }
     private async geometry(key: string) { let data = this.data.get(key); if (!data) {
         data = await this.platform.readJSON<PolityGeometry>(`/data/territories/${key}.geojson`);
@@ -136,7 +142,14 @@ export class Morph {
         while (this.labelCache.size > 4)
             this.labelCache.delete(this.labelCache.keys().next().value!);
     } return labels; }
-    prepare(a: string, b: string) {
+    private cachedTarget(key: string, data: PolityGeometry) {
+        const cached = this.targetCache.get(key);
+        if (cached) { this.rasterHits++; this.targetCache.delete(key); this.targetCache.set(key,cached); return cached; }
+        const target = this.raster.rasterize(data,this.ids,this.labelsSize); this.targetCache.set(key,target); return target;
+    }
+    private trimTargets() { for (const [key,target] of this.targetCache) { if(this.targetCache.size<=3) break; if(target!==this.targetA&&target!==this.targetB&&target!==this.warmingTarget&&!this.preparingTargets.has(target)){target.dispose();this.targetCache.delete(key);} } }
+    prefetchGeometry(a: string,b: string) { if(this.initPromise) void Promise.all([this.geometry(a),this.geometry(b)]).catch(()=>{}); }
+    prepare(a: string, b: string, preview = false) {
         const generation = ++this.generation;
         this.preparing = true;
         this.error = null;
@@ -148,7 +161,7 @@ export class Morph {
             if (generation !== this.generation || !this.alive)
                 return;
             const [ca, cb] = [a, b].sort(), flip = a !== ca;
-            if (this.canonicalA === ca && this.canonicalB === cb && this.ready) {
+            if (this.canonicalA === ca && this.canonicalB === cb && this.ready && (preview || !this.preview)) {
                 this.flip = flip;
                 this.preparing = false;
                 this.setProgress(0, 'seek');
@@ -157,12 +170,13 @@ export class Morph {
             const [dataA, dataB] = await Promise.all([this.geometry(ca!), this.geometry(cb!)]);
             if (generation !== this.generation || !this.alive)
                 return;
-            const rasterStart = this.platform.now(), ta = this.raster.rasterize(dataA, this.ids, this.labelsSize), tb = ca === cb ? ta : this.raster.rasterize(dataB, this.ids, this.labelsSize);
-            let installed = false;
+            const rasterStart = this.platform.now(), ta = this.cachedTarget(ca!, dataA), tb = ca === cb ? ta : this.cachedTarget(cb!, dataB);
+
             this.rasterMs = this.platform.now() - rasterStart;
+            this.preparingTargets.add(ta); this.preparingTargets.add(tb);
             try {
                 const key = `${ca}|${cb}|${this.size}`;
-                let reply = await this.client!.request(key);
+                let reply = preview ? { miss: false, hit: false, ms: 0, cacheBytes: this.cacheBytes, result: { size: this.size, ids: [], fields: new Uint16Array(2), changed: 0, bounds: {x:0,y:0,width:0,height:0}, births: [], deaths: [], seeds: [], particles: new Float32Array(), bytes: 0 } as GrowthResult } : await this.client!.request(key);
                 if (reply.miss) {
                     const [la, lb] = await Promise.all([this.labels(ca!, ta), this.labels(cb!, tb)]);
                     this.rasterMs = this.platform.now() - rasterStart;
@@ -176,17 +190,18 @@ export class Morph {
                 this.releasePair();
                 this.targetA = ta;
                 this.targetB = tb;
-                installed = true;
+
                 this.canonicalA = ca!;
                 this.canonicalB = cb!;
                 this.flip = flip;
                 this.result = result;
+                this.preview = preview;
                 this.initializeResolve = true;
                 this.workerMs = reply.ms;
                 this.cacheHit = reply.hit;
                 this.cacheBytes = reply.cacheBytes;
                 this.field.dispose();
-                this.field = new DataArrayTexture(new Uint16Array(result.fields.buffer as ArrayBuffer), this.size, this.size, Math.max(1, result.ids.length));
+                this.field = new DataArrayTexture(new Uint16Array(result.fields.buffer as ArrayBuffer), preview ? 1 : this.size, preview ? 1 : this.size, Math.max(1, result.ids.length));
                 this.field.format = RGFormat;
                 this.field.type = HalfFloatType;
                 this.field.minFilter = this.field.magFilter = LinearFilter;
@@ -202,9 +217,9 @@ export class Morph {
                 (uniforms.ids!.value as Float32Array).set(result.ids);
                 this.uniforms.polityA!.value = ta.texture;
                 this.uniforms.polityB!.value = tb.texture;
-                this.linesA = new Boundaries(dataA, this.styles(ca!), this.terrain, this.scene, this.palette.white, this.palette.cinnabar);
-                this.linesB = new Boundaries(dataB, this.styles(cb!), this.terrain, this.scene, this.palette.white, this.palette.cinnabar);
-                this.particles = new FrontParticles(result.particles, this.uniforms, this.scene, this.palette.dust, this.terrain);
+                if (!preview) this.linesA = new Boundaries(dataA, this.styles(ca!), this.terrain, this.scene, this.palette.white, this.palette.cinnabar);
+                if (!preview) this.linesB = new Boundaries(dataB, this.styles(cb!), this.terrain, this.scene, this.palette.white, this.palette.cinnabar);
+                if (!preview) this.particles = new FrontParticles(result.particles, this.uniforms, this.scene, this.palette.dust, this.terrain);
                 this.ready = true;
                 this.preparing = false;
                 this.preparationMs = this.platform.now() - start;
@@ -212,13 +227,11 @@ export class Morph {
                 this.setProgress(0, 'seek');
                 this.warmAt = this.platform.now() + 1500;
                 this.prefetched = false;
+                this.trimTargets();
             }
             finally {
-                if (!installed) {
-                    ta.dispose();
-                    if (tb !== ta)
-                        tb.dispose();
-                }
+                this.preparingTargets.delete(ta); this.preparingTargets.delete(tb);
+                this.trimTargets();
             }
         };
         this.queue = this.queue.catch(() => { }).then(run).catch(error => { if (generation === this.generation && this.alive) {
@@ -242,7 +255,7 @@ export class Morph {
         const now = this.platform.now(), clamped = Math.max(0, Math.min(1, t)), previous = this.progress;
         this.flight = null;
         this.previousProgress = previous;
-        this.crossfade = this.reducedMotion || !this.effects.growth || mode === 'drag' && (Math.abs(speed) > 300 || this.lastDrag > 0 && now - this.lastDrag < 150 && Math.abs(clamped - previous) / Math.max(1, now - this.lastDrag) * 1000 > 2.5);
+        this.crossfade = this.preview || this.reducedMotion || !this.effects.growth || mode === 'drag' && (Math.abs(speed) > 300 || this.lastDrag > 0 && now - this.lastDrag < 150 && Math.abs(clamped - previous) / Math.max(1, now - this.lastDrag) * 1000 > 2.5);
         if (mode === 'drag')
             this.lastDrag = now;
         // Fast input follows its latest target through a bounded 120 ms blend.
@@ -260,7 +273,7 @@ export class Morph {
     animateTo(t: number, duration = 1200) {
         if (!Number.isFinite(t))
             return;
-        this.crossfade = this.reducedMotion || !this.effects.growth;
+        this.crossfade = this.preview || this.reducedMotion || !this.effects.growth;
         this.flight = { start: this.platform.now(), from: this.progress, to: Math.max(0, Math.min(1, t)), duration: this.crossfade ? 120 : Math.max(900, Math.min(1400, duration)) };
         this.effectUntil = this.platform.now() + this.flight.duration;
     }
@@ -286,7 +299,8 @@ export class Morph {
             const from = this.snapshots[index]!, keys = [from.key, next.key].sort(), data = await this.geometry(next.key);
             if (!this.alive)
                 return;
-            target = this.raster.rasterize(data, this.ids, this.labelsSize);
+            target = this.cachedTarget(next.key,data);
+            this.warmingTarget = target;
             const labels = await this.labels(next.key, target), oldKey = `${from.key}:${this.size}`, old = this.labelCache.get(oldKey);
             if (!old)
                 return;
@@ -295,14 +309,17 @@ export class Morph {
         }
         catch { /* Optional prefetch never replaces the visible pair. */ }
         finally {
-            target?.dispose();
+            this.trimTargets();
             this.warming = false;
+            this.warmingTarget = null;
+            this.trimTargets();
         }
     }
     update(now: number, quality: Quality) {
         const active = this.enabled && this.ready;
         this.uniforms.territoryEnabled!.value = Number(active && this.effects.fill);
         this.uniforms.territoryOpacity!.value = this.fillOpacity;
+        this.uniforms.territoryEdges!.value = Number(active && this.effects.boundaries && !this.preview && !this.crossfade && !this.flight && now-this.lastDrag>200);
         if (this.flight) {
             const f = this.flight, t = Math.min(1, (now - f.start) / f.duration);
             this.progress = f.from + (f.to - f.from) * t;
@@ -321,7 +338,7 @@ export class Morph {
         this.uniforms.territoryInk!.value = Number(transient && this.effects.ink);
         this.uniforms.particleEnabled!.value = Number(transient && this.effects.particles);
         this.uniforms.particleRatio!.value = Math.min(1, MORPH_QUALITY[quality].particles / Math.max(1, (this.result?.particles.length ?? 0) / 4));
-        if (active && this.dirty) {
+        if (active && this.dirty && !this.preview && !this.crossfade) {
             const start = this.platform.now();
             (this.resolveMesh.material as ShaderMaterial).uniforms.progress!.value = t;
             this.raster.draw(this.resolveScene, this.resolveCamera, this.current, this.initializeResolve ? undefined : this.result?.bounds);
@@ -333,10 +350,10 @@ export class Morph {
         const previousCanonical = (this.trailSide === 0) !== this.flip ? 0 : 1;
         this.linesA?.update(this.renderer, lineOn ? Math.max(fadeA, previousCanonical === 0 ? trail : 0) : 0, MORPH_QUALITY[quality].glow, fadeA < .01 && trail > 0 && previousCanonical === 0);
         this.linesB?.update(this.renderer, lineOn ? Math.max(fadeB, previousCanonical === 1 ? trail : 0) : 0, MORPH_QUALITY[quality].glow, fadeB < .01 && trail > 0 && previousCanonical === 1);
-        if (active && now > this.warmAt && !this.preparing && !this.flight)
+        if (active && now > this.warmAt && !this.preparing && !this.flight && !this.preview && now - this.lastDrag > 500)
             void this.precompute();
     }
-    stats() { return { enabled: this.enabled, ready: this.ready, preparing: this.preparing, error: this.error, snapshotA: this.flip ? this.canonicalB : this.canonicalA, snapshotB: this.flip ? this.canonicalA : this.canonicalB, t: this.progress, playing: Boolean(this.flight), mode: this.crossfade ? 'crossfade' : 'sdf', labelSize: this.labelsSize, fieldSize: this.size, preparationMs: this.preparationMs, rasterMs: this.rasterMs, workerMs: this.workerMs, resolveMs: this.resolveMs, changedPixels: this.result?.changed ?? 0, involved: this.result?.ids.length ?? 0, fieldBytes: this.result?.bytes ?? 0, cacheHit: this.cacheHit, cacheBytes: this.cacheBytes, prefetched: this.prefetched, capitalFallbacks: this.result?.seeds.filter(s => s.source === 'centroid').length ?? 0, seedSources: this.result?.seeds.map(seed => ({ ...seed, polity: [...this.ids].find(([, id]) => id === seed.id)?.[0] })) ?? [], fillOpacity: this.fillOpacity, effects: { ...this.effects } }; }
+    stats() { return { preview: this.preview, rasterCacheHits: this.rasterHits, rasterCacheEntries: this.targetCache.size, enabled: this.enabled, ready: this.ready, preparing: this.preparing, error: this.error, snapshotA: this.flip ? this.canonicalB : this.canonicalA, snapshotB: this.flip ? this.canonicalA : this.canonicalB, t: this.progress, playing: Boolean(this.flight), mode: this.crossfade ? 'crossfade' : 'sdf', labelSize: this.labelsSize, fieldSize: this.size, preparationMs: this.preparationMs, rasterMs: this.rasterMs, workerMs: this.workerMs, resolveMs: this.resolveMs, changedPixels: this.result?.changed ?? 0, involved: this.result?.ids.length ?? 0, fieldBytes: this.result?.bytes ?? 0, cacheHit: this.cacheHit, cacheBytes: this.cacheBytes, prefetched: this.prefetched, capitalFallbacks: this.result?.seeds.filter(s => s.source === 'centroid').length ?? 0, seedSources: this.result?.seeds.map(seed => ({ ...seed, polity: [...this.ids].find(([, id]) => id === seed.id)?.[0] })) ?? [], fillOpacity: this.fillOpacity, effects: { ...this.effects } }; }
     /** Explicit debug audit; never read back pixels in the animation loop. */
     async audit() {
         if (!this.result || !this.targetA || !this.targetB)
@@ -360,9 +377,8 @@ export class Morph {
         }
         return { t: this.progress, pixels: a.length, gaps, invalid, mismatches, hash: hash >>> 0 };
     }
-    restore() { this.field.needsUpdate = this.paletteTexture.needsUpdate = true; this.ready = false; this.initializeResolve = true; const a = this.flip ? this.canonicalB : this.canonicalA, b = this.flip ? this.canonicalA : this.canonicalB, t = this.progress; this.canonicalA = ''; this.canonicalB = ''; if (a && b)
+    restore() { this.field.needsUpdate = this.paletteTexture.needsUpdate = true; this.ready = false; this.targetCache.forEach(t=>t.dispose()); this.targetCache.clear(); this.initializeResolve = true; const a = this.flip ? this.canonicalB : this.canonicalA, b = this.flip ? this.canonicalA : this.canonicalB, t = this.progress; this.canonicalA = ''; this.canonicalB = ''; if (a && b)
         void this.prepare(a, b).then(() => this.setProgress(t, 'seek')).catch(() => { }); }
-    private releasePair() { this.targetA?.dispose(); if (this.targetB !== this.targetA)
-        this.targetB?.dispose(); this.linesA?.dispose(); this.linesB?.dispose(); this.particles?.dispose(); this.linesA = this.linesB = null; this.particles = null; }
-    dispose() { this.alive = false; this.generation++; this.client?.dispose(); this.releasePair(); this.current.dispose(); this.field.dispose(); this.paletteTexture.dispose(); this.empty.dispose(); this.resolveMesh.geometry.dispose(); (this.resolveMesh.material as ShaderMaterial).dispose(); }
+    private releasePair() { this.linesA?.dispose(); this.linesB?.dispose(); this.particles?.dispose(); this.linesA = this.linesB = null; this.particles = null; }
+    dispose() { this.alive = false; this.generation++; this.client?.dispose(); this.releasePair(); this.targetCache.forEach(t=>t.dispose()); this.targetCache.clear(); this.current.dispose(); this.field.dispose(); this.paletteTexture.dispose(); this.empty.dispose(); this.resolveMesh.geometry.dispose(); (this.resolveMesh.material as ShaderMaterial).dispose(); }
 }

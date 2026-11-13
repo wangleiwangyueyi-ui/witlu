@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Eras, Phase, RiverPolity } from '@witlu/core/time';
+import type { Eras, Phase, RiverPolity, RegistryPolity, Chapter, ChronicleEvent } from '@witlu/core/time';
 export interface Chronicle {
     phases: (Phase & {
         dynastyKey: string;
@@ -15,30 +15,19 @@ export interface Chronicle {
             strokeOnly: boolean;
         }[];
     }[];
-    events: {
-        id: string;
-        year: number;
-        title: string;
-        regime: string | null;
-        kind: string;
-        importance: number;
-    }[];
-    dynasties: {
-        key: string;
-        title: string;
-        fromYear: number;
-        toYear: number;
-        summary: string;
-    }[];
+    registry: RegistryPolity[];
+    translations: { en: { dynasties: Record<string, {name:string; capital:string; desc:string}>; milestones: Record<string, [string,string]>; dict: Record<string,string> }; hant: { CHAR_S2T: Record<string,string> } };
+    events: ChronicleEvent[];
+    dynasties: Chapter[];
 }
 let promise: Promise<Chronicle> | undefined;
 export function loadChronicle() {
-    return promise ??= Promise.all(['phases', 'coexistence', 'eras', 'polity-colors', 'events', 'dynasties'].map(async (name) => {
+    return promise ??= Promise.all(['phases', 'coexistence', 'eras', 'polity-colors', 'events', 'dynasties', 'polities', 'i18n'].map(async (name) => {
         const r = await fetch(`/data/${name}.json`);
         if (!r.ok)
-            throw new Error(`时间资料加载失败：${name}`);
+            throw new Error(name);
         return r.json();
-    })).then(([phases, polities, eras, colors, events, dynasties]) => ({ phases, polities, eras, colors, events, dynasties })).catch(e => { promise = undefined; throw e; });
+    })).then(([phases, polities, eras, colors, events, dynasties, registry, translations]) => ({ phases, polities, eras, colors, events, dynasties, registry, translations })).catch(e => { promise = undefined; throw e; });
 }
 export function useChronicle() {
     const [data, set] = useState<Chronicle>();

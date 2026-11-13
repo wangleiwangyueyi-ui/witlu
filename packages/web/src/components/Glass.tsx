@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import type { HTMLAttributes, PointerEvent, ReactNode } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import type { HTMLMotionProps } from 'motion/react';
 import { useShell } from '../state/shell';
 import { GlassIcon } from './GlassIcon';
 import type { IconName } from './GlassIcon';
-export function useReducedEffects() { const system = useReducedMotion(); return useShell(s => s.reducedMotion) || !!system; }
+export function useReducedEffects() { const [system,setSystem]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches); useEffect(()=>{const q=matchMedia('(prefers-reduced-motion: reduce)');const changed=()=>setSystem(q.matches);q.addEventListener('change',changed);return()=>q.removeEventListener('change',changed);},[]);return useShell(s=>s.reducedMotion)||system; }
 function light(event: PointerEvent<HTMLElement>) {
   const r = event.currentTarget.getBoundingClientRect();
   event.currentTarget.style.setProperty('--mx', `${100 * (event.clientX - r.left) / r.width}%`);

@@ -1,0 +1,95 @@
+.calligraphy { display: flex; align-items: center; gap: 14px; }
+.calligraphy-glyphs { display: flex; flex-wrap: wrap; gap: 0; max-width: 300px; }
+.calligraphy-glyphs svg { width: 48px; height: 56px; overflow: visible; }
+.calligraphy-stroke { fill: none; stroke: var(--text); stroke-width: 150; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.calligraphy[data-animated='true'] .calligraphy-stroke { animation: write-stroke var(--duration-ui) linear both; }
+.calligraphy[data-animated='true'] .calligraphy-stamp { animation: seal-fall 350ms var(--ease-spring) both; animation-delay: var(--opening-duration); }
+@keyframes write-stroke { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes seal-fall { from { opacity: 0; transform: translateY(-14px) scale(1.4) rotate(8deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(3deg); } }
+.chapter-english { display: block; font: 600 17px/1.5 var(--font-title); margin-top: 6px; }
+.chapter-panel { bottom: 295px; }
+.chapter-heading { padding: 18px 24px 14px; }
+.chapter-title { margin-top: 8px; }
+.chapter-range { letter-spacing: .04em; font-size: 12px; }
+.chapter-content h2 { font-size: 14px; font-weight: 500; }
+.chapter-intro { margin-top: 22px; }
+.chapter-intro small { font: 10px var(--font-ui); color: var(--text-secondary); }
+.chapter-disclaimer { font-size: 11px; color: var(--text-secondary); line-height: 1.7; margin-top: 18px; }
+.tour-controls { margin-bottom: 20px; }
+.tour-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.tour-buttons button, .dossier-focus, .chapters-lab-controls button { min-width: 44px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--glass-light); font-size: 12px; }
+.tour-caption { padding-top: 10px; font-size: 12px; line-height: 1.8; }
+.tour-caption p, .tour-caption small { color: var(--text-secondary); }
+.world-legend h2 { margin-bottom: 6px; }
+.world-legend > p { color: var(--text-secondary); font-size: 10px; line-height: 1.6; margin-bottom: 10px; }
+.world-legend > div { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.legend-entry { display: flex; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); background: var(--glass-light); }
+.legend-entry button { min-height: 44px; min-width: 44px; padding: 8px; display: flex; align-items: center; gap: 8px; background: transparent; font-size: 12px; }
+.legend-entry i { display: block; width: 7px; height: 7px; border-radius: 50%; background: var(--track-color); box-shadow: 0 0 7px var(--track-color); }
+.world-tracks { position: absolute; z-index: 11; bottom: 295px; left: 30px; right: 430px; }
+.tracks-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 9px; text-shadow: 0 2px 8px var(--sea-deep); }
+.tracks-heading h2 { font-size: 12px; font-weight: 500; }
+.tracks-heading small { font-size: 11px; }
+.tracks-heading > div { display: flex; align-items: center; font-size: 11px; }
+.tracks-heading button { background: var(--glass-bottom); min-width: 44px; min-height: 44px; border-radius: var(--radius-sm); }
+.tracks-grid { display: grid; grid-template-columns: repeat(var(--track-count), minmax(0,1fr)); gap: 8px; }
+.world-track { min-width: 0; padding: 12px; border-radius: var(--radius-md); border-top: 2px solid var(--track-color); }
+.track-title { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 4px; background: transparent; min-height: 44px; padding: 0; font: 600 20px/1.4 var(--font-title); text-align: left; }
+.track-title small { font: 9px var(--font-ui); color: var(--text-secondary); white-space: nowrap; }
+.track-era, .track-capital { font-size: 10px; line-height: 1.7; color: var(--text-secondary); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.track-events { max-height: 116px; overflow: auto; scrollbar-width: thin; }
+.track-events > p { font-size: 11px; line-height: 2; }
+.track-event { display: flex; flex-direction: column; width: 100%; min-height: 44px; background: transparent; text-align: left; padding: 8px 0 4px; line-height: 1.5; font-size: 11px; border-top: 1px solid var(--glass-border); margin-top: 6px; }
+.track-event time { font-size: 10px; color: var(--text-secondary); }
+.track-event[data-current='true'], .chronicle-event[data-current='true'] { background: color-mix(in srgb, var(--polity-main) 13%, transparent); box-shadow: inset 2px 0 var(--polity-main); padding-left: 8px; }
+.dossier-backdrop { position: absolute; inset: 0; z-index: 90; display: grid; place-items: center; background: color-mix(in srgb, var(--sea-deep) 70%, transparent); backdrop-filter: blur(8px); }
+.polity-dossier { width: min(560px,calc(100vw - 32px)); max-height: 84dvh; padding: 30px; overflow: auto; scrollbar-width: thin; }
+.polity-dossier h2 { font: 600 36px var(--font-title); margin: 10px 0; }
+.polity-dossier p { font-size: 13px; line-height: 1.9; color: var(--text-secondary); margin-block: 14px; }
+.polity-dossier h3 { margin-top: 22px; font-size: 17px; }
+.dossier-close { position: absolute; top: 12px; right: 12px; min-width: 44px; min-height: 44px; background: var(--glass-light); border-radius: var(--radius-sm); font-size: 22px; }
+.ruler-lineage { margin-top: 20px; padding-left: 20px; border-left: 1px solid var(--glass-border); list-style: none; }
+.ruler-lineage li { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 18px; font-size: 13px; }
+.ruler-lineage time, .ruler-lineage small { font-size: 11px; color: var(--text-secondary); }
+.chapters-lab-controls { position: absolute; z-index: 81; top: 105px; left: 30px; max-width: 360px; border-radius: var(--radius-md); padding: 14px; font-size: 12px; }
+.chapters-lab-controls > div { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+@media (width >= 768px) and (width <= 1100px) { .world-tracks { right: 350px; left: 22px; } .track-title { font-size: 15px; } .track-title small { display: none; } .world-track { padding: 8px; } }
+@media (width <= 767px) and (orientation: portrait) {
+  .calligraphy-glyphs { max-width: 160px; }.calligraphy-glyphs svg { width: 26px; height: 32px; }.calligraphy { gap: 6px; }
+  .chapter-english { font-size: 10px; }.mobile-heading h1 { max-width: 170px; }
+  .world-tracks { position: relative; inset: auto; margin-top: 20px; }
+  .mobile-tracks .segmented { overflow-x: auto; border-radius: var(--radius-sm); }.mobile-tracks .segmented button { flex: none; min-width: 44px; min-height: 44px; }
+  .mobile-tracks .tracks-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 0; scrollbar-width: none; margin-top: 10px; touch-action: pan-x pan-y; }
+  .mobile-tracks .world-track { flex: 0 0 100%; scroll-snap-align: start; }
+  .mobile-tracks .track-events { max-height: 130px; }.track-title { font-size: 23px; }
+  .chapters-lab-controls { top: 145px; left: 16px; max-width: 310px; }.chapters-lab-controls strong { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .calligraphy[data-animated='true'] .calligraphy-stroke, .calligraphy[data-animated='true'] .calligraphy-stamp { animation: none; } }
+
+.legend-era { display: block; font: 10px/1.8 var(--font-ui); color: var(--text-secondary); }.world-legend .era-tracks { margin: 8px 0 0; }
+@media (width >= 768px) {
+  .atlas-app .time-dock { padding-block: 10px; }
+  .atlas-app .time-dock .history-river { height: 52px; }
+  .atlas-app .time-dock .river-zoom { position: absolute; bottom: 9px; left: 380px; }
+  .atlas-app .time-dock .river-legend { margin-top: 4px; }
+  .atlas-app .time-dock .river-control { padding-bottom: 10px; }
+  .atlas-app .chapter-panel, .atlas-app .world-tracks { bottom: 230px; }
+  .atlas-app .track-events { max-height: 82px; }
+  .atlas-app .track-event { font-size: 10px; padding-top: 5px; }
+  .atlas-app .world-track { padding: 9px 12px; }
+  .atlas-app .camera-controls { bottom: 460px; }
+}
+.polity-labels { position: absolute; inset: 0; pointer-events: none; }
+.polity-labels > div { position: absolute; top: 0; left: 0; text-align: center; text-shadow: 0 2px 3px var(--sky), 0 0 8px var(--sky), 0 0 16px var(--sea-deep); }
+.polity-labels strong { display: block; font: 600 25px/1.5 var(--font-title); letter-spacing: .1em; }
+.polity-labels small { font-size: 10px; }
+.chapter-summary[data-opening='true'] { animation: summary-arrive 400ms var(--ease-out) 1950ms both; }
+@keyframes summary-arrive { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+[data-reduced-motion='true'] .chapter-summary { animation: none; }
+@media (prefers-reduced-motion: reduce) { .chapter-summary[data-opening='true'] { animation: none; } }
+@media (width <= 767px) { .polity-labels strong { font-size: 18px; } }
+@media (width <= 767px) and (orientation: portrait) {
+  .chapter-sheet[data-snap='1'] .time-controls, .chapter-sheet[data-snap='1'] .river-years, .chapter-sheet[data-snap='1'] .river-legend, .chapter-sheet[data-snap='1'] .river-zoom { display: none; }
+  .chapter-sheet[data-snap='1'] .mobile-tracks { margin-top: 10px; }
+  .chapter-sheet[data-snap='1'] .track-events { max-height: 80px; }
+}

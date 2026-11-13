@@ -37,3 +37,9 @@ P2 地形由本仓库独立烘焙，不复用上游的地形渲染图。Terrariu
 本阶段提供本地界面和 Cloudflare Pages 连接说明，不修改域名或 DNS。
 
 Terrain Tiles 全球提供者的原始完整声明已于 2026-11-12 归档到 [docs/sources/terrain-attribution.md](docs/sources/terrain-attribution.md)，包括低 zoom 瓦片所覆盖的其他地区来源；对应原始地址为上方 Tilezen attribution 链接。
+
+## 章节书法笔画（P6）
+
+Make Me a Hanzi（https://github.com/skishore/makemeahanzi），固定提交 `bddc96d41bef78427ed0e034e9f7e31d71fd1b92`。仅从 `graphics.txt` 提取 18 章简繁标题使用的 33 个字，未改变笔画与中线坐标。提取脚本：`scripts/build-calligraphy.mjs`；修改：2026-11-13，witlu contributors，删除未用字符、重新打包为 JSON。
+
+图形数据衍生于文鼎 Arphic 字体，采用 Arphic Public License；这一独立素材保留原许可，不改为 GPL。完整许可、上游 COPYING 与可修改的笔画源文件一并位于 `assets/calligraphy/`，发布时复制到 `/calligraphy/`。字典数据未使用。原始图形文件 SHA-256 记录在子集元数据中。

@@ -7,3 +7,5 @@ packages/web/public/tiles/
 test-results/
 playwright-report/
 *.tsbuildinfo
+
+packages/web/public/calligraphy/

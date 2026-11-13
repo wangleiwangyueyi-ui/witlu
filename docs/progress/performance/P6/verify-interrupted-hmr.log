@@ -1,0 +1,182 @@
+
+> witlu@ verify D:\Google IDE\witlu
+> pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm verify:terrain && pnpm verify:environment && pnpm verify:morph && pnpm test:smoke
+
+
+> witlu@ typecheck D:\Google IDE\witlu
+> pnpm -r typecheck && tsc -p tsconfig.json
+
+Scope: 3 of 4 workspace projects
+packages/core typecheck$ tsc -p tsconfig.json
+packages/core typecheck: Done
+packages/engine typecheck$ tsc -p tsconfig.json
+packages/engine typecheck: Done
+packages/web typecheck$ tsc -p tsconfig.json
+packages/web typecheck: Done
+
+> witlu@ lint D:\Google IDE\witlu
+> eslint packages scripts tests && stylelint "packages/web/src/**/*.css" && node scripts/lint-boundaries.mjs
+
+Portable layer boundaries and color tokens verified
+
+> witlu@ test D:\Google IDE\witlu
+> vitest run
+
+
+ RUN  v3.2.7 D:/Google IDE/witlu
+
+ ✓ packages/core/edt/edt.test.ts (4 tests) 72ms
+ ✓ scripts/lib/distance-field.test.mjs (2 tests) 11ms
+ ✓ packages/engine/atmosphere/model.test.ts (5 tests) 27ms
+ ✓ packages/core/time/time.test.ts (20 tests) 73ms
+ ✓ packages/core/time/chapters.test.ts (8 tests) 51ms
+ ✓ packages/core/time/chronology.test.ts (22 tests) 107ms
+ ✓ packages/core/morph/morph.test.ts (2 tests) 221ms
+ ✓ packages/web/src/styles/contrast.test.ts (2 tests) 9ms
+ ✓ packages/web/src/components/sheet-model.test.ts (2 tests) 6ms
+ ✓ scripts/lib/terrain.test.mjs (4 tests) 42ms
+ ✓ scripts/lib/pipeline.test.mjs (21 tests) 50ms
+ ✓ packages/engine/terrain/terrain.test.ts (20 tests) 59ms
+ ✓ scripts/stylelint/tokens.test.mjs (7 tests) 866ms
+   ✓ P1 actual color linters > rejects literal neutral gray in TSX through ESLint  797ms
+
+ Test Files  13 passed (13)
+      Tests  119 passed (119)
+   Start at  17:04:11
+   Duration  2.93s (transform 1.09s, setup 0ms, collect 4.60s, tests 1.59s, environment 4ms, prepare 3.76s)
+
+
+> witlu@ verify:parity D:\Google IDE\witlu
+> node scripts/verify-parity.mjs
+
+| 项目 | 固定上游 | 新站产物 | 结果 |
+|---|---:|---:|---|
+| 快照 | 198 | 198 | 通过 |
+| 时期 | 18 | 18 | 通过 |
+| 阶段 | 198 | 198 | 通过 |
+| 大事 | 526 | 526 | 通过 |
+| 城池 | 1761 | 1761 | 通过 |
+| 走廊 | 16 | 16 | 通过 |
+| 人物 | 126 | 126 | 通过 |
+| 人物详情 | 126 | 126 | 通过 |
+| 行迹 | 7 | 7 | 通过 |
+| 行迹站点 | 76 | 76 | 通过 |
+| 雄关 | 20 | 20 | 通过 |
+| 名胜 | 186 | 186 | 通过 |
+| 名城题记 | 87 | 87 | 通过 |
+| 政权小传 | 110 | 110 | 通过 |
+| 政权档案 | 110 | 110 | 通过 |
+| 定点大事 | 726 | 726 | 通过 |
+| 年号 | 523 | 523 | 通过 |
+| 专题页 | 35 | 35 | 通过 |
+| 郡州府要素 | 28436 | 28436 | 通过 |
+| 一级政区要素 | 4636 | 4636 | 通过 |
+| 政权要素 | 5100 | 5100 | 通过 |
+| 现代省界 | 35 | 35 | 通过 |
+| 河流 | 198 | 198 | 通过 |
+| 湖泊 | 62 | 62 | 通过 |
+| 古海岸线 | 9 | 9 | 通过 |
+| 古琴 | 5 | 5 | 通过 |
+
+> witlu@ verify:terrain D:\Google IDE\witlu
+> node scripts/verify-terrain.mjs
+
+Terrain verified: 9970 WebP tiles; DEM 0–8, relief 3–8; luma span 23.80%; no off-palette pixels
+
+> witlu@ verify:environment D:\Google IDE\witlu
+> node scripts/verify-environment.mjs
+
+Coast atlas: 2423281 land, 1476111 sea, 192334 nearshore pixels
+Environment assets verified: Natural Earth coast distance + two seamless normals + shared cloud coverage
+
+> witlu@ verify:morph D:\Google IDE\witlu
+> node scripts/verify-morph.mjs
+
+Morph parity: 198 snapshots, 5100 polity features, 104 interior rings; exact match to full geometry
+
+> witlu@ test:smoke D:\Google IDE\witlu
+> playwright test
+
+
+Running 138 tests using 1 worker
+
+(node:35888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok   1 [desktop] › tests\chapters.spec.ts:5:1 › P6 five historical worlds, dossiers, tour and calligraphy (41.1s)
+  ok   2 [desktop] › tests\chapters.spec.ts:29:1 › P6 translated P5 controls, reduced motion and same-year camera (6.4s)
+  -    3 [desktop] › tests\chapters.spec.ts:49:1 › P6 recorded chapter tour and cross-snapshot drag performance
+  x    4 [desktop] › tests\chapters.spec.ts:71:1 › P6 held drag defers SDF, then refines without losing cached geometry (9.3s)
+(node:39028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -    5 [desktop] › tests\environment-acceptance.spec.ts:9:1 › P3 continuous 32 second environment recording and frame sample
+  -    6 [desktop] › tests\environment-acceptance.spec.ts:36:1 › isolates actual water, wave and cloud shadow pixel changes
+  -    7 [desktop] › tests\environment-acceptance.spec.ts:53:1 › composited L0 stays blue, below 25 percent luma span and above 7:1 white contrast
+  ok   8 [desktop] › tests\environment.spec.ts:11:1 › ocean and cloud labs compile and render in all viewports (4.2s)
+  ok   9 [desktop] › tests\environment.spec.ts:21:1 › all sea regions and independent environment controls work (27.3s)
+  -   10 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ba-shu
+  -   11 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-conquests
+  -   12 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-chuhan
+  -   13 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance han-three-kingdoms
+  -   14 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance jin-sixteen-states
+  -   15 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance nanbei-sui
+  -   16 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance tang-anxi
+  -   17 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance song-south
+  -   18 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ming-qing
+  -   19 [desktop] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance 1945-1946
+  -   20 [desktop] › tests\morph-sequence.spec.ts:3:1 › P4 Qin conquest chronology includes all six intermediate stages
+  ok  21 [desktop] › tests\morph.spec.ts:4:1 › morph lab prepares GPU labels and renders reversible states (7.3s)
+  ok  22 [desktop] › tests\morph.spec.ts:25:1 › morph lifecycle, caching, reduced motion and rapid drag fallback (8.0s)
+  ok  23 [desktop] › tests\morph.spec.ts:76:1 › main timeline prepares real snapshot pairs and exposes morph controls (8.0s)
+  ok  24 [desktop] › tests\motion.spec.ts:3:1 › glass button presses to 0.96 and springs back (3.8s)
+  ok  25 [desktop] › tests\p1.spec.ts:3:1 › language, quality, popovers and debug console work (5.1s)
+  -   26 [desktop] › tests\p1.spec.ts:27:1 › sheet settles across all three states and handles a swipe
+  ok  27 [desktop] › tests\p1.spec.ts:41:1 › reduced motion disables refraction and moving highlights (852ms)
+  ok  28 [desktop] › tests\p1.spec.ts:46:1 › liquid press has an independent effect switch (2.2s)
+  ok  29 [desktop] › tests\p1.spec.ts:57:1 › preserves upstream single-year and multi-year URLs on initial load (1.5s)
+  ok  30 [desktop] › tests\p1.spec.ts:68:1 › tablet and phone landscape use the side panel (1.7s)
+  ok  31 [desktop] › tests\p1.spec.ts:78:1 › isolated glass lab exposes all required icons and a working toast (1.2s)
+  -   32 [desktop] › tests\performance-report.spec.ts:3:1 › exports the P2 measured Performance report
+  ok  33 [desktop] › tests\performance.spec.ts:3:1 › records bounded shell regression frame samples (5.8s)
+  ok  34 [desktop] › tests\smoke.spec.ts:3:1 › loads complete data, credits, and the responsive atlas shell (2.6s)
+  ok  35 [desktop] › tests\terrain-motion.spec.ts:3:1 › records terrain pan zoom rotate tilt and reset (10.9s)
+  -   36 [desktop] › tests\terrain-performance.spec.ts:6:1 › P2 drag and zoom sustain at least 50 fps
+  ok  37 [desktop] › tests\terrain.spec.ts:5:1 › real terrain renders and remains interactive in each viewport (4.5s)
+  ok  38 [desktop] › tests\terrain.spec.ts:19:1 › lab supports flyTo, switches, keyboard and WebGL context recovery (7.8s)
+  -   39 [desktop] › tests\terrain.spec.ts:34:1 › two-finger touch pinches, rotates and inclines the terrain
+  -   40 [desktop] › tests\timeline-acceptance.spec.ts:4:1 › P5 recorded river interactions and frame samples
+  x   41 [desktop] › tests\timeline.spec.ts:4:1 › year input, ambiguity, BCE boundary and keyboard controls (7.3s)
+(node:21616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  42 [desktop] › tests\timeline.spec.ts:34:1 › real tributaries and area ratios at four divided periods (2.0s)
+  ok  43 [desktop] › tests\timeline.spec.ts:44:1 › playback speed, pause, inertia, zoom reset and touch targets (3.0s)
+  -   44 [desktop] › tests\timeline.spec.ts:78:1 › two-finger zoom and reduced motion switches
+  -   45 [desktop] › tests\timeline.spec.ts:96:1 › Android dynasty boundary haptic respects the independent switch
+  x   46 [desktop] › tests\timeline.spec.ts:109:1 › main continuous timeline drives the engine and cloud passage (9.4s)
+(node:27424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  47 [iPhone-14] › tests\chapters.spec.ts:5:1 › P6 five historical worlds, dossiers, tour and calligraphy (34.2s)
+  x   48 [iPhone-14] › tests\chapters.spec.ts:29:1 › P6 translated P5 controls, reduced motion and same-year camera (6.1s)
+(node:25856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -   49 [iPhone-14] › tests\chapters.spec.ts:49:1 › P6 recorded chapter tour and cross-snapshot drag performance
+  -   50 [iPhone-14] › tests\chapters.spec.ts:71:1 › P6 held drag defers SDF, then refines without losing cached geometry
+  -   51 [iPhone-14] › tests\environment-acceptance.spec.ts:9:1 › P3 continuous 32 second environment recording and frame sample
+  -   52 [iPhone-14] › tests\environment-acceptance.spec.ts:36:1 › isolates actual water, wave and cloud shadow pixel changes
+  -   53 [iPhone-14] › tests\environment-acceptance.spec.ts:53:1 › composited L0 stays blue, below 25 percent luma span and above 7:1 white contrast
+  ok  54 [iPhone-14] › tests\environment.spec.ts:11:1 › ocean and cloud labs compile and render in all viewports (4.6s)
+  -   55 [iPhone-14] › tests\environment.spec.ts:21:1 › all sea regions and independent environment controls work
+  -   56 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ba-shu
+  -   57 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-conquests
+  -   58 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance qin-chuhan
+  -   59 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance han-three-kingdoms
+  -   60 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance jin-sixteen-states
+  -   61 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance nanbei-sui
+  -   62 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance tang-anxi
+  -   63 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance song-south
+  -   64 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance ming-qing
+  -   65 [iPhone-14] › tests\morph-acceptance.spec.ts:17:5 › P4 acceptance 1945-1946
+  -   66 [iPhone-14] › tests\morph-sequence.spec.ts:3:1 › P4 Qin conquest chronology includes all six intermediate stages
+  ok  67 [iPhone-14] › tests\morph.spec.ts:4:1 › morph lab prepares GPU labels and renders reversible states (6.8s)
+  -   68 [iPhone-14] › tests\morph.spec.ts:25:1 › morph lifecycle, caching, reduced motion and rapid drag fallback
+  ok  69 [iPhone-14] › tests\morph.spec.ts:76:1 › main timeline prepares real snapshot pairs and exposes morph controls (6.7s)
+  ok  70 [iPhone-14] › tests\motion.spec.ts:3:1 › glass button presses to 0.96 and springs back (3.2s)

@@ -2,10 +2,13 @@ import { useEffect, useRef } from 'react';
 import { createSnapshotTimeline, indexToYear, riverLanes, yearToIndex } from '@witlu/core/time';
 import { useChronicle } from '../store/chronicle';
 import { resetTimeView, seekIndex, seekYear, setTimeView, stepYear, timeStore, toggleTime } from '../store/time';
+import { useChronicleText, formatYear } from '../i18n/chronicle';
+import { historicalText } from '../i18n/history';
 import { useShell } from '../state/shell';
 export function River({ compact = false }: {
     compact?: boolean;
 }) {
+    const ct=useChronicleText(),locale=useShell(s=>s.locale);
     const legend = useRef<HTMLDivElement>(null);
     const canvas = useRef<HTMLCanvasElement>(null), stamp = useRef<HTMLSpanElement>(null), ticks = useRef<HTMLDivElement>(null);
     const { data, error } = useChronicle();
@@ -102,7 +105,7 @@ export function River({ compact = false }: {
                 c.fill();
             }
             if (ticks.current)
-                ticks.current.replaceChildren(...Array.from({ length: compact ? 3 : 5 }, (_, i) => { const span = document.createElement('span'); const y = indexToYear(Math.round(a + (b - a) * i / (compact ? 2 : 4))); span.textContent = y < 0 ? `前${-y}` : String(y); return span; }));
+                ticks.current.replaceChildren(...Array.from({ length: compact ? 3 : 5 }, (_, i) => { const span = document.createElement('span'); const y = indexToYear(Math.round(a + (b - a) * i / (compact ? 2 : 4))); span.textContent = formatYear(y,locale); return span; }));
         }
         function draw(now: number) {
             frame = requestAnimationFrame(draw);
@@ -124,7 +127,7 @@ export function River({ compact = false }: {
             if (legend.current && legendKey !== snapKey) {
                 legendKey = snapKey;
                 const rows = lanes.get(snapKey) ?? [];
-                legend.current.replaceChildren(...rows.map(r => { const label = document.createElement('span'); label.textContent = r.title; label.title = Math.round(r.area).toLocaleString() + ' km²'; label.style.borderColor = colors.get(snapKey)?.get(r.key)?.color ?? mainTone; return label; }));
+                legend.current.replaceChildren(...rows.map(r => { const label = document.createElement('span'); label.textContent = locale === 'en' ? data?.registry.find(p=>p.key===r.key)?.en ?? r.title : historicalText(r.title,locale,data); label.title = Math.round(r.area).toLocaleString() + ' km²'; label.style.borderColor = colors.get(snapKey)?.get(r.key)?.color ?? mainTone; return label; }));
                 element!.dataset.branches = String(rows.length);
             }
             const [a, b] = s.view;
@@ -171,6 +174,7 @@ export function River({ compact = false }: {
         const position = (x: number) => { const s = timeStore.getState(); return s.view[0] + (x - element!.getBoundingClientRect().left) / width * (s.view[1] - s.view[0]); };
         let gestureIndex = timeStore.getState().index;
         const down = (e: PointerEvent) => {
+            timeStore.setState({scrubbing:true});
             if (points.size === 0) gestureIndex = timeStore.getState().index;
             element.setPointerCapture(e.pointerId);
             points.set(e.pointerId, e.clientX);
@@ -209,12 +213,15 @@ export function River({ compact = false }: {
             if (!points.has(e.pointerId)) return;
             const wasPinch = points.size > 1;
             points.delete(e.pointerId);
+            timeStore.setState({scrubbing:false});
             if (wasPinch) {
+                timeStore.setState({velocity:0});
                 points.clear();
                 velocity = 0;
                 return;
             }
             if (e.type === 'pointercancel') {
+                timeStore.setState({velocity:0});
                 velocity = 0;
                 return;
             }
@@ -238,10 +245,10 @@ export function River({ compact = false }: {
         element.addEventListener('pointerup', up);
         element.addEventListener('pointercancel', up);
         frame = requestAnimationFrame(draw);
-        return () => { cancelAnimationFrame(frame); observer.disconnect(); element.removeEventListener('pointerdown', down); element.removeEventListener('pointermove', move); element.removeEventListener('pointerup', up); element.removeEventListener('pointercancel', up); };
-    }, [data, compact]);
+        return () => { timeStore.setState({scrubbing:false,velocity:0}); cancelAnimationFrame(frame); observer.disconnect(); element.removeEventListener('pointerdown', down); element.removeEventListener('pointermove', move); element.removeEventListener('pointerup', up); element.removeEventListener('pointercancel', up); };
+    }, [data, compact, locale]);
     return <div className={`river-control ${compact ? 'compact' : ''}`}>
-    <div className="river-canvas-wrap"><canvas ref={canvas} className="history-river" role="slider" tabIndex={0} aria-label="历史长河 · 左右键逐年，Shift 十年，双击复原" aria-valuemin={-403} aria-valuemax={2027} aria-valuenow={230} onDoubleClick={resetTimeView} onKeyDown={e => { if (e.code === 'Space') {
+    <div className="river-canvas-wrap"><canvas ref={canvas} className="history-river" role="slider" tabIndex={0} aria-label={ct('riverHelp')} aria-valuemin={-403} aria-valuemax={2027} aria-valuenow={230} onDoubleClick={resetTimeView} onKeyDown={e => { if (e.code === 'Space') {
         e.preventDefault();
         toggleTime();
     } if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -254,6 +261,6 @@ export function River({ compact = false }: {
         e.preventDefault();
         seekYear(2027);
     } }}/><span ref={stamp} className="river-seal" aria-hidden="true">今</span></div>
-    <div className="river-years" ref={ticks}/><div className="river-legend" ref={legend} aria-label="当前支流"/><div className="river-zoom"><button aria-label="缩小时间范围" onClick={() => { const [a, b] = timeStore.getState().view; setTimeView((a + b) / 2 - (b - a) / 4, (a + b) / 2 + (b - a) / 4); }}>＋</button><button onClick={resetTimeView}>复原</button><button aria-label="扩大时间范围" onClick={() => { const [a, b] = timeStore.getState().view; setTimeView(a - (b - a) / 2, b + (b - a) / 2); }}>−</button></div>{error && <p role="alert">{error}</p>}
+    <div className="river-years" ref={ticks}/><div className="river-legend" ref={legend} aria-label={ct('branches')}/><div className="river-zoom"><button aria-label={ct('zoomIn')} onClick={() => { const [a, b] = timeStore.getState().view; setTimeView((a + b) / 2 - (b - a) / 4, (a + b) / 2 + (b - a) / 4); }}>＋</button><button onClick={resetTimeView}>{ct('resetView')}</button><button aria-label={ct('zoomOut')} onClick={() => { const [a, b] = timeStore.getState().view; setTimeView(a - (b - a) / 2, b + (b - a) / 2); }}>−</button></div>{error && <p role="alert">{ct('loadError')} · {error}</p>}
   </div>;
 }

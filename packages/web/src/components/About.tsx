@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react';
 import { GlassButton, GlassPanel } from './Glass';
 import { useI18n } from '../i18n';
 import { useShell } from '../state/shell';
+import { useChronicleText } from '../i18n/chronicle';
 import { CHGIS_CITATION } from './Credits';
 export function About() {
-  const { t } = useI18n(); const close = useShell(s => s.setAbout); const ref = useRef<HTMLDivElement>(null);
+  const { t } = useI18n(); const ct=useChronicleText(); const close = useShell(s => s.setAbout); const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     ref.current?.querySelector('button')?.focus();
@@ -18,5 +19,5 @@ export function About() {
     };
     document.addEventListener('keydown', key); return () => { document.removeEventListener('keydown', key); if (previous?.isConnected) previous.focus(); else document.querySelector<HTMLElement>('[data-popover-trigger="more"]')?.focus(); };
   }, [close]);
-  return <div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget) close(false); }}><div ref={ref}><GlassPanel className="about-dialog" role="dialog" aria-modal="true" aria-label={t('about')}><GlassButton className="modal-close" icon="close" label={t('close')} onClick={() => close(false)}/><img src="/brand/seal.svg" alt="" width="72" height="72"/><p className="eyebrow">WITLU · JIANGSHAN</p><h2>{t('aboutTitle')}</h2><p>{t('credit')} <a href="https://github.com/DeanChensj/jiangshan-map" target="_blank" rel="noreferrer">{t('upstream')}</a></p><p>{t('license')}</p><p>{CHGIS_CITATION}</p><p>Terrain Tiles / Mapzen · USGS SRTM &amp; GMTED2010 · NOAA ETOPO1 · Natural Earth. <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noreferrer">Terrain sources ↗</a></p><p>{t('legitimacy')}</p><p>{t('disclaimer')}</p><a href="https://github.com/wangleiwangyueyi-ui/witlu/blob/main/NOTICE.md" target="_blank" rel="noreferrer">NOTICE · GPL-3.0 ↗</a></GlassPanel></div></div>;
+  return <div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget) close(false); }}><div ref={ref}><GlassPanel className="about-dialog" role="dialog" aria-modal="true" aria-label={t('about')}><GlassButton className="modal-close" icon="close" label={t('close')} onClick={() => close(false)}/><img src="/brand/seal.svg" alt="" width="72" height="72"/><p className="eyebrow">WITLU · JIANGSHAN</p><h2>{t('aboutTitle')}</h2><p>{t('credit')} <a href="https://github.com/DeanChensj/jiangshan-map" target="_blank" rel="noreferrer">{t('upstream')}</a></p><p>{t('license')}</p><p>{CHGIS_CITATION}</p><p>Terrain Tiles / Mapzen · USGS SRTM &amp; GMTED2010 · NOAA ETOPO1 · Natural Earth. <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noreferrer">Terrain sources ↗</a></p><p><a href="https://github.com/skishore/makemeahanzi">{ct('calligraphyCredit')}</a> · <a href="/calligraphy/ARPHIC-LICENSE.txt">Arphic Public License</a></p><p>{t('legitimacy')}</p><p>{t('disclaimer')}</p><a href="https://github.com/wangleiwangyueyi-ui/witlu/blob/main/NOTICE.md" target="_blank" rel="noreferrer">NOTICE · GPL-3.0 ↗</a></GlassPanel></div></div>;
 }

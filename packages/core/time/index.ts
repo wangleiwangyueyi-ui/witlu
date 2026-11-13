@@ -1,5 +1,6 @@
 /** Historical years use -1, 1 at the BCE/CE boundary. Indices are continuous. */
 export * from './chronology';
+export * from './chapters';
 export function yearToIndex(year: number): number {
   if (!Number.isInteger(year) || year === 0) throw new RangeError('Historical years must be nonzero integers; use an index for interpolation');
   return year < 0 ? year + 1 : year;

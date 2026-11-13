@@ -3,6 +3,7 @@ import { indexToYear, playbackDelta, yearToIndex } from '@witlu/core/time';
 import { useShell } from '../state/shell';
 export type TimeMode = 'drag' | 'play' | 'jump';
 interface TimeState {
+    scrubbing: boolean;
     index: number;
     speed: number;
     playing: boolean;
@@ -19,7 +20,7 @@ interface TimeState {
 const min = yearToIndex(-403), max = yearToIndex(2027);
 const initial = yearToIndex(useShell.getState().year);
 const initialLeft = Math.max(min, Math.min(max - 120, initial - 60));
-export const timeStore = createStore<TimeState>(() => ({ index: initial, speed: 1, playing: false, mode: 'jump', velocity: 0, view: [initialLeft, initialLeft + 120], flow: true, flight: true, haptics: true }));
+export const timeStore = createStore<TimeState>(() => ({ scrubbing: false, index: initial, speed: 1, playing: false, mode: 'jump', velocity: 0, view: [initialLeft, initialLeft + 120], flow: true, flight: true, haptics: true }));
 export function seekIndex(index: number, mode: TimeMode = 'jump', velocity = 0) {
     if (!Number.isFinite(index))
         return;

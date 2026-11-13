@@ -1,0 +1,18 @@
+[WebServer] (node:35896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `pnpm --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:35500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [desktop] › tests\chapters.spec.ts:53:1 › P6 recorded chapter tour and cross-snapshot drag performance (1.3m)
+(node:47580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [iPhone-14] › tests\chapters.spec.ts:53:1 › P6 recorded chapter tour and cross-snapshot drag performance (45.1s)
+(node:37492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [Pixel-7] › tests\chapters.spec.ts:53:1 › P6 recorded chapter tour and cross-snapshot drag performance (48.2s)
+
+  3 passed (3.0m)

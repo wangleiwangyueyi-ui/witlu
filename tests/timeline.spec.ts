@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs/promises';
-const folder = 'docs/progress/screenshots/P5';
+const folder = 'docs/progress/screenshots/P6/regression';
 test('year input, ambiguity, BCE boundary and keyboard controls', async ({ page }) => {
     await page.goto('/lab/timeline');
     const input = page.locator('#history-year');
@@ -72,8 +72,8 @@ test('playback speed, pause, inertia, zoom reset and touch targets', async ({ pa
         expect(target.width, target.label ?? '').toBeGreaterThanOrEqual(44);
         expect(target.height, target.label ?? '').toBeGreaterThanOrEqual(44);
     }
-    await fs.mkdir('docs/progress/performance/P5', { recursive: true });
-    await fs.writeFile(`docs/progress/performance/P5/${info.project.name}-targets.json`, JSON.stringify(targets, null, 2));
+    await fs.mkdir('docs/progress/performance/P6/regression', { recursive: true });
+    await fs.writeFile(`docs/progress/performance/P6/regression/${info.project.name}-targets.json`, JSON.stringify(targets, null, 2));
 });
 test('two-finger zoom and reduced motion switches', async ({ page }, info) => {
     test.skip(info.project.name === 'desktop', 'Touch gestures on phone viewports');
