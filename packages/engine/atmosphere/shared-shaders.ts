@@ -1,4 +1,18 @@
 export const environmentUniformsGLSL = /* glsl */`
+uniform float weatherRain;
+uniform float weatherTime;
+uniform float weatherFlash;
+uniform float weatherSorrow;
+uniform float weatherFlood;
+uniform float weatherFire;
+uniform vec3 weatherBlue;
+uniform vec3 weatherGold;
+uniform vec3 weatherFocus;
+uniform vec4 weatherRiver[32];
+uniform int weatherRiverCount;
+float riverDistance(vec2 p){float d=100000.;for(int i=0;i<32;i++){if(i>=weatherRiverCount)break;vec4 r=weatherRiver[i];vec2 ab=r.zw-r.xy;float t=clamp(dot(p-r.xy,ab)/max(1.,dot(ab,ab)),0.,1.);d=min(d,length(p-r.xy-ab*t));}return d;}
+vec3 weatherGrade(vec3 color,vec3 world){float lum=dot(color,vec3(.2126,.7152,.0722));color=mix(color,weatherBlue*lum*1.7,weatherSorrow);color=mix(color,weatherBlue,weatherFlash*.3);
+float focusDistance=distance(world.xz,weatherFocus.xz);if((weatherFlood>0.||weatherFire>0.)&&focusDistance<480.){float d=riverDistance(world.xz),local=1.-smoothstep(100.,480.,focusDistance);float width=mix(4.,55.,weatherFlood);float water=(1.-smoothstep(width*.6,width,d))*local;float ripple=.65+.35*sin(d*.4-weatherTime*2.);color=mix(color,weatherBlue*.23,water*weatherFlood*.5);float reflection=(1.-smoothstep(0.,18.,d))*local*(.55+.45*sin(world.x*1.5+weatherTime*8.));color=mix(color,weatherGold,reflection*weatherFire*.2*ripple);}return color;}
 uniform float envEnabled;
 uniform float envTime;
 uniform vec3 sunDirection;

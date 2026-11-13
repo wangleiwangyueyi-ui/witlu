@@ -1,0 +1,16 @@
+.weather-lab-controls { position: absolute; top: max(20px, var(--space-safe-top)); left: 20px; width: 310px; max-height: calc(100dvh - 64px); overflow-y: auto; padding: 20px; }
+.weather-lab-controls h1 { font: 600 30px var(--font-title); margin-block: 6px 16px; }
+.weather-scenes, .weather-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-block: 10px; }
+.weather-controls p { font-size: 13px; color: var(--text-secondary); }
+.weather-controls [role='alert'] { color: var(--polity-coral); }
+.weather-controls > .glass-button { margin-block: 4px; }
+.weather-controls details { margin-block: 12px; }
+.weather-controls summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+.weather-story-caption { position: absolute; left: 30px; top: 130px; max-width: min(440px, 50vw); padding: 10px 16px; font-size: 13px; line-height: 1.5; pointer-events: none; }
+[data-weather-mood='solemn'] .track-event[data-current='true'], [data-weather-mood='solemn'] .chronicle-event[data-current='true'] { background: var(--glass-light); box-shadow: inset 2px 0 var(--land-snow); }
+[data-weather-mood='solemn'] .calligraphy-stamp, [data-weather-mood='solemn'] .calligraphy-stroke { animation: none; }
+@media (width < 768px) {
+  .weather-story-caption { top: 128px; left: 16px; right: 16px; max-width: none; padding: 8px 12px; font-size: 12px; }
+  .weather-lab-controls { top: auto; bottom: max(24px, var(--space-safe-bottom)); left: 12px; right: 12px; width: auto; max-height: 34dvh; padding: 14px; }
+  .weather-lab-controls h1 { font-size: 22px; }
+}

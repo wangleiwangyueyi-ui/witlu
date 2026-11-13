@@ -1,3 +1,4 @@
+import { storyLock } from '../state/weather';
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { activeTracks, sameYearSites } from '@witlu/core/time';
@@ -56,6 +57,6 @@ export function PolityDossier() {
 }
 export function ResonanceDriver() {
   const {data,year}=useWorld(), enabled=useChapterSettings(s=>s.resonance), reduced=useReducedEffects();
-  useEffect(()=>{const engine=terrainBridge.engine;if(!engine||!data)return;engine.resonance.enabled=enabled;if(!enabled||reduced)return;const timer=setTimeout(()=>{if(timeStore.getState().scrubbing || Math.abs(timeStore.getState().velocity)>0)return;const sites=sameYearSites(year,data.events);if(sites.length>1){engine.resonance.trigger(sites);frameSites(sites,800);}},300);return()=>clearTimeout(timer);},[data,year,enabled,reduced]);
+  useEffect(()=>{const engine=terrainBridge.engine;if(!engine||!data)return;engine.resonance.enabled=enabled;if(!enabled||reduced)return;const timer=setTimeout(()=>{if(storyLock.active || timeStore.getState().scrubbing || Math.abs(timeStore.getState().velocity)>0)return;const sites=sameYearSites(year,data.events);if(sites.length>1){engine.resonance.trigger(sites);frameSites(sites,800);}},300);return()=>clearTimeout(timer);},[data,year,enabled,reduced]);
   return null;
 }

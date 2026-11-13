@@ -3,11 +3,12 @@ import type { DecodedImage } from '../platform/PlatformAdapter';
 import type { IUniform } from 'three';
 import type { EnvironmentPalette } from '../atmosphere/Environment';
 import type { MorphPalette } from '../morph/Morph';
+import type { WeatherPalette } from '../weather/Weather';
 import { BOUNDS, elevationKm, latFromY, project, sampleHeight, tileBounds } from './geo';
 import type { TileId } from './geo';
 import { terrainFragment, terrainVertex } from './shaders';
 import { oceanFragment, oceanVertex } from '../ocean/shaders';
-export interface TerrainPalette { sky: string; land: string; sea: string; environment?: EnvironmentPalette; morph?:MorphPalette }
+export interface TerrainPalette { sky: string; land: string; sea: string; environment?: EnvironmentPalette; morph?:MorphPalette; weather?:WeatherPalette }
 
 function texture(image: DecodedImage, srgb: boolean) { const tex = new DataTexture(image.data, image.width, image.height, RGBAFormat); tex.colorSpace = srgb ? SRGBColorSpace : NoColorSpace; tex.minFilter = tex.magFilter = LinearFilter; tex.generateMipmaps = false; tex.flipY = false; tex.needsUpdate = true; return tex; }
 export class TerrainTile {

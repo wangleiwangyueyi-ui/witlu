@@ -64,6 +64,8 @@ void main() {
       float aa = 1.0 - smoothstep(2.0, 5.0, fwidth(phase));
       color = mix(color, waveColor, band * broken * shore * aa * .055);
     }
+    if(weatherRain>0.){vec2 cell=floor(vWorld.xz/24.),uvRain=fract(vWorld.xz/24.)-.5;float seed=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453);float age=fract(weatherTime*1.7+seed);float ring=1.-smoothstep(.018,.07,abs(length(uvRain)-age*.48));color=mix(color,weatherBlue,ring*(1.-age)*weatherRain*.07);}
+    color=weatherGrade(color,vWorld);
     color *= cloudShadow(vWorld);
     float fog = max(smoothstep(5000.0, 15000.0, vDistance) * .12 * fogEnabled, 1.0 - smoothstep(0.0, 600.0, edge));
     color = mix(color, mix(skyColor, horizonColor, .28), fog * smoothstep(0.0, 600.0, edge));

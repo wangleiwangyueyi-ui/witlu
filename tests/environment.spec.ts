@@ -25,7 +25,7 @@ test('all sea regions and independent environment controls work',async({page},in
     await page.getByRole('button',{name,exact:true}).click();await expect.poll(async()=>(await stats(page)).pose.lon).toBeCloseTo(lon,1);await ready(page);
     await page.screenshot({path:`docs/progress/screenshots/P5/regression/p4/regression/region-${lon}.png`});expect((await stats(page)).errors).toBe(0);
   }
-  await page.locator('.debug-console summary').filter({hasText:'特效开关'}).click();
+  await page.locator('.debug-console summary').filter({hasText:/^特效开关$/}).click();
   const pairs = [['海水流动','waterMotion'],['冷色反光','moonlight'],['海岸光浪','coastWaves'],['洋流粒子','currents'],['渐变天空','sky'],['远景雾','fog'],['光照循环','lightCycle'],['漂移云片','clouds'],['移动云影','cloudShadows']] as const;
   for(const [label,key] of pairs) {
     await page.getByRole('switch',{name:label,exact:true}).click();await expect.poll(async()=>(await stats(page)).environment.effects[key]).toBe(false);

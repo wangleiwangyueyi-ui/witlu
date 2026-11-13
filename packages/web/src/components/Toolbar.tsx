@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { GlassButton, GlassChip, Popover, SegmentedControl } from './Glass';
 import { useI18n } from '../i18n';
 import { useShell } from '../state/shell';
 import type { Quality, Regime } from '../state/shell';
 import type { Locale, MessageKey } from '../i18n/messages';
 import { useToast } from './Toast';
+import { weatherMixer, useAudioState } from '../audio/WeatherMixer';
 import { terrainBridge } from '../state/terrain';
 export function Toggle({ label, checked, onChange, disabled = false }: { label: string; checked: boolean; onChange: () => void; disabled?: boolean }) { return <button type="button" className="toggle-row" role="switch" aria-checked={checked} disabled={disabled} onClick={onChange}><span>{label}</span><i aria-hidden="true"><b/></i></button>; }
 function Search() {
@@ -13,14 +14,8 @@ function Search() {
   return <Popover icon="search" label={t('search')} className="search-popover"><input className="search-input" aria-label={t('searchPlaceholder')} placeholder={t('searchPlaceholder')} value={query} onChange={e => setQuery(e.target.value)}/><div className="search-results">{results.length ? results.map(key => <button type="button" key={key} onClick={() => { select(key); toast(`${t('selected')} · ${t(key)}`); }}>{t(key)}<span>{key === 'wei' ? t('main') : t('rival')}</span></button>) : <p>{t('noResults')}</p>}</div></Popover>;
 }
 function Music() {
-  const { t } = useI18n(); const ref = useRef<HTMLAudioElement | null>(null); const [playing, setPlaying] = useState(false); const toast = useToast();
-  useEffect(() => () => { ref.current?.pause(); }, []);
-  const toggle = async () => {
-    if (!ref.current) { const audio = new Audio('/assets/audio/liu_shui.mp3'); audio.loop = true; audio.volume = .28; ref.current = audio; }
-    if (playing) { ref.current.pause(); setPlaying(false); return; }
-    try { await ref.current.play(); setPlaying(true); } catch { toast(t('musicError')); }
-  };
-  return <GlassButton icon="music" label={playing ? t('pauseMusic') : t('playMusic')} aria-pressed={playing} onClick={() => void toggle()}/>;
+  const {t}=useI18n(),playing=useAudioState(s=>s.enabled),toast=useToast();
+  return <GlassButton icon="music" label={playing?t('pauseMusic'):t('playMusic')} aria-pressed={playing} onClick={()=>void weatherMixer.toggle().catch(()=>toast(t('musicError')))}/>;
 }
 export function Toolbar({ refractionSupported }: { refractionSupported: boolean }) {
   const { t, locale } = useI18n(); const state = useShell(); const toast = useToast();

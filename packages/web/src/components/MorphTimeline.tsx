@@ -5,6 +5,7 @@ import { terrainBridge } from '../state/terrain';
 import { useShell } from '../state/shell';
 import { timeStore } from '../store/time';
 import { useMorphSettings } from './MorphControls';
+import { storyLock } from '../state/weather';
 export function MorphTimeline({ phases }: {
     phases: Phase[];
 }) {
@@ -25,6 +26,7 @@ export function MorphTimeline({ phases }: {
             engine.morph.fillOpacity = s.opacity;
         };
         const update = async (force = false) => {
+            if(storyLock.active){request++;current='';return;}
             const engine = terrainBridge.engine;
             if (!engine)
                 return;

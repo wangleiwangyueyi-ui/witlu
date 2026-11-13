@@ -1,1 +1,16 @@
-{ "name": "@witlu/core", "version": "0.0.0", "private": true, "type": "module", "exports": { ".": "./index.ts", "./time": "./time/index.ts", "./edt": "./edt/index.ts", "./morph": "./morph/index.ts" }, "scripts": { "typecheck": "tsc -p tsconfig.json" } }
+{
+  "name": "@witlu/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./time": "./time/index.ts",
+    "./edt": "./edt/index.ts",
+    "./morph": "./morph/index.ts",
+    "./weather": "./weather/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

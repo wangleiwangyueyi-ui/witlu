@@ -17,6 +17,8 @@ export class Clouds {
   }
   update(time: number, distance: number, anchor: { x: number; z: number }, camera: PerspectiveCamera, effects: EnvironmentEffects, layers: number, limit: number, enabled: boolean) {
     const cohorts = cloudCohorts(time, limit), fade = cloudFade(distance), data = this.uniforms.cloudData!.value as Vector4[], details = this.uniforms.cloudDetails!.value as Vector4[];
+    const storm=(this.uniforms.weatherStorm?.value??0) as number;
+    if(storm>0){if(cohorts.length>=limit)cohorts.pop();cohorts.push({id:-999,age:0,offsetX:-300,offsetZ:-1700+Math.min(1,((this.uniforms.weatherTime?.value??0) as number)/3)*1000,alpha:storm*.25});}
     const right = new Vector3(1, 0, 0).applyQuaternion(camera.quaternion), up = new Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
     (this.uniforms.cloudBasis!.value as Vector4).set(right.x, right.z, up.x, up.z);
     this.uniforms.cloudVisibility!.value = fade; this.uniforms.cloudCount!.value = enabled && effects.clouds ? cohorts.length : 0;

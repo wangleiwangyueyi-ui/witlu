@@ -22,6 +22,7 @@ export class Morph {
     readonly uniforms: Record<string, IUniform>;
     effects: MorphEffects = { ...DEFAULT_MORPH_EFFECTS };
     enabled = false;
+    precomputeEnabled = true;
     reducedMotion = false;
     fillOpacity = .4;
     snapshots: Snapshot[] = [];
@@ -350,10 +351,10 @@ export class Morph {
         const previousCanonical = (this.trailSide === 0) !== this.flip ? 0 : 1;
         this.linesA?.update(this.renderer, lineOn ? Math.max(fadeA, previousCanonical === 0 ? trail : 0) : 0, MORPH_QUALITY[quality].glow, fadeA < .01 && trail > 0 && previousCanonical === 0);
         this.linesB?.update(this.renderer, lineOn ? Math.max(fadeB, previousCanonical === 1 ? trail : 0) : 0, MORPH_QUALITY[quality].glow, fadeB < .01 && trail > 0 && previousCanonical === 1);
-        if (active && now > this.warmAt && !this.preparing && !this.flight && !this.preview && now - this.lastDrag > 500)
+        if (this.precomputeEnabled && active && now > this.warmAt && !this.preparing && !this.flight && !this.preview && now - this.lastDrag > 500)
             void this.precompute();
     }
-    stats() { return { preview: this.preview, rasterCacheHits: this.rasterHits, rasterCacheEntries: this.targetCache.size, enabled: this.enabled, ready: this.ready, preparing: this.preparing, error: this.error, snapshotA: this.flip ? this.canonicalB : this.canonicalA, snapshotB: this.flip ? this.canonicalA : this.canonicalB, t: this.progress, playing: Boolean(this.flight), mode: this.crossfade ? 'crossfade' : 'sdf', labelSize: this.labelsSize, fieldSize: this.size, preparationMs: this.preparationMs, rasterMs: this.rasterMs, workerMs: this.workerMs, resolveMs: this.resolveMs, changedPixels: this.result?.changed ?? 0, involved: this.result?.ids.length ?? 0, fieldBytes: this.result?.bytes ?? 0, cacheHit: this.cacheHit, cacheBytes: this.cacheBytes, prefetched: this.prefetched, capitalFallbacks: this.result?.seeds.filter(s => s.source === 'centroid').length ?? 0, seedSources: this.result?.seeds.map(seed => ({ ...seed, polity: [...this.ids].find(([, id]) => id === seed.id)?.[0] })) ?? [], fillOpacity: this.fillOpacity, effects: { ...this.effects } }; }
+    stats() { return { backgroundPreparing:this.warming, preview: this.preview, rasterCacheHits: this.rasterHits, rasterCacheEntries: this.targetCache.size, enabled: this.enabled, ready: this.ready, preparing: this.preparing, error: this.error, snapshotA: this.flip ? this.canonicalB : this.canonicalA, snapshotB: this.flip ? this.canonicalA : this.canonicalB, t: this.progress, playing: Boolean(this.flight), mode: this.crossfade ? 'crossfade' : 'sdf', labelSize: this.labelsSize, fieldSize: this.size, preparationMs: this.preparationMs, rasterMs: this.rasterMs, workerMs: this.workerMs, resolveMs: this.resolveMs, changedPixels: this.result?.changed ?? 0, involved: this.result?.ids.length ?? 0, fieldBytes: this.result?.bytes ?? 0, cacheHit: this.cacheHit, cacheBytes: this.cacheBytes, prefetched: this.prefetched, capitalFallbacks: this.result?.seeds.filter(s => s.source === 'centroid').length ?? 0, seedSources: this.result?.seeds.map(seed => ({ ...seed, polity: [...this.ids].find(([, id]) => id === seed.id)?.[0] })) ?? [], fillOpacity: this.fillOpacity, effects: { ...this.effects } }; }
     /** Explicit debug audit; never read back pixels in the animation loop. */
     async audit() {
         if (!this.result || !this.targetA || !this.targetB)

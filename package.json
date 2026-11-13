@@ -8,7 +8,7 @@
     "node": ">=22.12"
   },
   "scripts": {
-    "data": "node scripts/import-upstream.mjs && node scripts/build-geometry.mjs && node scripts/build-territories.mjs && node scripts/build-colors.mjs && node scripts/build-events.mjs && node scripts/build-moods.mjs && node scripts/verify-parity.mjs && node scripts/build-calligraphy.mjs",
+    "data": "node scripts/import-upstream.mjs && node scripts/build-geometry.mjs && node scripts/build-territories.mjs && node scripts/build-colors.mjs && node scripts/build-events.mjs && node scripts/build-moods.mjs && node scripts/verify-parity.mjs && node scripts/build-calligraphy.mjs && node scripts/build-weather-audio.mjs",
     "dev": "pnpm --filter @witlu/web dev",
     "build": "pnpm data && pnpm assets && pnpm tiles && pnpm typecheck && pnpm --filter @witlu/web build",
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json",
@@ -16,20 +16,22 @@
     "fonts": "node scripts/build-fonts.mjs",
     "tiles": "node scripts/build-dem.mjs && node scripts/bake-relief.mjs && node scripts/bake-coast-distance.mjs",
     "tiles:preview": "node scripts/build-dem.mjs --max-zoom 5 && node scripts/bake-relief.mjs --preview",
-    "assets": "node scripts/build-brand.mjs && node scripts/build-calligraphy.mjs",
+    "assets": "node scripts/build-brand.mjs && node scripts/build-calligraphy.mjs && node scripts/build-weather-audio.mjs",
     "test": "vitest run",
     "verify:parity": "node scripts/verify-parity.mjs",
     "verify:terrain": "node scripts/verify-terrain.mjs",
     "test:smoke": "playwright test",
     "test:performance": "node scripts/test-performance.mjs",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm verify:terrain && pnpm verify:environment && pnpm verify:morph && pnpm test:smoke",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm verify:parity && pnpm verify:terrain && pnpm verify:environment && pnpm verify:morph && pnpm verify:weather && pnpm test:smoke",
     "tiles:environment": "node scripts/bake-coast-distance.mjs",
     "verify:environment": "node scripts/verify-environment.mjs",
     "test:environment": "node scripts/test-environment.mjs",
     "test:morph": "node scripts/test-morph.mjs",
     "verify:morph": "node scripts/verify-morph.mjs",
     "test:timeline": "node scripts/test-timeline.mjs",
-    "test:chapters": "node scripts/test-chapters.mjs"
+    "test:chapters": "node scripts/test-chapters.mjs",
+    "test:weather": "node scripts/test-weather.mjs",
+    "verify:weather": "node scripts/verify-weather.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

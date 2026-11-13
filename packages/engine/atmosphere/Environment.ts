@@ -15,6 +15,8 @@ export class Environment {
   effects: EnvironmentEffects = { ...DEFAULT_EFFECTS }; enabled = false; reducedMotion = false;
   time = 0; ready = false; error: string | null = null; private slowTime = 0;
   private disposed = false; private maps: DataTexture[] = [];
+  private coastPixels: {data:Uint8Array|Uint8ClampedArray;width:number;height:number}|null=null;
+  private coastSample={key:'',value:0};
   private sky: Mesh; private clouds: Clouds; private currents: Currents;
   private state = effectiveSettings('high', this.effects, false);
   constructor(private platform: PlatformAdapter, palette: EnvironmentPalette, scene: Scene) {
@@ -44,6 +46,7 @@ export class Environment {
       const entries = [['coastDistance', 'coast-distance.webp'], ['normalA', 'water-normal-a.webp'], ['normalB', 'water-normal-b.webp'], ['cloudCoverage', 'cloud-coverage.webp']] as const;
       for (const [uniform, name] of entries) {
         const pixels = await this.platform.decodeImage(await this.platform.readBytes(`/tiles/environment/${name}`)); if (this.disposed) return;
+        if(uniform==='coastDistance')this.coastPixels=pixels;
         const texture = new DataTexture(pixels.data, pixels.width, pixels.height, RGBAFormat); texture.colorSpace = NoColorSpace; texture.magFilter = LinearFilter; texture.flipY = false;
         const repeat = uniform === 'normalA' || uniform === 'normalB'; texture.minFilter = repeat ? LinearMipmapLinearFilter : LinearFilter; texture.generateMipmaps = repeat; if (repeat) texture.wrapS = texture.wrapT = RepeatWrapping;
         texture.needsUpdate = true; this.maps.push(texture); this.uniforms[uniform]!.value = texture;
@@ -66,6 +69,20 @@ export class Environment {
     this.sky.visible = active && this.effects.sky; this.sky.position.copy(camera.camera.position);
     this.clouds.update(this.time, camera.pose.distance, project(camera.pose.lon, camera.pose.lat), camera.camera, this.effects, this.state.cloudLayers, this.state.cloudLimit, active);
     this.currents.update(this.slowTime, this.state.currents, active);
+  }
+  coastalProximity(lon:number,lat:number){
+    const key=`${lon.toFixed(2)},${lat.toFixed(2)}`;if(this.coastSample.key===key)return this.coastSample.value;
+    if(!this.coastPixels)return 0;const p=project(lon,lat),t=this.uniforms.coastTransform!.value as Vector4,u=(p.x-t.x)/t.z,v=(p.z-t.y)/t.w;
+    if(u<0||v<0||u>=1||v>=1)return 0;
+    const {data,width,height}=this.coastPixels,i=(Math.floor(v*height)*width+Math.floor(u*width))*4,distance=((data[i]??255)*256+(data[i+1]??255))/65535*160;
+    let nearest=distance;
+    if((data[i+2]??255)>127){
+      // The offshore EDT is zero on land. Search its landmask near a coastal
+      // camera target instead of treating every inland location as a beach.
+      const km=t.z/width*Math.cos(lat*Math.PI/180),radius=Math.ceil(45/km),cx=Math.floor(u*width),cy=Math.floor(v*height);nearest=45;
+      for(let y=-radius;y<=radius;y++)for(let x=-radius;x<=radius;x++){const d=Math.hypot(x,y)*km,px=cx+x,py=cy+y;if(d>=nearest||px<0||py<0||px>=width||py>=height)continue;if((data[(py*width+px)*4+2]??255)<128)nearest=d;}
+    }
+    this.coastSample={key,value:Math.max(0,1-nearest/45)};return this.coastSample.value;
   }
   stats() { return { enabled: this.enabled, ready: this.ready, error: this.error, time: this.time, sunAzimuth: sunAzimuth(this.time, this.effects.lightCycle), clouds: this.uniforms.cloudCount!.value as number, cloudLayers: this.state.cloudLayers, shadowStrength: this.state.shadows, normalLayers: this.state.normalLayers, currentParticles: this.state.currents, reducedMotion: this.reducedMotion, effects: { ...this.effects } }; }
   restore() { this.maps.forEach(texture => { texture.needsUpdate = true; }); }
