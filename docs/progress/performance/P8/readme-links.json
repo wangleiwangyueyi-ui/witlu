@@ -1,0 +1,22 @@
+[
+  {
+    "source": "README_ZH.md",
+    "url": "https://deanchen.me/jiangshan-map/?year=741&place=长安",
+    "query": "?year=741&place=%E9%95%BF%E5%AE%89"
+  },
+  {
+    "source": "README_ZH_HANT.md",
+    "url": "https://deanchen.me/jiangshan-map/?year=741&place=長安",
+    "query": "?year=741&place=%E9%95%B7%E5%AE%89"
+  },
+  {
+    "source": "README.md",
+    "url": "https://deanchen.me/jiangshan-map/?year=741&place=Chang'an&lang=en",
+    "query": "?year=741&place=Chang%27an&lang=en"
+  },
+  {
+    "source": "README_JA.md",
+    "url": "https://deanchen.me/jiangshan-map/?year=741&place=Chang'an&lang=en",
+    "query": "?year=741&place=Chang%27an&lang=en"
+  }
+]

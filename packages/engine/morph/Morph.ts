@@ -1,4 +1,4 @@
-import { Color, DataArrayTexture, DataTexture, FloatType, GLSL3, HalfFloatType, LinearFilter, Mesh, NoColorSpace, OrthographicCamera, PlaneGeometry, RGFormat, RGBAFormat, Scene, ShaderMaterial } from 'three';
+import { Color, Vector3, DataArrayTexture, DataTexture, FloatType, GLSL3, HalfFloatType, LinearFilter, Mesh, NoColorSpace, OrthographicCamera, PlaneGeometry, RGFormat, RGBAFormat, Scene, ShaderMaterial } from 'three';
 import type { IUniform, WebGLRenderer, WebGLRenderTarget } from 'three';
 import type { PlatformAdapter } from '../platform/PlatformAdapter';
 import type { TerrainManager } from '../terrain/TerrainManager';
@@ -101,7 +101,7 @@ export class Morph {
         this.field.needsUpdate = true;
         this.paletteTexture = new DataTexture(new Float32Array(1024 * 4 * 4), 1024, 4, RGBAFormat, FloatType);
         this.paletteTexture.needsUpdate = true;
-        this.uniforms = { polityFocus: { value: 0 }, territoryEdges: { value: 0 }, territoryEnabled: { value: 0 }, polityA: { value: dummy }, polityB: { value: dummy }, polityCurrent: { value: this.current.texture }, polityPalette: { value: this.paletteTexture }, territoryBounds: { value: territoryTransform }, territoryProgress: { value: 0 }, territoryCrossfade: { value: 0 }, territoryOpacity: { value: .4 }, territoryFront: { value: 0 }, territoryInk: { value: 0 }, territoryGold: { value: new Color(palette.gold) }, particleEnabled: { value: 0 }, particleRatio: { value: 1 } };
+        this.uniforms = { territoryFields:{value:this.field}, territoryLens:{value:new Vector3(0,0,0)}, territoryLabelSize:{value:this.labelsSize}, territoryFieldSize:{value:this.size}, polityFocus: { value: 0 }, territoryEdges: { value: 0 }, territoryEnabled: { value: 0 }, polityA: { value: dummy }, polityB: { value: dummy }, polityCurrent: { value: this.current.texture }, polityPalette: { value: this.paletteTexture }, territoryBounds: { value: territoryTransform }, territoryProgress: { value: 0 }, territoryCrossfade: { value: 0 }, territoryOpacity: { value: .4 }, territoryFront: { value: 0 }, territoryInk: { value: 0 }, territoryGold: { value: new Color(palette.gold) }, particleEnabled: { value: 0 }, particleRatio: { value: 1 } };
         const material = new ShaderMaterial({ glslVersion: GLSL3, depthTest: false, depthWrite: false, uniforms: { fields: { value: this.field }, labelsA: { value: dummy }, labelsB: { value: dummy }, palette: { value: this.paletteTexture }, progress: { value: 0 }, count: { value: 0 }, ids: { value: new Float32Array(96) } }, vertexShader: resolveVertex, fragmentShader: resolveFragment });
         this.resolveMesh = new Mesh(new PlaneGeometry(2, 2), material);
         this.resolveScene.add(this.resolveMesh);
@@ -211,6 +211,7 @@ export class Morph {
                 this.makePalette(this.styles(ca!), this.styles(cb!), result);
                 const uniforms = (this.resolveMesh.material as ShaderMaterial).uniforms;
                 uniforms.fields!.value = this.field;
+                this.uniforms.territoryFields!.value=this.field;
                 uniforms.labelsA!.value = ta.texture;
                 uniforms.labelsB!.value = tb.texture;
                 uniforms.count!.value = result.ids.length;
@@ -249,7 +250,7 @@ export class Morph {
             if (s.role !== 'neighbor')
                 data[(3 * 1024 + id) * 4] = 1;
         } for (const seed of result.seeds)
-        data.set([seed.x / this.size, seed.y / this.size, 1, 0], (2 * 1024 + seed.id) * 4); this.paletteTexture.needsUpdate = true; }
+        data.set([seed.x / this.size, seed.y / this.size, 1, 0], (2 * 1024 + seed.id) * 4); for(const [layer,id]of result.ids.entries())data[(3*1024+id)*4+1]=layer+1; this.paletteTexture.needsUpdate = true; }
     setProgress(t: number, mode: 'drag' | 'seek' = 'drag', speed = 0) {
         if (!Number.isFinite(t))
             return;

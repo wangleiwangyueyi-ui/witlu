@@ -1,3 +1,4 @@
+import {Cartography} from './cartography/Cartography';
 import { Color, Scene, SRGBColorSpace, WebGLRenderer } from 'three';
 import type { WebGLRendererParameters } from 'three';
 import type { PlatformAdapter } from './platform/PlatformAdapter';
@@ -15,9 +16,9 @@ import { Vector3 } from 'three';
 import { TimeFlight } from './atmosphere/TimeFlight';
 import { Morph } from './morph/Morph';
 import { Weather } from './weather/Weather';
-export interface EngineStats { fps: number; frameMs: number; cpuMs: number; drawCalls: number; triangles: number; tiles: number; cached: number; loading: number; errors: number; zoom: number; quality: Quality; pixelRatio: number; context: 'ready' | 'lost'; pose: ReturnType<AtlasRenderer['pose']>; environment: ReturnType<Environment['stats']>; weather:ReturnType<Weather['stats']>; morph:ReturnType<Morph['stats']> }
+export interface EngineStats { cartography:ReturnType<Cartography['stats']>; fps: number; frameMs: number; cpuMs: number; drawCalls: number; triangles: number; tiles: number; cached: number; loading: number; errors: number; zoom: number; quality: Quality; pixelRatio: number; context: 'ready' | 'lost'; pose: ReturnType<AtlasRenderer['pose']>; environment: ReturnType<Environment['stats']>; weather:ReturnType<Weather['stats']>; morph:ReturnType<Morph['stats']> }
 export class AtlasRenderer {
-  readonly weather:Weather; readonly resonance: Resonance; readonly timeFlight: TimeFlight; readonly camera: MapCamera; readonly quality: QualityController; readonly terrain: TerrainManager; readonly environment: Environment; readonly morph:Morph;
+  readonly cartography:Cartography; readonly weather:Weather; readonly resonance: Resonance; readonly timeFlight: TimeFlight; readonly camera: MapCamera; readonly quality: QualityController; readonly terrain: TerrainManager; readonly environment: Environment; readonly morph:Morph;
   readonly renderer: WebGLRenderer; private scene = new Scene(); private frame = 0; private alive = true; private visible = true; private lost = false;
   private previous = 0; private lastLod = -Infinity; private lastReport = 0; private samples: number[] = []; private cpu: number[] = [];
   private cleanup: (() => void)[] = [];
@@ -35,6 +36,7 @@ export class AtlasRenderer {
     this.terrain = new TerrainManager(platform, this.scene, palette, initialQuality, viewport.mobile, this.environment.uniforms);
     this.resonance = new Resonance(this.scene, this.terrain, palette.morph?.gold ?? palette.land);
     this.morph=new Morph(platform,this.renderer,this.terrain,this.scene,palette.morph??{gold:palette.land,white:palette.land,cinnabar:palette.land,dust:palette.land});Object.assign(this.environment.uniforms,this.morph.uniforms);
+    this.cartography=new Cartography(platform,this.scene,this.renderer,this.terrain,palette.morph?.gold??palette.land,palette.weather?.blue??palette.land,palette.morph?.white??palette.land);
     this.camera.onPick = (x, y) => this.onPick?.(pickTerrain(x, y, this.camera.width, this.camera.height, this.camera.camera, this.terrain.visible));
     this.cleanup.push(platform.bindInput(this.camera), platform.onResize(() => this.resize()), platform.onContextChange(() => {
       this.lost = true; platform.cancelFrame(this.frame); this.report(platform.now());
@@ -56,6 +58,7 @@ export class AtlasRenderer {
     this.camera.flyTo(pose,duration);
   }
   projectSite(coord: [number, number]) { const q = project(...coord), p = new Vector3(q.x, this.terrain.heightAt(q.x,q.z) + 8, q.z).project(this.camera.camera); return { x: (p.x+1)*.5*this.camera.width, y: (1-p.y)*.5*this.camera.height, visible: Math.abs(p.x)<=1 && Math.abs(p.y)<=1 && p.z>=-1 && p.z<=1 }; }
+  pickAt(x:number,y:number){return pickTerrain(x,y,this.camera.width,this.camera.height,this.camera.camera,this.terrain.visible);}
   pose() { return { ...this.camera.pose }; }
   setQuality(level: Quality) { this.quality.set(level); this.terrain.setQuality(level); this.resize(); }
   resize() { const v = this.platform.viewport(); this.camera.resize(Math.max(1, v.width), Math.max(1, v.height)); this.renderer.setPixelRatio(Math.min(v.pixelRatio, QUALITY[this.quality.level].pixelRatio)); this.renderer.setSize(Math.max(1, v.width), Math.max(1, v.height), false); this.lastLod = -Infinity; }
@@ -70,7 +73,9 @@ export class AtlasRenderer {
     this.weather.update(now,this.camera,this.quality.level,this.terrain);
     if (now - this.lastLod >= 120) { this.terrain.update(this.camera.camera, this.camera.height, now); this.lastLod = now; }
     this.morph.precomputeEnabled=!this.weather.stats().active;
+    const lens=this.cartography.paths.lensState(),ratio=this.renderer.getPixelRatio();(this.morph.uniforms.territoryLens!.value as Vector3).set(lens.x*ratio,(this.camera.height-lens.y)*ratio,lens.radius*ratio);
     this.morph.update(now,this.quality.level);
+    this.cartography.update(now,this.camera,this.quality.level,this.environment.reducedMotion,this.renderer.getPixelRatio());
     this.renderer.render(this.scene, this.camera.camera);
     if (dt < 250) { this.samples.push(dt); this.cpu.push(this.platform.now() - start); }
     const change = this.quality.sample(dt); if (change) { this.terrain.setQuality(change); this.resize(); this.onQuality?.(change); }
@@ -79,10 +84,10 @@ export class AtlasRenderer {
   }
   private report(now: number) {
     const mean = (values: number[]) => values.reduce((s, n) => s + n, 0) / Math.max(1, values.length);
-    const frameMs = mean(this.samples); this.onStats?.({ fps: this.lost ? 0 : frameMs ? 1000 / frameMs : 0, frameMs, cpuMs: mean(this.cpu), drawCalls: this.renderer.info.render.calls, triangles: this.renderer.info.render.triangles, tiles: this.terrain.visible.length, cached: this.terrain.cacheSize, loading: this.terrain.loading, errors: this.terrain.errors, zoom: this.terrain.maxZoom, quality: this.quality.level, pixelRatio: this.renderer.getPixelRatio(), context: this.lost ? 'lost' : 'ready', pose: this.pose(), weather:this.weather.stats(), environment: this.environment.stats(), morph:this.morph.stats() });
+    const frameMs = mean(this.samples); this.onStats?.({ cartography:this.cartography.stats(), fps: this.lost ? 0 : frameMs ? 1000 / frameMs : 0, frameMs, cpuMs: mean(this.cpu), drawCalls: this.renderer.info.render.calls, triangles: this.renderer.info.render.triangles, tiles: this.terrain.visible.length, cached: this.terrain.cacheSize, loading: this.terrain.loading, errors: this.terrain.errors, zoom: this.terrain.maxZoom, quality: this.quality.level, pixelRatio: this.renderer.getPixelRatio(), context: this.lost ? 'lost' : 'ready', pose: this.pose(), weather:this.weather.stats(), environment: this.environment.stats(), morph:this.morph.stats() });
     this.samples = []; this.cpu = []; this.lastReport = now;
   }
   renderNow() { if (!this.lost) this.renderer.render(this.scene, this.camera.camera); }
   prepareWeather(){this.weather.warm(this.renderer,this.camera.camera);}
-  dispose() { this.alive = false; this.platform.cancelFrame(this.frame); this.cleanup.forEach(fn => fn()); this.camera.cancel(); this.terrain.dispose(); this.resonance.dispose(); this.timeFlight.dispose(); this.weather.dispose(); this.environment.dispose(); this.morph.dispose(); this.renderer.dispose(); }
+  dispose() { this.alive = false; this.platform.cancelFrame(this.frame); this.cleanup.forEach(fn => fn()); this.camera.cancel(); this.terrain.dispose(); this.resonance.dispose(); this.timeFlight.dispose(); this.cartography.dispose(); this.weather.dispose(); this.environment.dispose(); this.morph.dispose(); this.renderer.dispose(); }
 }

@@ -19,7 +19,7 @@ export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Wo
   }
   viewport() { const box = this.canvas.getBoundingClientRect(); return { width: box.width, height: box.height, pixelRatio: devicePixelRatio, mobile: matchMedia('(pointer: coarse)').matches || box.width < 768 }; }
   createWorker(path: string):WorkerPort {
-    const worker=path==='growth'?new Worker(new URL('../workers/growth.worker.ts',import.meta.url),{type:'module'}):new Worker(path,{type:'module'});
+    const worker=path==='labels'?new Worker(new URL('../workers/labels.worker.ts',import.meta.url),{type:'module'}):path==='growth'?new Worker(new URL('../workers/growth.worker.ts',import.meta.url),{type:'module'}):new Worker(path,{type:'module'});
     return{post:(message,transfer=[])=>worker.postMessage(message,transfer),onMessage:fn=>{const listener=(e:MessageEvent<unknown>)=>fn(e.data);worker.addEventListener('message',listener);return()=>worker.removeEventListener('message',listener);},onError:fn=>{const listener=(e:ErrorEvent)=>fn(e.message);worker.addEventListener('error',listener);return()=>worker.removeEventListener('error',listener);},terminate:()=>worker.terminate()};
   }
   storage = { get: (key: string) => { try { return localStorage.getItem(key); } catch { return null; } }, set: (key: string, value: string) => { try { localStorage.setItem(key, value); } catch { /* Storage is optional. */ } } };
@@ -30,12 +30,18 @@ export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Wo
   bindInput(handlers: InputHandlers) {
     const canvas = this.canvas, controller = new AbortController(), options = { signal: controller.signal }, active = new Set<number>();
     const input = (e: PointerEvent): PointerInput => { const box = canvas.getBoundingClientRect(); return { id: e.pointerId, x: e.clientX - box.left, y: e.clientY - box.top, button: e.buttons === 2 ? 2 : 0, shift: e.shiftKey, time: e.timeStamp }; };
-    canvas.addEventListener('pointerdown', e => { e.preventDefault(); canvas.focus({ preventScroll: true }); active.add(e.pointerId); canvas.setPointerCapture(e.pointerId); handlers.down(input(e)); }, options);
-    canvas.addEventListener('pointermove', e => handlers.move(input(e)), options);
-    canvas.addEventListener('pointerup', e => { active.delete(e.pointerId); handlers.up(input(e)); if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId); }, options);
-    canvas.addEventListener('pointercancel', () => { active.clear(); handlers.cancel(); }, options);
-    canvas.addEventListener('lostpointercapture', e => { if (active.has(e.pointerId)) { active.clear(); handlers.cancel(); } }, options);
-    canvas.addEventListener('wheel', e => { e.preventDefault(); handlers.wheel(e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? canvas.clientHeight : 1)); }, { ...options, passive: false });
+    // DOM place labels are part of the map surface: capture on the original
+    // target so taps still click the label, while drags feed the same camera.
+    const surface = canvas.closest('.atlas-app,.places-lab') ?? canvas;
+    const isMapTarget = (target: EventTarget | null) => target === canvas || target instanceof Element && !!target.closest('.place-label');
+    const starts = new Map<number, {x:number;y:number}>(); let dragged = false, suppressClickUntil = 0;
+    surface.addEventListener('pointerdown', event => { const e=event as PointerEvent;if(!isMapTarget(e.target))return;e.preventDefault();canvas.focus({preventScroll:true});if(!active.size)dragged=false;active.add(e.pointerId);starts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(active.size>1)dragged=true;(e.target as Element).setPointerCapture(e.pointerId);handlers.down(input(e)); }, options);
+    surface.addEventListener('pointermove', event => { const e=event as PointerEvent;if(!active.has(e.pointerId))return;const start=starts.get(e.pointerId);if(start&&Math.hypot(e.clientX-start.x,e.clientY-start.y)>6)dragged=true;handlers.move(input(e)); }, options);
+    surface.addEventListener('pointerup', event => { const e=event as PointerEvent;if(!active.has(e.pointerId))return;active.delete(e.pointerId);starts.delete(e.pointerId);handlers.up(input(e));if(dragged)suppressClickUntil=performance.now()+350;const target=e.target as Element;if(target.hasPointerCapture(e.pointerId))target.releasePointerCapture(e.pointerId); }, options);
+    surface.addEventListener('pointercancel', () => { active.clear();starts.clear();handlers.cancel(); }, options);
+    surface.addEventListener('lostpointercapture', event => { const e=event as PointerEvent;if(active.has(e.pointerId)){active.clear();starts.clear();handlers.cancel();} }, options);
+    surface.addEventListener('click', e => {if(isMapTarget(e.target)&&performance.now()<suppressClickUntil){e.preventDefault();e.stopPropagation();}}, {...options,capture:true});
+    surface.addEventListener('wheel', event => {const e=event as WheelEvent;if(!isMapTarget(e.target))return;e.preventDefault();handlers.wheel(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?canvas.clientHeight:1));}, {...options,passive:false});
     canvas.addEventListener('contextmenu', e => e.preventDefault(), options);
     canvas.addEventListener('keydown', e => { if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-', 'Home'].includes(e.key)) { e.preventDefault(); handlers.key(e.key); } }, options);
     return () => controller.abort();
