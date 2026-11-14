@@ -32,7 +32,8 @@
     "test:chapters": "node scripts/test-chapters.mjs",
     "test:weather": "node scripts/test-weather.mjs",
     "verify:weather": "node scripts/verify-weather.mjs",
-    "test:places": "node scripts/test-places.mjs"
+    "test:places": "node scripts/test-places.mjs",
+    "test:explore": "node scripts/test-explore.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

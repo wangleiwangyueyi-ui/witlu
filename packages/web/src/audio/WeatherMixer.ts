@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import type { WeatherAudio } from '@witlu/engine';
-export const useAudioState=create<{enabled:boolean;ready:boolean;error:string}>(()=>({enabled:false,ready:false,error:''}));
+export const useAudioState=create<{enabled:boolean;ready:boolean;error:string;track:number;volume:number}>(()=>({enabled:false,ready:false,error:'',track:0,volume:.7}));
 type Sound='rain'|'wind'|'waves'|'thunder';
 class WeatherMixer {
   private context:AudioContext|null=null;private master:GainNode|null=null;private musicGain:GainNode|null=null;private music:HTMLAudioElement|null=null;
   private gains=new Map<Sound,GainNode>();private buffers=new Map<Sound,AudioBuffer>();private sources=new Set<AudioBufferSourceNode>();private pending=new Set<AudioBufferSourceNode>();private load:Promise<void>|null=null;
-  private consent=false;private last:WeatherAudio={rain:0,wind:0,waves:0,thunder:false,delay:.8,quiet:false};
+  private trackUrl='/assets/audio/liu_shui.mp3';private ducked=false;private consent=false;private last:WeatherAudio={rain:0,wind:0,waves:0,thunder:false,delay:.8,quiet:false};
   constructor(){
     // WeChat may expose its media bridge after React mounts. Never use it to bypass consent.
     document.addEventListener('WeixinJSBridgeReady',()=>{if(this.consent&&useAudioState.getState().enabled)void this.resume().catch(()=>this.mute());});
@@ -17,7 +17,7 @@ class WeatherMixer {
     this.consent=true;
     try{
       if(!this.context){const Ctor=window.AudioContext??(window as unknown as {webkitAudioContext:typeof AudioContext}).webkitAudioContext;this.context=new Ctor();this.master=this.context.createGain();this.master.gain.value=.65;const limiter=this.context.createDynamicsCompressor();limiter.threshold.value=-16;limiter.ratio.value=8;this.master.connect(limiter).connect(this.context.destination);
-        this.music=new Audio('/assets/audio/liu_shui.mp3');this.music.loop=true;this.music.preload='auto';this.music.setAttribute('playsinline','');this.music.setAttribute('webkit-playsinline','');this.musicGain=this.context.createGain();this.musicGain.gain.value=.28;this.context.createMediaElementSource(this.music).connect(this.musicGain).connect(this.master);
+        this.music=new Audio(this.trackUrl);this.music.loop=true;this.music.preload='auto';this.music.setAttribute('playsinline','');this.music.setAttribute('webkit-playsinline','');this.musicGain=this.context.createGain();this.musicGain.gain.value=.28;this.context.createMediaElementSource(this.music).connect(this.musicGain).connect(this.master);
       }
       // Both calls happen in the button gesture, before any fetch/decode await.
       const resumed=this.context.resume(),played=this.music!.play();useAudioState.setState({enabled:true,error:''});await Promise.all([resumed,played]);
@@ -35,9 +35,12 @@ class WeatherMixer {
     this.last={...cue,thunder:false};if(cue.quiet)this.cancelThunder();if(!this.context||!useAudioState.getState().enabled||document.hidden)return;
     const now=this.context.currentTime;
     for(const name of ['rain','wind','waves']as const){const gain=this.gains.get(name);if(gain){gain.gain.cancelScheduledValues(now);gain.gain.setTargetAtTime(cue.quiet?0:cue[name]*(name==='rain'?.48:.3),now,.3);}}
-    this.musicGain?.gain.setTargetAtTime(cue.rain>.2?.19:.28,now,.4);
+    this.musicGain?.gain.setTargetAtTime((cue.rain>.2?.19:.28)*useAudioState.getState().volume/.7*(this.ducked?.3:1),now,.4);
     if(cue.thunder&&!cue.quiet&&this.buffers.has('thunder')){const source=this.context.createBufferSource(),gain=this.context.createGain();source.buffer=this.buffers.get('thunder')!;gain.gain.value=.48;source.connect(gain).connect(this.master!);this.pending.add(source);source.onended=()=>{this.pending.delete(source);source.disconnect();gain.disconnect();};source.start(now+Math.max(.6,Math.min(1.2,cue.delay)));}
   }
-  stats(){return {consent:this.consent,enabled:useAudioState.getState().enabled,state:this.context?.state??'uninitialized',buffers:this.buffers.size,pendingThunder:this.pending.size,levels:{...this.last}};}
+  async selectTrack(index:number,url:string){if(!url.startsWith('/assets/audio/'))throw Error('Local tracks only');this.trackUrl=url;useAudioState.setState({track:index});if(this.music){this.music.src=url;if(useAudioState.getState().enabled)await this.music.play();}}
+  setVolume(volume:number){useAudioState.setState({volume:Math.max(0,Math.min(1,volume))});this.update(this.last);}
+  duck(enabled:boolean){this.ducked=enabled;this.update(this.last);}
+  stats(){return {track:useAudioState.getState().track,musicTime:this.music?.currentTime??0,musicSrc:this.music?.src??this.trackUrl,consent:this.consent,enabled:useAudioState.getState().enabled,state:this.context?.state??'uninitialized',buffers:this.buffers.size,pendingThunder:this.pending.size,levels:{...this.last}};}
 }
 export const weatherMixer=new WeatherMixer();

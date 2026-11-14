@@ -2,7 +2,7 @@ export type Coord=[number,number];
 export interface Geometry {type:string;coordinates:Coord[][]|Coord[][][]}
 export interface Feature {geometry:Geometry;properties:{title?:string;layer?:string;anchor?:Coord;id?:string;[key:string]:unknown}}
 export interface Collection {features:Feature[]}
-export interface Site {id:string;name:string;en?:string;coord:Coord;kind:'seal'|'gate'|'battle'|'scroll'|'bead'|'lantern';priority:number;modern?:string;description?:string;quote?:string;year?:number;capital?:boolean}
+export interface Site {id:string;name:string;en?:string;coord:Coord;kind:'seal'|'gate'|'battle'|'scroll'|'bead'|'lantern';priority:number;modern?:string;description?:string;quote?:string;year?:number;capital?:boolean;color?:string}
 export interface Dated {appear?:number;vanish?:number}
 export function activeAt(item:Dated,year:number){return (item.appear==null||year>=item.appear)&&(item.vanish==null||year<item.vanish);}
 export function polygons(g:Geometry):Coord[][][]{return g.type==='Polygon'?[g.coordinates as Coord[][]]:g.coordinates as Coord[][][];}

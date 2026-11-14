@@ -21,7 +21,7 @@ export interface Chronicle {
     dynasties: Chapter[];
 }
 let promise: Promise<Chronicle> | undefined;
-export function loadChronicle() {
+export function loadChronicle(): Promise<Chronicle> {
     return promise ??= Promise.all(['phases', 'coexistence', 'eras', 'polity-colors', 'events', 'dynasties', 'polities', 'i18n'].map(async (name) => {
         const r = await fetch(`/data/${name}.json`);
         if (!r.ok)

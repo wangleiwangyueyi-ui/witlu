@@ -1,0 +1,316 @@
+{
+  "rawIntervals": [
+    {
+      "scenario": "person=sushi&stop=6",
+      "frames": [
+        27.09999998211879,
+        233.30000000000018,
+        50.099999999999454,
+        416.60000000000036,
+        16.599999999999454,
+        216.70000000000073,
+        16.699999999999818,
+        33.30000000000018,
+        33.399999999999636,
+        16.600000000000364,
+        50,
+        383.2999999999993,
+        300,
+        483.3000000000011,
+        316.6999999999989,
+        300,
+        399.89999999999964,
+        350.10000000000036,
+        266.60000000000036,
+        83.29999999999927,
+        100,
+        416.7000000000007
+      ]
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "frames": [
+        -25.300000000000182,
+        66.69999999999982,
+        33.30000000000018,
+        33.30000000000018,
+        266.6999999999998,
+        16.699999999999818,
+        266.60000000000036,
+        150,
+        116.69999999999982,
+        50,
+        566.6000000000004,
+        433.3000000000002,
+        416.6999999999998,
+        549.8999999999996,
+        366.8000000000002,
+        33.30000000000018,
+        66.59999999999945,
+        83.40000000000055,
+        266.59999999999945,
+        66.70000000000073,
+        33.29999999999927,
+        66.70000000000073,
+        400,
+        16.600000000000364,
+        50,
+        83.39999999999964,
+        16.600000000000364,
+        66.69999999999891
+      ]
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "frames": [
+        -10.900000005960464,
+        50,
+        33.30000000000018,
+        33.30000000000018,
+        216.69999999999982,
+        33.399999999999636,
+        166.60000000000036,
+        33.399999999999636,
+        33.30000000000018,
+        33.30000000000018,
+        50,
+        366.59999999999945,
+        500,
+        466.7000000000007,
+        566.6999999999998,
+        449.89999999999964,
+        383.3000000000002,
+        483.39999999999964,
+        433.3000000000011,
+        433.2999999999993
+      ]
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "frames": [
+        -5.799999988079435,
+        33.30000000000018,
+        33.400000000000546,
+        33.29999999999927,
+        150,
+        16.700000000000728,
+        33.29999999999927,
+        33.30000000000018,
+        50,
+        400,
+        416.6999999999998,
+        33.30000000000018,
+        33.30000000000018,
+        166.69999999999982,
+        450,
+        466.60000000000036,
+        416.6999999999998,
+        383.1999999999998,
+        33.400000000000546,
+        66.59999999999945,
+        100,
+        383.40000000000055,
+        316.60000000000036,
+        283.2999999999993,
+        66.70000000000073,
+        83.29999999999927,
+        366.7000000000007
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 18.262457605009125,
+      "frameMs": 54.75714285714288,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 0,
+      "frameMs": 0,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 10.911074740862018,
+      "frameMs": 91.64999999999964,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 21.82214948172382,
+      "frameMs": 45.82500000000027,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 18.007202881152423,
+      "frameMs": 55.53333333333345,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 26.675558519506534,
+      "frameMs": 37.487499999999955,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 23.99520095980802,
+      "frameMs": 41.67500000000003,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=sushi&stop=6",
+      "fps": 20.6262891430714,
+      "frameMs": 48.481818181818284,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 9.472687085569946,
+      "frameMs": 105.5666666666666,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 16.366612111292948,
+      "frameMs": 61.10000000000006,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 17.99640071985595,
+      "frameMs": 55.56666666666691,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 24.708789269325866,
+      "frameMs": 40.47142857142847,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 29.985007496251956,
+      "frameMs": 33.34999999999991,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 11.25281320330081,
+      "frameMs": 88.86666666666679,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 32.894736842105196,
+      "frameMs": 30.400000000000063,
+      "quality": "high"
+    },
+    {
+      "scenario": "person=libai,dufu,gaoshi",
+      "fps": 30.00750187546893,
+      "frameMs": 33.32499999999993,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 0,
+      "frameMs": 0,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 0,
+      "frameMs": 0,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 0,
+      "frameMs": 0,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 18.007202881152423,
+      "frameMs": 55.53333333333345,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 26.666666666666668,
+      "frameMs": 37.5,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 29.994001199760245,
+      "frameMs": 33.33999999999978,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 27.100271002710006,
+      "frameMs": 36.90000000000003,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=anshi&stop=1",
+      "fps": 23.99520095980802,
+      "frameMs": 41.67500000000003,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 23.574796399485667,
+      "frameMs": 42.41818181818177,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 0,
+      "frameMs": 0,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 0,
+      "frameMs": 0,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 13.333333333333334,
+      "frameMs": 75,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 40.00000000000146,
+      "frameMs": 24.99999999999909,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 22.48875562218866,
+      "frameMs": 44.46666666666715,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 24.376523532720746,
+      "frameMs": 41.02307692307701,
+      "quality": "high"
+    },
+    {
+      "scenario": "event=jingkang&stop=1",
+      "fps": 20.62628914307147,
+      "frameMs": 48.48181818181811,
+      "quality": "high"
+    }
+  ],
+  "errors": []
+}

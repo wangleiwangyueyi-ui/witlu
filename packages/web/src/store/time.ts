@@ -17,10 +17,13 @@ interface TimeState {
     flight: boolean;
     haptics: boolean;
 }
-const min = yearToIndex(-403), max = yearToIndex(2027);
+const rangeParams=new URLSearchParams(location.search),from=Number(rangeParams.get('from')),to=Number(rangeParams.get('to'));
+const hasRange=Number.isInteger(from)&&Number.isInteger(to)&&from!==0&&to!==0&&from>=-403&&to<=2027&&to-from>=12;
+const min = yearToIndex(hasRange?from:-403), max = yearToIndex(hasRange?to:2027);
 const initial = yearToIndex(useShell.getState().year);
-const initialLeft = Math.max(min, Math.min(max - 120, initial - 60));
-export const timeStore = createStore<TimeState>(() => ({ scrubbing: false, index: initial, speed: 1, playing: false, mode: 'jump', velocity: 0, view: [initialLeft, initialLeft + 120], flow: true, flight: true, haptics: true }));
+const initialWidth = Math.min(120, max - min);
+const initialLeft = Math.max(min, Math.min(max - initialWidth, initial - initialWidth / 2));
+export const timeStore = createStore<TimeState>(() => ({ scrubbing: false, index: initial, speed: 1, playing: false, mode: 'jump', velocity: 0, view: [initialLeft, initialLeft + initialWidth], flow: true, flight: true, haptics: true }));
 export function seekIndex(index: number, mode: TimeMode = 'jump', velocity = 0) {
     if (!Number.isFinite(index))
         return;
@@ -82,7 +85,7 @@ export function startTimeClock(boundaries: number[]) {
         frame = requestAnimationFrame(tick);
     };
     const keyboard = (e: KeyboardEvent) => {
-        if ((e.target as HTMLElement)?.closest('input,textarea,select,[contenteditable=true],[role=slider],button') || e.ctrlKey || e.metaKey || e.altKey || useShell.getState().about)
+        if (e.defaultPrevented || (e.target as HTMLElement)?.closest('input,textarea,select,[contenteditable=true],[role=slider],button') || e.ctrlKey || e.metaKey || e.altKey || useShell.getState().about)
             return;
         if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
             e.preventDefault();

@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-14",
+  "verify": {
+    "passed": true,
+    "unitTests": 141,
+    "playwrightPassed": 88,
+    "playwrightSkipped": 137,
+    "failed": 0
+  },
+  "readmeLinks": 63,
+  "screenshots": 24,
+  "videos": 3,
+  "productionBuild": true,
+  "upstreamCommit": "dbee605562dd87048c61218b2938bb7c6ffa792e",
+  "note": "Performance limits and device-emulation scope documented in P9.md; skipped performance tests are not a pass."
+}

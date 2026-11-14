@@ -1,0 +1,51 @@
+.explore-backdrop { position: fixed; inset: 0; z-index: 80; background: var(--shadow-blue); display: grid; place-items: start center; padding: max(90px,env(safe-area-inset-top)) 16px 24px; }
+.search-dialog { width: min(650px,100%); padding: 20px; border-radius: var(--radius-lg); max-height: 80dvh; overflow: auto; }
+.search-dialog header,.exploration-panel header,.quiz-panel header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.search-dialog h2,.exploration-panel h2,.quiz-panel h2 { font: 24px var(--font-title); margin: 8px 0; }
+.search-dialog form { display: flex; gap: 8px; margin-block: 12px; }
+.search-dialog input { min-width: 0; flex: 1; }
+.search-dialog button,.exploration-panel button,.quiz-panel button { min-height: 44px; color: var(--text); }
+.search-dialog form button,.search-shortcuts button,.together-result,.exploration-panel>button { background: var(--glass-reflect); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 8px 12px; }
+.search-shortcuts { display: flex; flex-wrap: wrap; gap: 6px; }
+.search-dialog .search-results { max-height: 48dvh; overflow: auto; }
+.search-dialog [aria-selected=true] { outline: 1px solid var(--gold-glow); background: var(--glass-reflect); }
+.search-results small { flex-shrink: 0; color: var(--text-secondary); }
+.exploration-panel,.quiz-panel { position: absolute; z-index: 16; top: 106px; left: 24px; width: 340px; padding: 18px; border-radius: var(--radius-lg); max-height: calc(100dvh - 270px); overflow: auto; box-shadow: var(--shadow-panel); }
+.exploration-copy { max-height: 35dvh; overflow: auto; line-height: 1.7; }
+.exploration-panel small { color: var(--text-secondary); }
+.exploration-panel blockquote { margin: 12px 0; border-left: 2px solid var(--polity-main); padding-left: 12px; font-family: var(--font-title); color: var(--text); }
+.route-navigation { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; }
+.exploration-panel ol { padding-left: 24px; }.exploration-panel li button { text-align: left; background: transparent; border: 0; }
+.exploration-panel [aria-current=step],.act-heading { color: var(--gold-glow); }
+.camp-legend { display: flex; gap: 12px; margin: 12px 0; }.camp-legend span { border-bottom: 3px solid var(--camp-color); padding-bottom: 6px; }
+.meteor-switch { display: flex; gap: 8px; align-items: center; min-height: 44px; }
+.quiz-pin { position: absolute; top: 0; left: 0; z-index: 18; color: var(--gold-glow); font-size: 36px; }
+.quiz-pin button { display: block; min-height: 44px; color: var(--text); border: 1px solid var(--gold-glow); border-radius: var(--radius-sm); font-size: 16px; padding: 8px; }
+.quiz-rings { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+.quiz-rings path { fill: none; stroke: var(--gold-glow); stroke-width: 2; opacity: .7; }
+:root[data-quiz=true] .place-labels,:root[data-quiz=true] .polity-labels,:root[data-quiz=true] .world-tracks,:root[data-quiz=true] .chapter-panel,:root[data-quiz=true] .sheet,:root[data-quiz=true] .map-bubble { visibility: hidden; }
+.atlas-app:has(.exploration-panel) .chapter-panel { visibility: hidden; }
+@media(max-width:767px) {
+ .exploration-panel,.quiz-panel { left: 12px; right: 12px; top: auto; bottom: calc(100px + env(safe-area-inset-bottom)); width: auto; max-height: 39dvh; padding: 12px; }
+ .exploration-panel h2,.quiz-panel h2 { font-size: 20px; }.exploration-copy { max-height: 17dvh; }.atlas-app:has(.exploration-panel) .sheet { visibility: hidden; }
+ .search-dialog { padding: 12px; }.search-dialog h2 { font-size: 21px; }.search-dialog .search-results { max-height: 42dvh; }
+}
+
+.atlas-app[data-embed=true] .app-header,.atlas-app[data-embed=true] .chapter-panel,.atlas-app[data-embed=true] .world-tracks,.atlas-app[data-embed=true] .map-meta { display: none; }
+.atlas-app[data-embed=true] .place-card { top: 20px; }
+.atlas-app:has(.exploration-panel) .world-tracks { left: 390px; right: 24px; width: auto; }
+.place-poem { max-width: 180px; overflow: hidden; }
+
+.exploration-panel { display: flex; flex-direction: column; }
+.exploration-panel header,.camp-legend,.route-navigation,.exploration-panel>button { flex-shrink: 0; }
+.exploration-copy { flex: 1 1 auto; min-height: 48px; }
+.exploration-panel details { max-height: 180px; overflow: auto; flex-shrink: 0; }
+.exploration-panel summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+@media(max-width:767px) {
+ .exploration-panel { bottom: calc(20px + env(safe-area-inset-bottom)); max-height: 46dvh; }
+ .exploration-panel header h2 { font-size: 18px; }.exploration-panel header small { font-size: 10px; }
+ .exploration-copy { max-height: 23dvh; font-size: 13px; }.camp-legend { margin: 6px 0; font-size: 12px; }
+ .place-poem { font-size: 14px; max-height: 150px; max-width: 84px; opacity: .75; }
+}
+
+.meteor-switch input,.popover-wrap input[type=range] { accent-color: var(--polity-main); }
