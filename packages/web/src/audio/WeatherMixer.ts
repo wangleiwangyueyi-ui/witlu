@@ -32,11 +32,11 @@ class WeatherMixer {
   private cancelThunder(){this.pending.forEach(s=>{s.stop();s.disconnect();});this.pending.clear();}
   mute(){useAudioState.setState({enabled:false});this.music?.pause();this.cancelThunder();void this.context?.suspend();}
   update(cue:WeatherAudio){
-    this.last={...cue,thunder:false};if(cue.quiet)this.cancelThunder();if(!this.context||!useAudioState.getState().enabled||document.hidden)return;
+    this.last={...cue,thunder:false};if(cue.quiet||cue.cancelThunder)this.cancelThunder();if(!this.context||!useAudioState.getState().enabled||document.hidden)return;
     const now=this.context.currentTime;
     for(const name of ['rain','wind','waves']as const){const gain=this.gains.get(name);if(gain){gain.gain.cancelScheduledValues(now);gain.gain.setTargetAtTime(cue.quiet?0:cue[name]*(name==='rain'?.48:.3),now,.3);}}
     this.musicGain?.gain.setTargetAtTime((cue.rain>.2?.19:.28)*useAudioState.getState().volume/.7*(this.ducked?.3:1),now,.4);
-    if(cue.thunder&&!cue.quiet&&this.buffers.has('thunder')){const source=this.context.createBufferSource(),gain=this.context.createGain();source.buffer=this.buffers.get('thunder')!;gain.gain.value=.48;source.connect(gain).connect(this.master!);this.pending.add(source);source.onended=()=>{this.pending.delete(source);source.disconnect();gain.disconnect();};source.start(now+Math.max(.6,Math.min(1.2,cue.delay)));}
+    if(cue.thunder&&!cue.quiet&&!cue.cancelThunder&&this.buffers.has('thunder')){const source=this.context.createBufferSource(),gain=this.context.createGain();source.buffer=this.buffers.get('thunder')!;gain.gain.value=.48;source.connect(gain).connect(this.master!);this.pending.add(source);source.onended=()=>{this.pending.delete(source);source.disconnect();gain.disconnect();};source.start(now+Math.max(.6,Math.min(1.2,cue.delay)));}
   }
   async selectTrack(index:number,url:string){if(!url.startsWith('/assets/audio/'))throw Error('Local tracks only');this.trackUrl=url;useAudioState.setState({track:index});if(this.music){this.music.src=url;if(useAudioState.getState().enabled)await this.music.play();}}
   setVolume(volume:number){useAudioState.setState({volume:Math.max(0,Math.min(1,volume))});this.update(this.last);}

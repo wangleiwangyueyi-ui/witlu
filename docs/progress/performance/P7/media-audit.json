@@ -1,6 +1,6 @@
 [
   {
-    "file": "desktop-bluepass.webm",
+    "file": "desktop-qin.webm",
     "programs": [],
     "stream_groups": [],
     "streams": [
@@ -11,38 +11,14 @@
       }
     ],
     "format": {
-      "duration": "23.640000"
-    }
-  },
-  {
-    "file": "desktop-chibi.webm",
-    "programs": [],
-    "stream_groups": [],
-    "streams": [
-      {
-        "codec_name": "vp9",
-        "width": 1440,
-        "height": 900
-      }
-    ],
-    "format": {
-      "duration": "23.640000"
-    }
-  },
-  {
-    "file": "desktop-eco.webm",
-    "programs": [],
-    "stream_groups": [],
-    "streams": [
-      {
-        "codec_name": "vp9",
-        "width": 1440,
-        "height": 900
-      }
-    ],
-    "format": {
-      "duration": "23.440000"
-    }
+      "duration": "37.800000"
+    },
+    "sha256": "de60e784bd499192328a07f8409708fb9ffaffc8ff86a35899c087c51fa66cf8",
+    "sampleCount": 254,
+    "rawFps": 12.492253818990195,
+    "p95FrameMs": 283.3000000000011,
+    "maxRawFrameMs": 1083.199999999999,
+    "errors": []
   },
   {
     "file": "desktop-jingkang.webm",
@@ -56,23 +32,14 @@
       }
     ],
     "format": {
-      "duration": "21.680000"
-    }
-  },
-  {
-    "file": "desktop-qin.webm",
-    "programs": [],
-    "stream_groups": [],
-    "streams": [
-      {
-        "codec_name": "vp9",
-        "width": 1440,
-        "height": 900
-      }
-    ],
-    "format": {
-      "duration": "40.040000"
-    }
+      "duration": "20.880000"
+    },
+    "sha256": "bae05f0c9db0d54ef2ecd5aa7adcaf70d924f5abdbf9308ca793423fb9d4a53d",
+    "sampleCount": 89,
+    "rawFps": 12.684567584516277,
+    "p95FrameMs": 116.69999999999891,
+    "maxRawFrameMs": 716.6000000000004,
+    "errors": []
   },
   {
     "file": "desktop-yashan.webm",
@@ -86,8 +53,35 @@
       }
     ],
     "format": {
-      "duration": "21.960000"
-    }
+      "duration": "20.880000"
+    },
+    "sha256": "bdc355d90ef8b067284b2e7e9b6e5c1566ff7d4ed11d3da9a08b34089c39628f",
+    "sampleCount": 197,
+    "rawFps": 27.2362781695009,
+    "p95FrameMs": 50.100000000000364,
+    "maxRawFrameMs": 250,
+    "errors": []
+  },
+  {
+    "file": "desktop-chibi.webm",
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 1440,
+        "height": 900
+      }
+    ],
+    "format": {
+      "duration": "21.240000"
+    },
+    "sha256": "229eec07afc5ef34448b74b420c86ce160e0fc73c9f8172ac9840b27d7668fd8",
+    "sampleCount": 169,
+    "rawFps": 23.5277739106223,
+    "p95FrameMs": 83.29999999999927,
+    "maxRawFrameMs": 116.69999999999891,
+    "errors": []
   },
   {
     "file": "desktop-zhenguan.webm",
@@ -101,68 +95,56 @@
       }
     ],
     "format": {
-      "duration": "22.920000"
-    }
+      "duration": "21.120000"
+    },
+    "sha256": "13ff3db074038f0c08aebfc48684da0c50523b70266e832f54235b2261d3442c",
+    "sampleCount": 143,
+    "rawFps": 19.724682060194763,
+    "p95FrameMs": 83.29999999999927,
+    "maxRawFrameMs": 183.29999999999927,
+    "errors": []
   },
   {
-    "file": "iPhone-14-bluepass.webm",
+    "file": "desktop-bluepass.webm",
     "programs": [],
     "stream_groups": [],
     "streams": [
       {
         "codec_name": "vp9",
-        "width": 390,
-        "height": 664
+        "width": 1440,
+        "height": 900
       }
     ],
     "format": {
-      "duration": "15.720000"
-    }
+      "duration": "19.800000"
+    },
+    "sha256": "b7bfda86bb035b7aca70ffaff2135a6fd05ca5ff6372918231c5d6ef1a833b6d",
+    "sampleCount": 143,
+    "rawFps": 19.86193869188994,
+    "p95FrameMs": 83.29999999999927,
+    "maxRawFrameMs": 100,
+    "errors": []
   },
   {
-    "file": "iPhone-14-chibi.webm",
+    "file": "desktop-eco.webm",
     "programs": [],
     "stream_groups": [],
     "streams": [
       {
         "codec_name": "vp9",
-        "width": 390,
-        "height": 664
+        "width": 1440,
+        "height": 900
       }
     ],
     "format": {
-      "duration": "16.440000"
-    }
-  },
-  {
-    "file": "iPhone-14-eco.webm",
-    "programs": [],
-    "stream_groups": [],
-    "streams": [
-      {
-        "codec_name": "vp9",
-        "width": 390,
-        "height": 664
-      }
-    ],
-    "format": {
-      "duration": "14.760000"
-    }
-  },
-  {
-    "file": "iPhone-14-jingkang.webm",
-    "programs": [],
-    "stream_groups": [],
-    "streams": [
-      {
-        "codec_name": "vp9",
-        "width": 390,
-        "height": 664
-      }
-    ],
-    "format": {
-      "duration": "15.360000"
-    }
+      "duration": "21.560000"
+    },
+    "sha256": "8182f8bddc26a9bef4cec94829eb977f96ee7e6f02d3ea2db17cf33e74e1298c",
+    "sampleCount": 343,
+    "rawFps": 47.640873925302444,
+    "p95FrameMs": 33.399999999999636,
+    "maxRawFrameMs": 250,
+    "errors": []
   },
   {
     "file": "iPhone-14-qin.webm",
@@ -176,8 +158,35 @@
       }
     ],
     "format": {
-      "duration": "28.640000"
-    }
+      "duration": "28.040000"
+    },
+    "sha256": "1facaf3eb02f93ef85e6619b6834bdd033d491ef18190af603212cde962d86b0",
+    "sampleCount": 626,
+    "rawFps": 38.802935634235844,
+    "p95FrameMs": 49.900000000001455,
+    "maxRawFrameMs": 466.60000000000036,
+    "errors": []
+  },
+  {
+    "file": "iPhone-14-jingkang.webm",
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 390,
+        "height": 664
+      }
+    ],
+    "format": {
+      "duration": "16.280000"
+    },
+    "sha256": "6433f6556f02c4b9ca3d8f10342dd296439c8249bf9f3fa2fdde83ea0554be6f",
+    "sampleCount": 282,
+    "rawFps": 38.808229546549235,
+    "p95FrameMs": 49.900000000001455,
+    "maxRawFrameMs": 316.6999999999998,
+    "errors": []
   },
   {
     "file": "iPhone-14-yashan.webm",
@@ -191,8 +200,35 @@
       }
     ],
     "format": {
-      "duration": "15.320000"
-    }
+      "duration": "16.080000"
+    },
+    "sha256": "1020c11f9c4b6351ca41e6ef690d47fe84eff5d16d2d88b409ec446c54ff4ffa",
+    "sampleCount": 371,
+    "rawFps": 51.64900948058638,
+    "p95FrameMs": 33.30000000000109,
+    "maxRawFrameMs": 316.59999999999854,
+    "errors": []
+  },
+  {
+    "file": "iPhone-14-chibi.webm",
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 390,
+        "height": 664
+      }
+    ],
+    "format": {
+      "duration": "17.160000"
+    },
+    "sha256": "155a2f021c0880b428eef6b361eed8359a51df5a8321c0ad4314ff10f6076341",
+    "sampleCount": 345,
+    "rawFps": 48.02940234717601,
+    "p95FrameMs": 33.399999999999636,
+    "maxRawFrameMs": 383.3000000000011,
+    "errors": []
   },
   {
     "file": "iPhone-14-zhenguan.webm",
@@ -206,68 +242,56 @@
       }
     ],
     "format": {
-      "duration": "14.800000"
-    }
+      "duration": "15.760000"
+    },
+    "sha256": "09a4065cb2c8ab0ffcbea1bc64f39f2a2167228cf7a6c02b4e1b80717026daa6",
+    "sampleCount": 359,
+    "rawFps": 49.86318874397544,
+    "p95FrameMs": 33.399999999999636,
+    "maxRawFrameMs": 316.60000000000036,
+    "errors": []
   },
   {
-    "file": "Pixel-7-bluepass.webm",
+    "file": "iPhone-14-bluepass.webm",
     "programs": [],
     "stream_groups": [],
     "streams": [
       {
         "codec_name": "vp9",
-        "width": 412,
-        "height": 838
+        "width": 390,
+        "height": 664
       }
     ],
     "format": {
-      "duration": "14.640000"
-    }
+      "duration": "16.080000"
+    },
+    "sha256": "ce4e433ffcab944c39f0746fa736caf8f8d83f4d7663dce3419b0727d127f54f",
+    "sampleCount": 314,
+    "rawFps": 43.61232256451568,
+    "p95FrameMs": 33.399999999999636,
+    "maxRawFrameMs": 466.7999999999993,
+    "errors": []
   },
   {
-    "file": "Pixel-7-chibi.webm",
+    "file": "iPhone-14-eco.webm",
     "programs": [],
     "stream_groups": [],
     "streams": [
       {
         "codec_name": "vp9",
-        "width": 412,
-        "height": 838
+        "width": 390,
+        "height": 664
       }
     ],
     "format": {
-      "duration": "17.080000"
-    }
-  },
-  {
-    "file": "Pixel-7-eco.webm",
-    "programs": [],
-    "stream_groups": [],
-    "streams": [
-      {
-        "codec_name": "vp9",
-        "width": 412,
-        "height": 838
-      }
-    ],
-    "format": {
-      "duration": "14.400000"
-    }
-  },
-  {
-    "file": "Pixel-7-jingkang.webm",
-    "programs": [],
-    "stream_groups": [],
-    "streams": [
-      {
-        "codec_name": "vp9",
-        "width": 412,
-        "height": 838
-      }
-    ],
-    "format": {
-      "duration": "16.000000"
-    }
+      "duration": "15.720000"
+    },
+    "sha256": "2bec30e56f62d5dc27f0637284fac0858245555162ac3a5f6470a744e12afd9c",
+    "sampleCount": 405,
+    "rawFps": 56.25156254340399,
+    "p95FrameMs": 16.700000000000728,
+    "maxRawFrameMs": 300,
+    "errors": []
   },
   {
     "file": "Pixel-7-qin.webm",
@@ -281,8 +305,35 @@
       }
     ],
     "format": {
-      "duration": "30.880000"
-    }
+      "duration": "27.880000"
+    },
+    "sha256": "7f3c89827d336c8a85be54d4c54365fa5ccf9f075be3dc63b4b72388f48defe3",
+    "sampleCount": 507,
+    "rawFps": 31.07379259622456,
+    "p95FrameMs": 50,
+    "maxRawFrameMs": 616.7000000000007,
+    "errors": []
+  },
+  {
+    "file": "Pixel-7-jingkang.webm",
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 412,
+        "height": 838
+      }
+    ],
+    "format": {
+      "duration": "15.400000"
+    },
+    "sha256": "5a8c37bba9a92aa0edb87f3454b4f523ee300d03bfc5ab03c7bab9c0c1cc6186",
+    "sampleCount": 193,
+    "rawFps": 26.37945409564944,
+    "p95FrameMs": 66.69999999999891,
+    "maxRawFrameMs": 366.7999999999993,
+    "errors": []
   },
   {
     "file": "Pixel-7-yashan.webm",
@@ -296,8 +347,35 @@
       }
     ],
     "format": {
-      "duration": "15.600000"
-    }
+      "duration": "16.120000"
+    },
+    "sha256": "a461694cab334821ac9b7cec7922317273f168c428e167b276accdf4b2cb1bc9",
+    "sampleCount": 292,
+    "rawFps": 40.651538354448,
+    "p95FrameMs": 33.400000000001455,
+    "maxRawFrameMs": 400,
+    "errors": []
+  },
+  {
+    "file": "Pixel-7-chibi.webm",
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 412,
+        "height": 838
+      }
+    ],
+    "format": {
+      "duration": "16.200000"
+    },
+    "sha256": "625c9dac209c273c8a866713fee99b3114512499d89735b90fe6aefc5b43277b",
+    "sampleCount": 267,
+    "rawFps": 36.99957041697269,
+    "p95FrameMs": 50,
+    "maxRawFrameMs": 316.60000000000036,
+    "errors": []
   },
   {
     "file": "Pixel-7-zhenguan.webm",
@@ -311,7 +389,55 @@
       }
     ],
     "format": {
-      "duration": "15.440000"
-    }
+      "duration": "16.120000"
+    },
+    "sha256": "13ecb78a0233b4c1505c3f70ebdf702a6f6689406d0c0dfa6117b7f7ea93e8e2",
+    "sampleCount": 259,
+    "rawFps": 35.97372112726919,
+    "p95FrameMs": 50,
+    "maxRawFrameMs": 333.3000000000011,
+    "errors": []
+  },
+  {
+    "file": "Pixel-7-bluepass.webm",
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 412,
+        "height": 838
+      }
+    ],
+    "format": {
+      "duration": "16.080000"
+    },
+    "sha256": "de549698f14ca2c8f566f7de8930347549b8ff98499f41bdff9b23046617e0f3",
+    "sampleCount": 193,
+    "rawFps": 26.806300175004864,
+    "p95FrameMs": 50.100000000000364,
+    "maxRawFrameMs": 400,
+    "errors": []
+  },
+  {
+    "file": "Pixel-7-eco.webm",
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 412,
+        "height": 838
+      }
+    ],
+    "format": {
+      "duration": "16.360000"
+    },
+    "sha256": "012eb503fe81974c17ac0dc1ca7a8137277ce87886ff9fddc8a9c8099b4d7102",
+    "sampleCount": 398,
+    "rawFps": 55.27931331425873,
+    "p95FrameMs": 16.800000000000182,
+    "maxRawFrameMs": 300.10000000000036,
+    "errors": []
   }
 ]

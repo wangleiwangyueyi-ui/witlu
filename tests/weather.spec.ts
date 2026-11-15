@@ -35,6 +35,39 @@ test('P7 weather rendering, consent, independent controls and sky-only degradati
   expect(errors).toEqual([]);
 });
 
+test('P7 solemn protection interrupts cooldown and cancels queued thunder',async({page},info)=>{
+  test.skip(info.project.name!=='desktop','Shared director and Web Audio contract');
+  await page.goto('/lab/weather');await ready(page);
+  await page.getByRole('button',{name:'开启古琴与环境音',exact:true}).click();
+  await expect.poll(()=>page.evaluate(async()=>{const {weatherMixer}=await import('/src/audio/WeatherMixer.ts' as string);return weatherMixer.stats().buffers;})).toBe(4);
+  const started=await page.evaluate(async()=>{const {terrainBridge}=await import('/src/state/terrain.ts' as string);const weather=terrainBridge.engine!.weather;weather.director.lastTrigger=-Infinity;weather.trigger({id:'storm-before-protection',title:'崖山海战',year:1279,mood:'sorrow'});return weather.director.lastTrigger;});
+  await expect.poll(()=>page.evaluate(async()=>{const {weatherMixer}=await import('/src/audio/WeatherMixer.ts' as string);return weatherMixer.stats().pendingThunder;}),{timeout:8000,intervals:[25,50,75]}).toBe(1);
+  expect(await page.evaluate(async()=>{const {terrainBridge}=await import('/src/state/terrain.ts' as string);return terrainBridge.engine!.weather.trigger({id:'protected',title:'南京大屠杀',year:1937,mood:'fire'},'qin');})).toBe(true);
+  await expect.poll(async()=>(await stats(page)).weather.mood).toBe('solemn');
+  await expect.poll(()=>page.evaluate(async()=>{const {weatherMixer}=await import('/src/audio/WeatherMixer.ts' as string);return weatherMixer.stats().pendingThunder;}),{timeout:1500,intervals:[50]}).toBe(0);
+  const state=await stats(page);expect(state.weather.story).toBeNull();expect(state.weather.fire||state.weather.lightning||state.weather.shake||state.weather.wall).toBe(false);
+  expect(await page.evaluate(async()=>{const {terrainBridge}=await import('/src/state/terrain.ts' as string);return terrainBridge.engine!.weather.director.lastTrigger;})).toBe(started);
+  await page.getByRole('button',{name:'静音全部声音',exact:true}).click();
+});
+
+test('P7 master switch aborts choreography and leaves controls available',async({page},info)=>{
+  test.skip(info.project.name!=='desktop','Shared choreography cancellation contract');
+  await page.goto('/lab/weather');await ready(page);
+  await page.getByRole('button',{name:'秦灭六国',exact:true}).click();
+  await expect.poll(()=>page.evaluate(async()=>{const {storyLock}=await import('/src/state/weather.ts' as string);return storyLock.active;})).toBe(true);
+  await page.getByRole('switch',{name:'事件天象',exact:true}).click();
+  await expect.poll(()=>page.evaluate(async()=>{const {storyLock,useWeatherSettings}=await import('/src/state/weather.ts' as string);const s=useWeatherSettings.getState();return [storyLock.active,s.busy,s.sequence];})).toEqual([false,false,'']);
+  await expect(page.getByRole('button',{name:'秦灭六国',exact:true})).toBeDisabled();
+  await page.waitForTimeout(1500);expect((await stats(page)).weather.active).toBe(false);
+  await page.getByRole('switch',{name:'事件天象',exact:true}).click();
+  await expect(page.getByRole('button',{name:'秦灭六国',exact:true})).toBeEnabled();
+  const lastTrigger=await page.evaluate(async()=>{const {useWeatherSettings,loadMoods}=await import('/src/state/weather.ts' as string);const {seekYear}=await import('/src/store/time.ts' as string);const {terrainBridge}=await import('/src/state/terrain.ts' as string);await loadMoods();const previous=terrainBridge.engine!.weather.director.lastTrigger;seekYear(1127);useWeatherSettings.setState({enabled:false});return String(previous);});
+  // Allow the ordinary 250 ms year debounce to expire after disabling weather.
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(async()=>{const {terrainBridge}=await import('/src/state/terrain.ts' as string);return String(terrainBridge.engine!.weather.director.lastTrigger);})).toBe(lastTrigger);
+  expect((await stats(page)).weather.active).toBe(false);
+});
+
 for(const scenario of ['qin','jingkang','yashan','chibi','zhenguan','bluepass','eco'] as const)test(`P7 recorded ${scenario}`,async({browser},info)=>{
   test.skip(process.env.P7_ACCEPTANCE!=='1','Dedicated serial P7 recording');test.setTimeout(180000);
   const p=info.project.use,viewport=p.viewport??{width:1440,height:900},name=info.project.name,key=scenario==='eco'?'yashan':scenario;

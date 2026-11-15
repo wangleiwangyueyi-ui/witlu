@@ -24,7 +24,7 @@ export const WEATHER_SCENARIOS = [
 export function stopWeather(){storyLock.generation++;storyLock.active=false;terrainBridge.engine?.weather.director.cancel();useWeatherSettings.setState({busy:false,sequence:'',caption:''});}
 const wait=(ms:number)=>new Promise<void>(r=>setTimeout(r,ms));
 export async function playWeatherScenario(key:string){
-  const engine=terrainBridge.engine,item=WEATHER_SCENARIOS.find(s=>s.key===key);if(!engine||!item||storyLock.active)return;
+  const engine=terrainBridge.engine,item=WEATHER_SCENARIOS.find(s=>s.key===key);if(!engine||!item||storyLock.active||!useWeatherSettings.getState().enabled)return;
   if(engine.weather.stats().cooldownMs>0){useWeatherSettings.setState({error:'cooldown'});return;}
   const generation=++storyLock.generation;storyLock.active=true;useWeatherSettings.setState({busy:true,error:'',sequence:key,caption:''});timeStore.setState({playing:false,velocity:0,scrubbing:false});
   const alive=()=>storyLock.generation===generation&&terrainBridge.engine===engine;
@@ -66,6 +66,6 @@ export async function playWeatherScenario(key:string){
   }catch(e){if(alive()){storyLock.active=false;engine.weather.director.resume(performance.now());useWeatherSettings.setState({busy:false,sequence:'',error:String(e)});}}
 }
 export async function triggerMood(mood:Mood){
-  const engine=terrainBridge.engine;if(!engine||storyLock.active)return;
+  const engine=terrainBridge.engine;if(!engine||storyLock.active||!useWeatherSettings.getState().enabled)return;
   const ok=engine.weather.trigger({id:`preview:${mood}`,title:mood==='poetic'?'兰亭集序':mood,year:indexToYear(Math.floor(timeStore.getState().index)),mood});useWeatherSettings.setState({error:ok?'':'cooldown'});
 }

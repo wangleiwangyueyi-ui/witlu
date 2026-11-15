@@ -38,8 +38,14 @@ export class WeatherDirector {
   private pausedAt:number|null=null;
   effects = Object.fromEntries(WEATHER_EFFECTS.map(k=>[k,true])) as Record<WeatherEffect,boolean>;
   trigger(event: WeatherEvent, now: number, story: Story | null = null) {
-    if (now-this.lastTrigger<10000) return false;
-    this.event={...event,mood:safeMood(event)};this.story=this.event.mood==='solemn'?null:story;this.started=now;this.lastTrigger=now;this.pausedAt=null;return true;
+    const next={...event,mood:safeMood(event)};
+    if (now-this.lastTrigger<10000) {
+      // Protection interrupts the current performance, retaining its remaining
+      // duration and cooldown instead of starting a second performance.
+      if(next.mood!=='solemn'||!this.event||this.event.mood==='solemn')return false;
+      this.resume(now);this.event=next;this.story=null;return true;
+    }
+    this.event=next;this.story=this.event.mood==='solemn'?null:story;this.started=now;this.lastTrigger=now;this.pausedAt=null;return true;
   }
   cancel() { this.event=null;this.story=null;this.pausedAt=null; }
   pause(now:number){this.pausedAt??=now;}

@@ -12,7 +12,7 @@ import { project } from '../terrain/geo';
 import { WeatherParticles } from './Particles';
 import { RisingWall } from './RisingWall';
 export interface WeatherPalette { blue:string;gold:string;fire:string;smoke:string }
-export interface WeatherAudio {rain:number;wind:number;waves:number;thunder:boolean;delay:number;quiet:boolean}
+export interface WeatherAudio {rain:number;wind:number;waves:number;thunder:boolean;delay:number;quiet:boolean;cancelThunder?:boolean}
 export class Weather {
   readonly director=new WeatherDirector(); readonly uniforms:Record<string,IUniform>;
   onAudio:((cue:WeatherAudio)=>void)|null=null;
@@ -63,7 +63,7 @@ export class Weather {
     this.surface.visible=s.fire||s.capital;this.surface.material.uniforms.amount!.value=s.strength*.5;this.surface.material.uniforms.capital!.value=Number(s.capital);this.surface.position.copy(this.focus);this.surface.position.y+=s.fire?60:20;this.surface.quaternion.copy(camera.camera.quaternion);this.surface.scale.set(s.capital?270:260,s.capital?150:180,1);
     this.wall.update(s.wall,s.seconds,s.strength,this.walls,terrain);
     if(s.shake){const pixels=Math.sin(s.shakePhase*Math.PI*4)*(1-s.shakePhase)*1.2*s.strength,worldPerPixel=camera.pose.distance*2*Math.tan(21*Math.PI/180)/camera.height;camera.camera.position.x+=pixels*worldPerPixel;camera.camera.updateMatrixWorld();}
-    if(firstFlash||now-this.lastAudio>100){this.lastAudio=now;this.onAudio?.({rain:s.skyOnly?0:Math.min(1,s.particles.rain/Math.max(1,quality==='ultra'?30000:quality==='high'?8000:2000)),wind:s.skyOnly?0:s.strength*(s.mood==='voyage'?.5:.16),waves:s.skyOnly?0:this.environment.coastalProximity(camera.pose.lon,camera.pose.lat)*Math.min(1,1800/camera.pose.distance),thunder:firstFlash,delay:.8,quiet:s.skyOnly});}
+    if(firstFlash||now-this.lastAudio>100){this.lastAudio=now;this.onAudio?.({rain:s.skyOnly?0:Math.min(1,s.particles.rain/Math.max(1,quality==='ultra'?30000:quality==='high'?8000:2000)),wind:s.skyOnly?0:s.strength*(s.mood==='voyage'?.5:.16),waves:s.skyOnly?0:this.environment.coastalProximity(camera.pose.lon,camera.pose.lat)*Math.min(1,1800/camera.pose.distance),thunder:firstFlash,delay:.8,quiet:s.skyOnly,cancelThunder:s.mood==='solemn'||!s.event||!this.director.effects.lightning||quality==='eco'});}
   }
   stats(){return {...this.state,flashes:this.flashes,thunderDelay:.8,ready:this.ready,error:this.error,cooldownMs:Math.max(0,10000-(this.now-this.director.lastTrigger)),riverSegments:this.uniforms.weatherRiverCount!.value as number};}
   dispose(){this.disposed=true;this.particles.dispose();this.wall.dispose();for(const m of [this.bolts,this.beams,this.surface]){m.removeFromParent();m.geometry.dispose();m.material.dispose();}this.onAudio=null;}

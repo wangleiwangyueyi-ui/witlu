@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-15",
+  "build": { "command": "pnpm build", "passed": true },
+  "finalWebBuild": { "command": "pnpm --filter @witlu/web build", "passed": true },
+  "verify": {
+    "command": "pnpm verify",
+    "passed": true,
+    "unitTestFiles": 18,
+    "unitTestsPassed": 154,
+    "playwright": { "passed": 98, "skipped": 154, "failed": 0, "durationMinutes": 18.1 }
+  },
+  "weatherRecordings": {
+    "command": "pnpm test:weather",
+    "passed": 27,
+    "skipped": 6,
+    "failed": 0,
+    "durationMinutes": 7.6,
+    "videos": 21,
+    "screenshots": 24,
+    "viewports": ["desktop", "iPhone-14", "Pixel-7"],
+    "scenarios": ["qin", "jingkang", "yashan", "chibi", "zhenguan", "bluepass", "eco"],
+    "mediaAudit": "media-audit.json"
+  },
+  "limitations": [
+    "Mobile devices are desktop Chromium emulations, not physical devices.",
+    "WeChat user gesture and bridge recovery have not been verified on a physical device.",
+    "Desktop high-quality recording averages 12.5 to 27.2 fps; the eco recording averages 47.6 fps.",
+    "Playwright videos contain no audio; sound is checked through decoding, consent, mixer state and asset validation."
+  ]
+}
