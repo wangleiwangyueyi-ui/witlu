@@ -56,3 +56,7 @@ Make Me a Hanzi（https://github.com/skishore/makemeahanzi），固定提交 `bd
 开场地球的海陆贴图使用上述 Natural Earth 公有领域数据，重新投影为等经纬图并采用 PLAN 色板。书法子集现为 45 个字，新增「两千四百年 · 一图观之」及简繁所需笔画，沿用 Make Me a Hanzi 固定提交和 Arphic Public License。
 
 分享海报的二维码由 [node-qrcode](https://github.com/soldair/node-qrcode) 生成，MIT License；二维码只编码 witlu.com 的公开深链，不请求第三方二维码服务。玻璃印章、OG 排版与程序化地球云层由本项目生成。
+
+## P11 调试工具
+
+vConsole 3.15.1，Tencent / THL A29 Limited，MIT License。仅在 `?debug=1` 时动态加载，自托管；生产离线预缓存不包含该调试包。源码：https://github.com/Tencent/vConsole ，许可证副本：`packages/web/public/licenses/vconsole-MIT.txt`。

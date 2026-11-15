@@ -8,15 +8,18 @@ export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Wo
   requestFrame(callback: (timestamp: number) => void) { return requestAnimationFrame(callback); }
   cancelFrame(handle: number) { cancelAnimationFrame(handle); }
   now() { return performance.now(); }
-  async readBytes(path: string) { const result = await fetch(path, { signal: this.abort.signal }); if (!result.ok) throw new Error(`Tile ${result.status}: ${path}`); return new Uint8Array(await result.arrayBuffer()); }
-  async readJSON<T>(path: string): Promise<T> { const result = await fetch(path, { signal: this.abort.signal }); if (!result.ok) throw new Error(`Manifest ${result.status}`); return result.json() as Promise<T>; }
+  async readBytes(path: string) { const result = await fetch(path.startsWith('/tiles/')?__TILE_ROOT__+path.slice(6):path, { signal: this.abort.signal, priority: path.startsWith('/tiles/')?'high':'auto' } as RequestInit); if (!result.ok) throw new Error(`Tile ${result.status}: ${path}`); return new Uint8Array(await result.arrayBuffer()); }
+  async readJSON<T>(path: string): Promise<T> { const result = await fetch(path.startsWith('/tiles/')?__TILE_ROOT__+path.slice(6):path, { signal: this.abort.signal }); if (!result.ok) throw new Error(`Manifest ${result.status}`); return result.json() as Promise<T>; }
   async decodeImage(bytes: Uint8Array) {
-    const bitmap = await createImageBitmap(new Blob([bytes.slice().buffer]), { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
-    const surface = new OffscreenCanvas(bitmap.width, bitmap.height); const context = surface.getContext('2d', { willReadFrequently: true });
-    if (!context) { bitmap.close(); throw new Error('Image decoding context unavailable'); }
-    context.drawImage(bitmap, 0, 0); const pixels = context.getImageData(0, 0, bitmap.width, bitmap.height); bitmap.close();
-    return { width: pixels.width, height: pixels.height, data: new Uint8Array(pixels.data.buffer) };
+    const blob=new Blob([bytes.slice().buffer]);
+    if(typeof createImageBitmap==='function'&&typeof OffscreenCanvas!=='undefined'){
+      const bitmap=await createImageBitmap(blob,{colorSpaceConversion:'none',premultiplyAlpha:'none'});
+      try{const surface=new OffscreenCanvas(bitmap.width,bitmap.height),context=surface.getContext('2d',{willReadFrequently:true});if(!context)throw Error('Image decoding context unavailable');context.drawImage(bitmap,0,0);const pixels=context.getImageData(0,0,bitmap.width,bitmap.height);return {width:pixels.width,height:pixels.height,data:new Uint8Array(pixels.data.buffer)};}finally{bitmap.close();}
+    }
+    const url=URL.createObjectURL(blob),image=new Image();
+    try{image.src=url;await image.decode();const surface=document.createElement('canvas');surface.width=image.width;surface.height=image.height;const context=surface.getContext('2d',{willReadFrequently:true});if(!context)throw Error('Image decoding context unavailable');context.drawImage(image,0,0);const pixels=context.getImageData(0,0,image.width,image.height);return {width:pixels.width,height:pixels.height,data:new Uint8Array(pixels.data.buffer)};}finally{URL.revokeObjectURL(url);}
   }
+
   viewport() { const box = this.canvas.getBoundingClientRect(); return { width: box.width, height: box.height, pixelRatio: devicePixelRatio, mobile: matchMedia('(pointer: coarse)').matches || box.width < 768 }; }
   createWorker(path: string):WorkerPort {
     const worker=path==='labels'?new Worker(new URL('../workers/labels.worker.ts',import.meta.url),{type:'module'}):path==='growth'?new Worker(new URL('../workers/growth.worker.ts',import.meta.url),{type:'module'}):new Worker(path,{type:'module'});

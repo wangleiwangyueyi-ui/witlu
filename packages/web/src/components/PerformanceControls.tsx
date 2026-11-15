@@ -1,0 +1,8 @@
+import {useState} from 'react';
+import {GlassButton} from './Glass';
+import {useShell} from '../state/shell';
+import {measurePerformance} from '../platform/performance';
+export function PerformanceControls(){const en=useShell(s=>s.locale)==='en',[busy,setBusy]=useState(false),[report,setReport]=useState(''),[summary,setSummary]=useState('');
+ const run=async()=>{setBusy(true);try{const result=await measurePerformance();setReport(JSON.stringify(result,null,2));setSummary(`${result.meanFps.toFixed(1)} fps · P95 ${result.p95Ms?.toFixed(1)} ms · ${result.initialQuality} → ${result.finalQuality}${result.interrupted?' · interrupted':''}`);}catch(e){setSummary(String(e));}finally{setBusy(false);}};
+ return <details><summary>{en?'Device performance test':'真机性能采样'}</summary><p>{en?'Keep this page visible for 30 seconds. The camera pans and zooms automatically.':'保持前台 30 秒，镜头自动平移缩放；结束后导出原始帧数据。'}</p><GlassButton disabled={busy} onClick={()=>void run()}>{busy?(en?'Measuring…':'采样中…'):(en?'Run 30-second test':'运行 30 秒测试')}</GlassButton><output role="status">{summary}</output>{report&&<><GlassButton onClick={()=>{const url=URL.createObjectURL(new Blob([report],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='witlu-device-performance.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}}>{en?'Download JSON':'导出 JSON'}</GlassButton><GlassButton onClick={()=>void Promise.resolve().then(()=>navigator.clipboard.writeText(report)).catch(()=>setSummary(en?'Copy is unavailable; use download.':'无法复制，请使用导出。'))}>{en?'Copy result':'复制结果'}</GlassButton></>}</details>;
+}

@@ -81,7 +81,7 @@ export class AtlasRenderer {
     this.cartography.update(now,this.camera,this.quality.level,this.environment.reducedMotion,this.renderer.getPixelRatio());
     this.opening.update(dt,this.quality.level);
     if(this.opening.active)this.opening.render(this.renderer,this.camera.width,this.camera.height);else this.renderer.render(this.scene, this.camera.camera);
-    if (dt < 250) { this.samples.push(dt); this.cpu.push(this.platform.now() - start); }
+    if (dt > 0) { this.samples.push(dt); this.cpu.push(this.platform.now() - start); }
     const change = this.quality.sample(dt); if (change) { this.terrain.setQuality(change); this.resize(); this.onQuality?.(change); }
     if (now - this.lastReport >= 500) this.report(now);
     this.start();

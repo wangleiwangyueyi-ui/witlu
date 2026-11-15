@@ -20,6 +20,7 @@ void main(){
 export const territoryGLSL = /*glsl*/ `
 precision highp sampler2DArray;
 uniform sampler2DArray territoryFields;
+uniform sampler2D territoryStyleCache;uniform float territoryStyleReady;uniform float territoryStyleSize;
 uniform vec3 territoryLens;uniform float territoryLabelSize;uniform float territoryFieldSize;uniform float polityFocus;uniform float territoryEdges;uniform float territoryEnabled;uniform sampler2D polityA;uniform sampler2D polityB;uniform sampler2D polityCurrent;uniform sampler2D polityPalette;
 uniform vec4 territoryBounds;uniform float territoryProgress;uniform float territoryCrossfade;uniform float territoryOpacity;uniform float territoryFront;uniform float territoryInk;uniform vec3 territoryGold;
 float polityId(vec2 rg){return floor(rg.x*255.0+.5)+floor(rg.y*255.0+.5)*256.0;}
@@ -27,6 +28,9 @@ vec4 polityStyle(float id,float row){return texture2D(polityPalette,vec2((id+.5)
 // Filter palette colors, never the packed regime IDs. The footprint covers
 // one label texel at close range and remains bounded at distant views.
 vec4 smoothPolity(sampler2D labels,vec2 uv,float row,float size){
+ // At national scale a screen pixel already covers multiple label texels.
+ // Keep the four-tap reconstruction for close views where texels become visible.
+ if(max(fwidth(uv.x),fwidth(uv.y))*size>=1.0)return polityStyle(polityId(texture2D(labels,uv).rg),row);
  vec2 p=uv*size-.5,base=floor(p),f=fract(p);f=f*f*(3.-2.*f);
  float a=polityId(texture2D(labels,(base+vec2(.5,.5))/size).rg),b=polityId(texture2D(labels,(base+vec2(1.5,.5))/size).rg),c=polityId(texture2D(labels,(base+vec2(.5,1.5))/size).rg),d=polityId(texture2D(labels,(base+vec2(1.5,1.5))/size).rg);
  if(a==b&&a==c&&a==d)return polityStyle(a,row);
@@ -37,10 +41,12 @@ vec4 timeStyle(float id){vec4 a=polityStyle(id,.125),b=polityStyle(id,.375);retu
 // Reconstruct the continuous SDF contour only where neighboring ownership differs.
 // This avoids magnifying the discrete low-resolution resolve grid at close range.
 vec4 grownStyle(vec2 uv,out float edgePx,out float owner){
+ float originalA=polityId(texture2D(polityA,uv).rg),originalB=polityId(texture2D(polityB,uv).rg);
+ owner=originalA;edgePx=1e5;
+ if(originalA==originalB&&max(fwidth(uv.x),fwidth(uv.y))*territoryLabelSize>=1.0)return timeStyle(originalA);
  vec2 base=floor(uv*territoryFieldSize-.5);
  vec4 ids=vec4(edgeId((base+vec2(.5,.5))/territoryFieldSize),edgeId((base+vec2(1.5,.5))/territoryFieldSize),edgeId((base+vec2(.5,1.5))/territoryFieldSize),edgeId((base+vec2(1.5,1.5))/territoryFieldSize));
  owner=ids.x;edgePx=1e5;
- float originalA=polityId(texture2D(polityA,uv).rg),originalB=polityId(texture2D(polityB,uv).rg);
  if(ids.x==ids.y&&ids.x==ids.z&&ids.x==ids.w){if(originalA==originalB)return mix(smoothPolity(polityA,uv,.125,territoryLabelSize),smoothPolity(polityB,uv,.375,territoryLabelSize),territoryProgress);return timeStyle(owner);}
  // Polities absent from the changed-set have no SDF layer. Keep their
  // high-resolution static coastline instead of extending a coarse winner.
@@ -87,6 +93,12 @@ vec3 territoryColor(vec3 ground,vec3 world){
   vec2 uv=vec2((world.x-territoryBounds.x)/territoryBounds.z,(territoryBounds.y-world.z)/territoryBounds.w);
   if(any(lessThan(uv,vec2(0.0)))||any(greaterThan(uv,vec2(1.0))))return ground*.85;
   float t=territoryProgress;
+  // A stationary point in time can reuse palette reconstruction as the camera
+  // moves. Keep the exact ID/SDF path for close views and transient effects.
+  if(territoryStyleReady>.5&&territoryInk<.5&&territoryFront<.5&&max(fwidth(uv.x),fwidth(uv.y))*territoryStyleSize>=1.0){
+    vec4 style=texture2D(territoryStyleCache,uv);float id=polityFocus>0.?edgeId(uv):0.;
+    float edge=length(fwidth(style.rgb));return polityEdge(polityBlend(ground,style,uv),style,id,edge>.025?.9:1e5);
+  }
   if(t<=0.0){float id=polityId(texture2D(polityA,uv).rg);vec4 s=smoothPolity(polityA,uv,.125,territoryLabelSize);return polityEdge(polityBlend(ground,s,uv),s,id,0.);}
   if(t>=1.0){float id=polityId(texture2D(polityB,uv).rg);vec4 s=smoothPolity(polityB,uv,.375,territoryLabelSize);return polityEdge(polityBlend(ground,s,uv),s,id,0.);}
   float a=polityId(texture2D(polityA,uv).rg),b=polityId(texture2D(polityB,uv).rg);
@@ -100,3 +112,12 @@ vec3 territoryColor(vec3 ground,vec3 world){
   return polityEdge(mix(color,territoryGold,(a==b?0.0:current.b)*envelope*territoryFront*.55),style,id,edgePx);
 }
 `;
+export const styleCacheFragment=`#define texture2D texture
+${territoryGLSL}
+in vec2 vUv;out vec4 outputColor;
+void main(){float t=territoryProgress;vec4 style;
+if(t<=0.)style=smoothPolity(polityA,vUv,.125,territoryLabelSize);
+else if(t>=1.)style=smoothPolity(polityB,vUv,.375,territoryLabelSize);
+else if(territoryCrossfade>.5)style=mix(smoothPolity(polityA,vUv,.125,territoryLabelSize),smoothPolity(polityB,vUv,.375,territoryLabelSize),t);
+else{float edge,owner;style=grownStyle(vUv,edge,owner);}
+outputColor=style;}`;

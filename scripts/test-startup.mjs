@@ -1,0 +1,9 @@
+import fs from 'node:fs/promises';
+import {chromium,devices} from '@playwright/test';
+const browser=await chromium.launch({args:process.platform==='win32'?['--use-angle=d3d11','--enable-gpu']:[]});
+try{const context=await browser.newContext({...devices['Pixel 7'],serviceWorkers:'block'}),page=await context.newPage(),cdp=await context.newCDPSession(page);
+ await cdp.send('Network.enable');await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});await cdp.send('Network.emulateNetworkConditions',{offline:false,latency:150,downloadThroughput:200000,uploadThroughput:93750,connectionType:'cellular4g'});await cdp.send('Emulation.setCPUThrottlingRate',{rate:4});
+ await page.goto((process.env.P11_URL??'http://127.0.0.1:4181')+'/?year=230',{waitUntil:'domcontentloaded',timeout:90000});await page.waitForFunction(()=>document.querySelector('[data-testid=terrain]')?.getAttribute('data-ready')==='true',{},{timeout:90000});
+ const report=await page.evaluate(()=>({date:new Date().toISOString(),first3DObservedMs:performance.now(),staticImages:performance.getEntriesByType('resource').filter(e=>e.name.includes('/fallback/')&&e.name.endsWith('.webp')).map(e=>({url:e.name,responseEnd:e.responseEnd})),paints:performance.getEntriesByType('paint').map(e=>({name:e.name,ms:e.startTime}))}));
+ await fs.mkdir('docs/progress/performance/P11',{recursive:true});await fs.writeFile('docs/progress/performance/P11/startup.json',JSON.stringify({...report,simulation:true,network:{downBytesPerSecond:200000,upBytesPerSecond:93750,latencyMs:150,cpuSlowdown:4},limitMs:3000,passed:report.first3DObservedMs<=3000,note:'Local gzip server, simulated network and CPU. Real 4G and device GPU require the device checklist.'},null,2));console.log(JSON.stringify(report));if(report.first3DObservedMs>3000)process.exitCode=1;
+}finally{await browser.close();}

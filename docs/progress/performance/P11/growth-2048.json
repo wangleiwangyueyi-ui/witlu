@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-15T09:02:20.709Z",
+  "simulation": true,
+  "size": 2048,
+  "snapshots": [
+    "s_sanguo",
+    "s_sanguo_a"
+  ],
+  "readbackMs": 245.30000001192093,
+  "coldWorkerWallMs": 4371,
+  "coldWorkerComputeMs": 4370.300000011921,
+  "warmWallMs": 159.19999998807907,
+  "cacheHit": true,
+  "fields": 4,
+  "fieldBytes": 67197904,
+  "runtimeFieldSize": 512,
+  "limitMs": 120,
+  "passed": false
+}

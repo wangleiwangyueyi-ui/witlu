@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-15",
+  "command": "pnpm verify",
+  "exitCode": 0,
+  "unit": {
+    "passed": 158,
+    "files": 19
+  },
+  "playwright": {
+    "passed": 108,
+    "skipped": 162,
+    "failed": 0,
+    "durationMinutes": 17.6
+  },
+  "readmeDeepLinks": 63,
+  "checks": [
+    "typecheck",
+    "lint",
+    "vitest",
+    "parity",
+    "terrain",
+    "environment",
+    "morph",
+    "weather",
+    "mcp",
+    "playwright"
+  ],
+  "note": "Functional regression. Performance budget and live deployment checks are separate and currently fail; physical-device checks remain unchecked.",
+  "followup": {
+    "unitPassed": 159,
+    "unitFiles": 20,
+    "typecheck": "passed",
+    "lint": "passed",
+    "reason": "Added regression coverage for immutable tile cache invalidation; final web build and release fixture passed."
+  }
+}

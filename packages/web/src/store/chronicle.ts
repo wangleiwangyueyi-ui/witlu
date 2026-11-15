@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { fetchAfterTerrain } from '../platform/startup';
 import type { Eras, Phase, RiverPolity, RegistryPolity, Chapter, ChronicleEvent } from '@witlu/core/time';
 export interface Chronicle {
     phases: (Phase & {
@@ -23,7 +24,7 @@ export interface Chronicle {
 let promise: Promise<Chronicle> | undefined;
 export function loadChronicle(): Promise<Chronicle> {
     return promise ??= Promise.all(['phases', 'coexistence', 'eras', 'polity-colors', 'events', 'dynasties', 'polities', 'i18n'].map(async (name) => {
-        const r = await fetch(`/data/${name}.json`);
+        const r = await fetchAfterTerrain(`/data/${name}.json`);
         if (!r.ok)
             throw new Error(name);
         return r.json();

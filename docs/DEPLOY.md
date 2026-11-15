@@ -1,76 +1,76 @@
-# Cloudflare Pages 连接 GitHub · witlu
+# 部署 witlu.com：Cloudflare Pages 与 Squarespace
 
-本仓库已经具备可直接运行的 Pages 构建、静态资源与响应头。以下首次账户连接需要在你自己的 Cloudflare / GitHub 页面完成；本阶段未创建 Pages 项目，也未声称已经取得线上预览链接。
+核对日期：2026-11-15。仓库使用 GPL-3.0，upstream 为固定 commit 子模块；CHGIS 衍生数据仅构建时生成。本文提供操作步骤，不代表已修改账户、DNS 或发布站点。当前域名的检查结果见 `docs/progress/performance/P11/live.json`。
 
-步骤按 2026-11-12 查阅的 Cloudflare 官方 [Git integration](https://developers.cloudflare.com/pages/get-started/git-integration/) 与 [Preview deployments](https://developers.cloudflare.com/pages/configuration/preview-deployments/) 编写。Cloudflare 同时提供 Workers，本项目按既定方案选择 **Pages**。
+## 1. GitHub 连接 Cloudflare Pages
 
-## 1. 确认 GitHub 上已有代码
+1. 将本地已验证的 commit 推送到自己的 GitHub 仓库 `wangleiwangyueyi-ui/witlu`；确认 `.gitmodules`、锁文件和 scripts 都存在。生产分支为 `main`。
+2. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)，选账户 → **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**。
+3. 选择 **GitHub**；授权页选 **Only select repositories** → 勾选 `witlu` → **Install & Authorize**。回到 Cloudflare 选仓库 → **Begin setup**。
+4. Project name 填可用名称（下文 `<project>` 代表这个真实名称）；Production branch 选 `main`；Framework preset 选 `None`。
+5. Build command 填 `git submodule update --init --recursive && pnpm build`；Build output directory 填 `packages/web/dist`；Root directory 留空。
+6. Environment variables 添加 `NODE_VERSION=22.19.0`、`PNPM_VERSION=10.20.0`，Production 与 Preview 都设置。点 **Save and Deploy**，查看构建日志。
+7. 成功后点 **Continue to project** → **Deployments**，保存真实的 `https://<project>.pages.dev`。打开 `/release.json`，应看到 `application: witlu` 和当前瓦片版本。
+8. **Settings → Builds & deployments → Branch control**：Production 保持 main，Preview 允许全部非生产分支。之后推送 `codex/*` 分支，在 **Deployments → Preview → View build / Aliases** 取每个 commit 的预览链接。合并到 main 后更新生产。
 
-仓库：<https://github.com/wangleiwangyueyi-ui/witlu>。`upstream/` 是固定 commit 的公开 Git submodule。生成的 CHGIS 数据不提交，Pages 在构建时读取子模块生成。
+界面名称可能随 Cloudflare 调整；选择 Pages 的 Git 集成。参考 [Git integration](https://developers.cloudflare.com/pages/get-started/git-integration/) 与 [Preview deployments](https://developers.cloudflare.com/pages/configuration/preview-deployments/)。
 
-首次连接前，确认 GitHub 的 `main` 至少已有 P0 的 package.json、锁文件、构建脚本与 submodule；如果远端还只有方案文档，先在本项目终端运行 `git push origin main` 同步本地 P0 主分支。若远端已具备构建配置则跳过。
+## 2. 构建资源与限额
 
-P1 代码放在本地 `codex/p1-liquid-glass` 分支。先完成下面的 Cloudflare 连接，再在第 3 节首次推送该分支，这样推送事件才会触发新的预览构建。不要假设连接前已有的分支会自动补建。若首次生产分支仍是 P0，生产地址先显示 P0 数据验收页；P1 界面通过分支预览地址检查，后续合并到 main 才更新生产版。
+`pnpm build` 导入上游 → 生成音频、书法、瓦片与海岸场 → 专题页 → 198 张静态兜底图 → strict typecheck → Vite → 版本化瓦片目录 → Service Worker。输出约一万余文件，具体数量由 `pnpm verify:bundle` 报告。
 
-## 2. 在 Cloudflare 首次连接
+Cloudflare Free Pages 上限为 20,000 文件、单文件 25 MiB，构建 20 分钟超时；本仓库检查前两项。首次全量瓦片下载较慢，后续应保存 `packages/web/public/tiles` 与 `.cache/terrain` 缓存；Pages 不保证保留这些自定义目录。若冷构建超过 20 分钟，可在 GitHub Actions 运行相同构建、缓存生成目录，再使用 Pages 的 Wrangler CI 上传；不要删图层绕过限额。超过文件或体积上限时再将瓦片迁到同域 R2。参见 [Pages limits](https://developers.cloudflare.com/pages/platform/limits/)。
 
-1. 打开 [Cloudflare Dashboard](https://dash.cloudflare.com/)，登录后选中你的账户。
-2. 左侧进入 **Workers & Pages**，点 **Create application**。
-3. 选择 **Pages**，再点 **Connect to Git**。不要选择 Direct Upload。
-4. 选择 **GitHub**。若出现 GitHub 授权页，选择你的账户，选择 **Only select repositories**，只勾选 `witlu`，再点 **Install & Authorize**。已有授权则直接选仓库。
-5. 回到 Cloudflare，选择 `wangleiwangyueyi-ui/witlu`，点 **Begin setup**。
-6. 在 **Set up builds and deployments** 填写下表。项目名可以用 `witlu`；若已被占用，以界面实际允许的名称为准。
+## 3. 方案 A：Cloudflare 托管 DNS（推荐）
 
-| 字段 | 值 |
+1. 先在 Squarespace 的 **Domains → witlu.com → DNS → DNS Settings** 保存现有记录，尤其 MX、TXT、SPF、DKIM、DMARC。切换 NS 不会自动搬迁邮件记录。
+2. Cloudflare 账户 → **Add a domain / Onboard a domain** → 输入 `witlu.com` → 选择适用套餐 → 检查扫描到的 DNS；补齐上一步邮件记录，邮件相关主机使用 DNS only。
+3. 继续到 Nameservers 页面，复制 Cloudflare 分配给该域名的两个 NS；不要用教程示例地址。
+4. Squarespace **Domains → witlu.com → DNS → Domain Nameservers → Use Custom Nameservers**；按提示验证密码或 2FA，按界面流程处理旧 DNSSEC；填 Nameserver 1 / 2 → **Save**。
+5. 回 Cloudflare 域名 Overview 确认 Active。DNS 生效期间不要反复切换；如启用 Cloudflare DNSSEC，按其给出的 DS 在注册商同步。
+6. **Workers & Pages → 项目 → Custom domains → Set up a domain**，依次添加 `witlu.com`、`www.witlu.com`；按提示确认 CNAME，等待两个域名均为 Active / 证书就绪。
+7. 域名 **SSL/TLS → Edge Certificates** 开启 **Always Use HTTPS**。不要将已有邮件记录改成网页指向。
+8. 可保留两个域名均能提供页面；若把 www 统一到根域，使用 **Rules → Redirect Rules → Create rule**，匹配 hostname `www.witlu.com`，动态目标 `concat("https://witlu.com", http.request.uri.path)`，301，勾选保留 query string。测试 `?year=230&lang=en` 必须保留。
+
+Pages 的根域必须作为 Cloudflare zone 并使用其 NS；必须先在 Pages 绑定域名，再设置 CNAME。依据 [Cloudflare custom domains](https://developers.cloudflare.com/pages/configuration/custom-domains/)。Squarespace 的准确 NS 入口及 DNSSEC 流程见 [nameserver guide](https://support.squarespace.com/hc/en-us/articles/4404183898125-Review-change-or-reset-your-domain-s-nameservers)。
+
+## 4. 方案 B：保留 Squarespace DNS，www 接 Pages
+
+1. Cloudflare **Workers & Pages → 项目 → Custom domains → Set up a domain**，先添加 `www.witlu.com`，复制提示中的 `<project>.pages.dev`。
+2. Squarespace **Domains → witlu.com → DNS → DNS Settings → Custom Records → Add record**：Type 选 CNAME，Host 填 `www`，Data 填 `<project>.pages.dev`（不带协议或路径），保存。只处理同名冲突的网页记录，保留邮件记录。
+3. 回 Cloudflare Custom domains，等待 www 变为 Active。先直接访问 `https://www.witlu.com/` 和 `/release.json` 验证。
+4. Squarespace **Domains → witlu.com → Website → Domain Forwarding Rules → Add rule**；验证身份后 Subdomain 填 `@`，Enter website URL 填 `www.witlu.com`，不要附加 `http://` 或 `https://`，也不要添加 www 为第二个转发源。
+5. **Advanced settings** 选 **Permanent Redirect (301)**；**Path Forwarding** 选 **Maintain paths** → **Save**。若旧界面仍显示 SSL 开关，确认打开；新界面可能不再显示。
+6. 检查根域 HTTP / HTTPS 都跳到 www，专题路径保留且没有循环。
+
+**该方案不能完整满足本项目深链要求**：Squarespace 官方说明转发不会保留查询参数，因此根域 `witlu.com/?year=230` 可能丢失 year；直接访问 `www.witlu.com/?year=230` 不受影响。本项目二维码、canonical 与 MCP 仍使用 witlu.com，所以正式上线应采用 A；B 仅供明确接受这一限制时配置，不能标为深链验收通过。参见 [CNAME 设置](https://support.squarespace.com/hc/en-us/articles/31119879125645-DNS-records-for-web-hosting) 与 [Squarespace forwarding / query 参数限制](https://support.squarespace.com/hc/en-us/articles/214767107-Forwarding-a-domain)。
+
+## 5. 缓存策略
+
+`packages/web/public/_headers` 原样发布到 dist，Vite 本地服务不执行它；最终以域名响应头为准。
+
+| 路径 | 策略 |
 |---|---|
-| Project name | `witlu` 或你选择的可用名称 |
-| Production branch | `main` |
-| Framework preset | `None`（手工填写以下参数） |
-| Build command | `git submodule update --init --recursive && pnpm build` |
-| Build output directory | `packages/web/dist` |
-| Root directory (advanced) → Path | 留空，使用仓库根目录；**不要**填 `packages/web` |
+| HTML：首页、lab、专题 | no-cache，每次重新验证 |
+| `/assets/*.js`、`*.css` | 文件名带内容哈希，一年 immutable |
+| `/terrain/<version>/*` | 全部瓦片文件内容生成版本目录，一年 immutable |
+| `/fallback/images/*` | 内容哈希文件名，一年 immutable |
+| data、音频、字体、brand、书法 | 固定路径，max-age=0 + must-revalidate |
+| sw.js、release、静态图索引、manifest、sitemap | no-cache |
 
-7. 展开 **Environment variables**，添加 `NODE_VERSION = 22.19.0` 和 `PNPM_VERSION = 10.20.0`。后续在 **Settings → Builds & deployments** 的环境变量编辑处，将这两个值同时配置到 **Production** 和 **Preview**。如界面使用 **Build / Variables and Secrets** 分栏，在对应构建环境填写相同值。
-8. 点 **Save and Deploy**。构建日志应依次完成依赖安装、印章资源构建、全量数据导入、198 快照几何与配色、parity、strict typecheck 和 Vite build。字体子集与许可证已提交，构建不需要 Python，也不从 Google Fonts 下载任何文件。
+版本化瓦片替代原固定 `/tiles` 发布路径，避免修改浮雕后仍命中旧的一年缓存。固定名称音频不会套用 JS 的 immutable。规则之间不重复设置同一缓存头，避免 Cloudflare 合并成冲突值；依据 [Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
 
-   P2 起 `pnpm build` 还会运行 `pnpm tiles`：首次下载 AWS Terrarium z0–8、生成 Natural Earth 海岸掩码与 z3–8 黛青浮雕。约一万张 WebP 是构建产物，不提交 Git；全部随 `packages/web/dist/tiles/` 自托管。首次构建明显更慢，检查日志的 `DEM …/5242`、`Relief …/4728` 进度。后续若构建环境保留 `packages/web/public/tiles/` 与 `.cache/terrain/`，会校验后复用；不要假定 Pages 默认缓存这些自定义目录。构建环境必须可访问 AWS S3 和 GitHub raw，无 token。
-9. 成功后点 **Continue to project**。**Deployments** 页面会显示真实的 `*.pages.dev` 地址。将这个界面返回的实际链接保存下来，不要把文档示例地址当成已部署地址。
+Service Worker 只预缓存应用入口的静态依赖、CSS 与印章；不预缓存 vConsole、全部实验室或分享导出模块。运行时缓存最多 100 项、每项 ≤2 MB；仅清理 witlu 自有缓存。离线支持外壳及已访问资源，不保证全朝代离线。新版本等待旧页面关闭后激活。
 
-## 3. 让每次推送自动产生预览
+## 6. 上线检查与回滚
 
-1. 在 **Workers & Pages → 你的 Pages 项目 → Settings → Builds & deployments** 找到 Git / Branch control，确认自动构建启用。
-2. **Production branch** 保持 `main`；**Preview branches** 选择所有非生产分支构建（All non-production branches / All branches），不要排除 `codex/*`。
-3. 推送 `codex/p1-liquid-glass` 这样的非生产分支。进入 **Deployments**，找到该 commit 对应的 **Preview** 记录，点 **View build** 查看状态和日志。
-4. 成功记录会给出不可变的 `<hash>.<project>.pages.dev` 地址，并给分支生成始终指向最新成功构建的别名。`codex/p1-liquid-glass` 的别名形式为 `codex-p1-liquid-glass.<project>.pages.dev`，以页面的 **Aliases** 实际值为准。
-5. 后续继续向同一分支推送，分支别名会更新。仓库内分支的 Pull Request 也会获得预览状态；从 fork 发起的 PR 不保证自动预览。推送到 `main` 更新的是生产站点及绑定域名，而非独立的预览分支。
-6. 用手机打开实际预览 URL，末尾加 `?debug=1` 可显示验收控制台。点语言、展开抽屉、拖动、点音乐（默认静音，需手势播放）和“一键截图”。
+```powershell
+pnpm verify
+pnpm build
+pnpm verify:bundle
+pnpm verify:live
+```
 
-默认预览链接可公开访问。如只给自己与朋友使用，可在项目 **Settings → General → Enable access policy** 开启 Cloudflare Access，并在 Access 中添加获准的访客。这项设置只保护预览域名，不自动保护生产域名或自定义域名。
+`verify:live` 读取 witlu.com 和 www 的 HTTP / HTTPS，逐跳记录状态码与有效 TLS，再检查首页身份、release、入口 JS、版本瓦片、SW 和专题缓存头。任一不符退出 1，输出 `docs/progress/performance/P11/live.json`。当前失败不应通过修改预期或返回码隐藏；域名正确绑定并发布后再执行。
 
-## 4. 构建与验收排错
-
-P3 的 `pnpm tiles` 会在浮雕完成后生成海岸距离场、双层海水法线与云覆盖图（约 722KiB）。这些文件同样由构建产生，不需要单独上传。已有 P2 缓存时运行 `pnpm tiles:environment` 即可补齐；缺图或 SHA 不匹配会被 `pnpm verify:environment` 检出。预览可打开 `/lab/ocean`、`/lab/clouds`，主程序和实验页都支持 `?debug=1` 的环境开关。
-
-| 现象 | 检查 |
-|---|---|
-| 找不到 packages 或 scripts | Root directory 应留空；输出目录才是 `packages/web/dist` |
-| 找不到 upstream/js | 确认 GitHub 中 upstream 是 gitlink，`.gitmodules` 已提交，构建命令包含 submodule update |
-| Vite 报 Node 版本不符 | Preview / Production 都设 Node >=22.19；本指南固定 22.19.0 |
-| 没有预览记录 | 检查推送是否到同一仓库、Preview branch control 是否启用、分支未被排除 |
-| 手机打开仍是旧版本 | 对照 Deployment 的 commit 和 Aliases；HTML 使用 no-cache，数据须重新验证 |
-| 字体缺字 | 本地更新标题键后运行 `pnpm fonts` 并提交 WOFF2 与 manifest；见 FONTS.md |
-
-`public/_headers` 会由 Vite 原样复制到 dist，设置 HTML 不缓存、静态资源缓存、数据重新验证与基础响应头。Cloudflare 预览自身还会添加 `X-Robots-Tag: noindex`。本地 Vite 不应用 `_headers`，应在实际部署后通过浏览器 Network 检查响应头。
-
-本阶段不修改域名或 DNS。后续绑定 witlu.com 时沿用 PLAN 第 10 节，在 Pages 项目 **Custom domains** 中添加域名，再依界面提示配置 DNS。
-
-
-## P10 静态发布与 PWA
-
-`pnpm build` 现在还生成 35 个专题 HTML、sitemap.xml、robots.txt、1200×630 OG 图片、llms.txt、Skill 和版本化 sw.js，输出目录保持 `packages/web/dist`。专题正文无需 JavaScript 即可读取。canonical、分享海报二维码和 AI 接口公开链接统一指向 https://witlu.com；本地或分支预览的 SEO 验收并不表示域名已经部署。
-
-Service Worker 只在生产构建注册，开发服务器不注册。安装缓存应用 JS、CSS、首页和印章图标；访问过的同源资源进入最多 100 项、每项不超过 2 MB 的缓存。断网可以打开应用外壳和仍在缓存中的已访问数据；不承诺离线覆盖全部朝代、所有音频或全部地形瓦片。新版本等待旧页面关闭后接管，更新时仅清理本应用 `witlu-v1-` 前缀缓存。sw.js 使用 no-cache，不要改为长期缓存。
-
-本地生产验收：先 `pnpm build`，另开终端运行 `pnpm --filter @witlu/web exec vite preview --host 127.0.0.1 --port 4176`，再运行 `pnpm test:seo`。脚本保存首页、专题目录和赤壁专题的 Lighthouse JSON / HTML，SEO 低于 95 即失败，并检查 Service Worker 离线外壳及已访问朝代数据。
-
-分享按钮生成本地 PNG：地图、地名、年份、二维码、免责声明与上游 / CHGIS 致谢。微信内使用图片长按保存；下载链接作为其他浏览器的补充。真实微信的菜单由微信客户端控制，手机模拟器不等于真机验收。
+再手工打开 `https://witlu.com/?year=230&lang=en` 和 www 版本，检查参数。真机按 [DEVICE-TESTS.md](DEVICE-TESTS.md) 执行。若新版本异常，进入 Pages **Deployments → 最近正常的 Production → … → Rollback to this deployment**，确认后重跑线上检查。DNS 回滚需使用前面保存的记录，而非删除全部记录。

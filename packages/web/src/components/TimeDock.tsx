@@ -21,7 +21,7 @@ export function TimeControls() {
         setError(ct('yearRange'));
         return;
     } seekYear(y); resetTimeView(); setInput(String(y)); setError(''); setMatches([]); };
-    return <div className="time-controls">
+    return <div className="time-controls" id="history-controls" tabIndex={-1}>
     <form className="year-form" onSubmit={e => { e.preventDefault(); if (!data)
         return; const hantToHans=new Map(Object.entries(data.translations.hant.CHAR_S2T).map(([s,t])=>[t,s])); const normalized=locale==='zh-Hant'?[...input].map(c=>hantToHans.get(c)??c).join(''):input; const found = parseHistoricalYear(normalized, data.eras); if (found.length === 1)
         choose(found[0]!.year);

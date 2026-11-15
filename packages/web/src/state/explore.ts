@@ -1,3 +1,4 @@
+import {fetchAfterTerrain} from '../platform/startup';
 import {create} from 'zustand';
 import {terrainBridge} from './terrain';
 import {mergeRoutes,personStops,quizDeck,sanitizeClue,normalize} from '@witlu/core/explore';
@@ -13,7 +14,7 @@ import {historicalText} from '../i18n/history';
 import type {MapPath} from '../../../engine/cartography/Paths';
 export interface ExploreData {people:Person[];details:Record<string,Detail>;journeys:Journey[];events:Event[];search:SearchEntry[];questions:Question[]}
 let promise:Promise<ExploreData>|undefined;
-export function loadExplore():Promise<ExploreData>{return promise??=Promise.all([loadPlaces(),loadChronicle(),...['persons','person-details','journeys','pinyin','milestones'].map(async n=>{const r=await fetch('/data/'+n+'.json');if(!r.ok)throw Error(n);return r.json();})]).then(([places,rawChronicle,people,details,journeys,pinyin,milestones])=>{
+export function loadExplore():Promise<ExploreData>{return promise??=Promise.all([loadPlaces(),loadChronicle(),...['persons','person-details','journeys','pinyin','milestones'].map(async n=>{const r=await fetchAfterTerrain('/data/'+n+'.json');if(!r.ok)throw Error(n);return r.json();})]).then(([places,rawChronicle,people,details,journeys,pinyin,milestones])=>{
  const c=rawChronicle as Chronicle;
  const profiles=people as Person[],routes=journeys as Journey[],events=[...(milestones as Event[]).map(e=>({...e,en:c.translations.en.milestones[e.dynastyKey+':'+e.year]?.[0]??e.headline??''})),...places.events] as Event[],search:SearchEntry[]=[];
  for(const p of profiles)search.push({id:'person:'+p.key,kind:'person',key:p.key,label:p.zh,en:p.en,tokens:[p.key,p.zh,p.en,...p.aliases??[],historicalText(p.zh,'zh-Hant',c)]});

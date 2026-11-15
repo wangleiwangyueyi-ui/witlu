@@ -9,3 +9,5 @@ playwright-report/
 *.tsbuildinfo
 
 packages/web/public/calligraphy/
+
+packages/web/public/fallback/

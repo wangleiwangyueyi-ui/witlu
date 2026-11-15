@@ -60,14 +60,17 @@ export class Boundaries {
         material.uniforms.trail!.value = Number(trail);
         renderer.getSize(material.uniforms.resolution!.value as Vector2);
         this.mesh.visible = opacity > .001;
+        if (!this.mesh.visible) return;
         const signature = String(this.terrain.effects.displacement) + this.terrain.visible.map(t => `${t.id.z}/${t.id.x}/${t.id.y}`).join(',');
         if (signature === this.lastTerrain)
             return;
         this.lastTerrain = signature;
         const other = this.mesh.geometry.getAttribute('other');
+        const heights=new Map<string,number>();
+        const height=(x:number,z:number)=>{const key=`${x},${z}`;let value=heights.get(key);if(value===undefined){value=this.terrain.heightAt(x,z)+.35;heights.set(key,value);}return value;};
         for (let i = 0; i < this.points.length; i += 3) {
-            this.points[i + 1] = this.terrain.heightAt(this.points[i]!, this.points[i + 2]!) + .35;
-            other.setY(i / 3, this.terrain.heightAt(other.getX(i / 3), other.getZ(i / 3)) + .35);
+            this.points[i + 1] = height(this.points[i]!, this.points[i + 2]!);
+            other.setY(i / 3, height(other.getX(i / 3), other.getZ(i / 3)));
         }
         this.mesh.geometry.getAttribute('position').needsUpdate = true;
         other.needsUpdate = true;

@@ -1,3 +1,7 @@
+import {installMobileViewport} from './platform/mobile';
+import {installModalFocus} from './platform/accessibility';
+import {loadDebugConsole} from './platform/debug';
+import './styles/mobile.css';
 import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles/app.css';
@@ -19,6 +23,7 @@ const GlassLab = lazy(() => import('./lab/GlassLab'));
 const TerrainLab = lazy(() => import('./lab/TerrainLab'));
 const EnvironmentLab = lazy(() => import('./lab/EnvironmentLab'));
 const MorphLab = lazy(() => import('./lab/MorphLab'));
+installMobileViewport(); installModalFocus(); void loadDebugConsole().catch(console.warn);
 createRoot(document.getElementById('root')!).render(<StrictMode><Suspense fallback={null}>{location.pathname === '/lab/opening' ? <OpeningLab/> : location.pathname === '/lab/explore' ? <ExploreLab/> : location.pathname === '/lab/places' ? <PlacesLab/> : location.pathname === '/lab/weather' ? <WeatherLab/> : location.pathname === '/lab/chapters' ? <ChaptersLab/> : location.pathname === '/lab/time-flight' ? <TimeFlightLab/> : location.pathname === '/lab/timeline' ? <TimelineLab/> : location.pathname === '/lab/glass' ? <GlassLab/> : location.pathname === '/lab/terrain' ? <TerrainLab/> : location.pathname === '/lab/ocean' ? <EnvironmentLab mode="ocean"/> : location.pathname === '/lab/clouds' ? <EnvironmentLab mode="clouds"/> : location.pathname === '/lab/morph' ? <MorphLab/> : <App/>}</Suspense></StrictMode>);
 
 if(import.meta.env.PROD&&'serviceWorker' in navigator)window.addEventListener('load',()=>void navigator.serviceWorker.register('/sw.js').catch(console.warn));

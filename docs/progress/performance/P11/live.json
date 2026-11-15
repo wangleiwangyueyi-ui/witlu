@@ -1,0 +1,274 @@
+{
+  "date": "2026-11-15T09:35:36.427Z",
+  "passed": false,
+  "results": [
+    {
+      "url": "http://witlu.com/",
+      "kind": "html",
+      "chain": [
+        {
+          "url": "http://witlu.com/",
+          "status": 301,
+          "headers": {
+            "location": "https://witlu.com/",
+            "server": "cloudflare",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": null
+        },
+        {
+          "url": "https://witlu.com/",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false,
+        "application": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://witlu.com/",
+      "kind": "html",
+      "chain": [
+        {
+          "url": "https://witlu.com/",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false,
+        "application": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://witlu.com/?year=230&lang=en",
+      "kind": "html",
+      "chain": [
+        {
+          "url": "https://witlu.com/?year=230&lang=en",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false,
+        "application": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://witlu.com/release.json",
+      "kind": "data",
+      "chain": [
+        {
+          "url": "https://witlu.com/release.json",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://witlu.com/release.json",
+      "passed": false,
+      "error": "SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+    },
+    {
+      "url": "http://www.witlu.com/",
+      "kind": "html",
+      "chain": [
+        {
+          "url": "http://www.witlu.com/",
+          "status": 301,
+          "headers": {
+            "location": "https://www.witlu.com/",
+            "server": "cloudflare",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": null
+        },
+        {
+          "url": "https://www.witlu.com/",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false,
+        "application": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://www.witlu.com/",
+      "kind": "html",
+      "chain": [
+        {
+          "url": "https://www.witlu.com/",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false,
+        "application": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://www.witlu.com/?year=230&lang=en",
+      "kind": "html",
+      "chain": [
+        {
+          "url": "https://www.witlu.com/?year=230&lang=en",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false,
+        "application": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://www.witlu.com/release.json",
+      "kind": "data",
+      "chain": [
+        {
+          "url": "https://www.witlu.com/release.json",
+          "status": 200,
+          "headers": {
+            "content-type": "text/html;charset=utf-8",
+            "server": "cloudflare",
+            "strict-transport-security": "max-age=15552000",
+            "x-content-type-options": "nosniff",
+            "cf-cache-status": "DYNAMIC"
+          },
+          "tls": {
+            "authorized": true,
+            "protocol": "TLSv1.3"
+          }
+        }
+      ],
+      "checks": {
+        "status": true,
+        "https": true,
+        "tls": true,
+        "query": true,
+        "cache": false
+      },
+      "passed": false
+    },
+    {
+      "url": "https://www.witlu.com/release.json",
+      "passed": false,
+      "error": "SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+    }
+  ]
+}

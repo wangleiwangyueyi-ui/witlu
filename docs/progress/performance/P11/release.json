@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-15T10:47:42.440Z",
+  "localFixture": true,
+  "base": "http://127.0.0.1:4181",
+  "passed": true,
+  "results": [
+    {
+      "route": "/",
+      "status": 200,
+      "cache": "no-cache",
+      "contentType": "text/html; charset=utf-8",
+      "passed": true
+    },
+    {
+      "route": "/lab/terrain",
+      "status": 200,
+      "cache": "no-cache",
+      "contentType": "text/html; charset=utf-8",
+      "passed": true
+    },
+    {
+      "route": "/topics/index.html",
+      "status": 200,
+      "cache": "no-cache",
+      "contentType": "text/html; charset=utf-8",
+      "passed": true
+    },
+    {
+      "route": "/sw.js",
+      "status": 200,
+      "cache": "no-cache",
+      "contentType": "text/javascript",
+      "passed": true
+    },
+    {
+      "route": "/release.json",
+      "status": 200,
+      "cache": "no-cache",
+      "contentType": "application/json",
+      "passed": true
+    },
+    {
+      "route": "/assets/index-D-AeD4Qq.js",
+      "status": 200,
+      "cache": "public, max-age=31536000, immutable",
+      "contentType": "text/javascript",
+      "passed": true
+    },
+    {
+      "route": "/terrain/d76efa91ca05dfe8/relief/3/6/3.webp",
+      "status": 200,
+      "cache": "public, max-age=31536000, immutable",
+      "contentType": "image/webp",
+      "passed": true
+    },
+    {
+      "route": "/fallback/initial.webp",
+      "status": 200,
+      "cache": "no-cache",
+      "contentType": "image/webp",
+      "passed": true
+    },
+    {
+      "route": "/data/phases.json",
+      "status": 200,
+      "cache": "public, max-age=0, must-revalidate",
+      "contentType": "application/json",
+      "passed": true
+    },
+    {
+      "name": "Debug bundles are not installed offline",
+      "passed": true
+    },
+    {
+      "name": "All 198 historical snapshot fallbacks",
+      "passed": true
+    }
+  ]
+}

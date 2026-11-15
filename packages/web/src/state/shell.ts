@@ -1,3 +1,4 @@
+import {deviceQuality} from '../platform/mobile';
 import {localeFromQuery} from '@witlu/core/deep-link';
 import { create } from 'zustand';
 import type { Locale } from '../i18n/messages';
@@ -19,7 +20,7 @@ interface ShellState {
 }
 export const useShell = create<ShellState>(set => ({
   locale, year: Number.isInteger(queryYear) && queryYear !== 0 && queryYear >= -403 && queryYear <= 2027 ? queryYear : 230,
-  quality: prefs.quality === 'ultra' || prefs.quality === 'eco' ? prefs.quality : 'high',
+  quality: prefs.quality === 'ultra' || prefs.quality === 'eco' || prefs.quality === 'high' ? prefs.quality : deviceQuality(),
   playing: false, regime: 'wei', highlight: prefs.highlight !== false, refraction: prefs.refraction !== false,
   pressMotion: prefs.pressMotion !== false,
   reducedMotion: prefs.reducedMotion === true, about: false,

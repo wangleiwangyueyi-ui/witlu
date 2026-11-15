@@ -10,7 +10,7 @@
   "scripts": {
     "data": "node scripts/import-upstream.mjs && node scripts/build-geometry.mjs && node scripts/build-territories.mjs && node scripts/build-colors.mjs && node scripts/build-events.mjs && node scripts/build-moods.mjs && node scripts/verify-parity.mjs && node scripts/build-calligraphy.mjs && node scripts/build-weather-audio.mjs",
     "dev": "pnpm --filter @witlu/web dev",
-    "build": "pnpm data && pnpm assets && pnpm tiles && pnpm publishing && pnpm typecheck && pnpm --filter @witlu/web build && node scripts/build-service-worker.mjs",
+    "build": "pnpm data && pnpm assets && pnpm tiles && pnpm publishing && pnpm fallback && pnpm typecheck && pnpm --filter @witlu/web build && node scripts/finalize-release.mjs && node scripts/build-service-worker.mjs",
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json",
     "lint": "eslint packages scripts tests && stylelint \"packages/web/src/**/*.css\" && node scripts/lint-boundaries.mjs",
     "fonts": "node scripts/build-fonts.mjs",
@@ -38,7 +38,14 @@
     "mcp": "node scripts/mcp-server.mjs",
     "test:publishing": "node scripts/test-publishing.mjs",
     "test:mcp": "node scripts/test-mcp.mjs",
-    "test:seo": "node scripts/test-seo.mjs"
+    "test:seo": "node scripts/test-seo.mjs",
+    "fallback": "node scripts/build-static-atlas.mjs",
+    "verify:live": "node scripts/check-live.mjs",
+    "verify:bundle": "node scripts/check-bundle-budget.mjs",
+    "test:hardening": "playwright test --config playwright.hardening.config.ts",
+    "test:budgets": "node scripts/test-budgets.mjs",
+    "test:startup": "node scripts/test-startup.mjs",
+    "test:growth-budget": "node scripts/test-growth-budget.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

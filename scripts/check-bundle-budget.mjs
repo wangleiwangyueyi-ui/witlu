@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {gzipSync} from 'node:zlib';
+const dist=path.resolve('packages/web/dist'),manifest=JSON.parse(await fs.readFile(path.join(dist,'.vite/manifest.json'),'utf8')),files=new Set();
+const add=key=>{const e=manifest[key];if(!e||files.has(e.file))return;files.add(e.file);for(const f of e.css??[])files.add(f);for(const dependency of e.imports??[])add(dependency);};
+add('index.html');for(const [key,e] of Object.entries(manifest))if(e.src?.includes('engine/index.ts'))add(key);
+const rows=await Promise.all([...files].sort().map(async file=>{const bytes=await fs.readFile(path.join(dist,file));return {file,bytes:bytes.length,gzip:gzipSync(bytes).length};}));
+const list=async dir=>{const out=[];for(const e of await fs.readdir(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())out.push(...await list(p));else out.push({file:path.relative(dist,p),bytes:(await fs.stat(p)).size});}return out;};
+const all=await list(dist),gzip=rows.reduce((s,f)=>s+f.gzip,0),checks={coreGzip:gzip<=350*1024,fileCount:all.length<=20000,maxFile:all.every(f=>f.bytes<=25*1024*1024)};
+const report={date:new Date().toISOString(),definition:'Entry static dependencies plus the 3D engine and their CSS; excludes opt-in labs/debug/export chunks.',gzipBytes:gzip,limitBytes:350*1024,files:rows,fileCount:all.length,largest:all.sort((a,b)=>b.bytes-a.bytes).slice(0,5),checks,passed:Object.values(checks).every(Boolean)};
+await fs.mkdir('docs/progress/performance/P11',{recursive:true});await fs.writeFile('docs/progress/performance/P11/bundle.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({gzipKB:gzip/1024,fileCount:all.length,checks}));if(!report.passed)process.exitCode=1;

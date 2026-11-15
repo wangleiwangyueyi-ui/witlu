@@ -18,7 +18,7 @@ export function MorphTimeline({ phases }: {
         let trailing: ReturnType<typeof setTimeout> | undefined, settle: ReturnType<typeof setTimeout> | undefined;
         const apply = () => {
             const engine = terrainBridge.engine;
-            if (!engine)
+            if (!engine || !terrainBridge.stats?.tiles)
                 return;
             const state = useShell.getState(), s = useMorphSettings.getState();
             engine.morph.enabled = state.layers.territories !== false;
@@ -28,7 +28,7 @@ export function MorphTimeline({ phases }: {
         const update = async (force = false) => {
             if(storyLock.active){request++;current='';return;}
             const engine = terrainBridge.engine;
-            if (!engine)
+            if (!engine || !terrainBridge.stats?.tiles)
                 return;
             const state = timeStore.getState(), now = performance.now();
             clearTimeout(settle);

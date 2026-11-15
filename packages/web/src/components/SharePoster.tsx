@@ -1,6 +1,5 @@
 import {shareURL} from '../state/share-url';
 import {useEffect,useState} from 'react';
-import QRCode from 'qrcode';
 import {useShell} from '../state/shell';
 import {terrainBridge} from '../state/terrain';
 import {GlassButton} from './Glass';
@@ -8,8 +7,8 @@ import {useExploreText} from './Explore';
 export function SharePoster(){const t=useExploreText(),[open,setOpen]=useState(false),[poster,setPoster]=useState(''),[error,setError]=useState(''),[copied,setCopied]=useState(false);const year=useShell(s=>s.year);
  useEffect(()=>{const show=()=>{setOpen(true);setPoster('');setError('');setCopied(false);};window.addEventListener('atlas:share',show);return()=>window.removeEventListener('atlas:share',show);},[]);
  useEffect(()=>{if(!open)return;let alive=true;void(async()=>{
-  const canvas=document.querySelector<HTMLCanvasElement>('.terrain-canvas');if(!canvas||!terrainBridge.engine)throw Error('Map is still loading');
-  await document.fonts.ready;terrainBridge.engine.renderNow();const frozen=new Image();frozen.src=canvas.toDataURL();await frozen.decode();
+  const canvas=document.querySelector<HTMLCanvasElement>('.terrain-canvas');const still=document.querySelector<HTMLImageElement>('[data-testid=static-atlas] img');if(!canvas||(!terrainBridge.engine&&!still))throw Error('Map is still loading');
+  await document.fonts.ready;terrainBridge.engine?.renderNow();const frozen=new Image();frozen.src=still?.src??canvas.toDataURL();await frozen.decode();
   const css=getComputedStyle(document.documentElement),token=(n:string)=>css.getPropertyValue(n).trim();
   const width=1080,height=Math.round(1080*canvas.clientHeight/canvas.clientWidth)+340,out=document.createElement('canvas');out.width=width;out.height=height;const ctx=out.getContext('2d')!;
   ctx.fillStyle=token('--sky');ctx.fillRect(0,0,width,height);ctx.drawImage(frozen,0,0,width,height-340);
@@ -18,7 +17,7 @@ export function SharePoster(){const t=useExploreText(),[open,setOpen]=useState(f
   ctx.textAlign='left';ctx.font='48px '+css.getPropertyValue('--font-title');ctx.fillStyle=token('--polity-main');ctx.fillText('江山 · '+(year<0?'公元前 '+(-year):'公元 '+year)+' 年',50,height-250);
   ctx.font='26px '+css.getPropertyValue('--font-ui');ctx.fillStyle=token('--text');ctx.fillText('两千四百年 · 一图观之',50,height-190);ctx.fillText('历史疆域为示意性近似，非测绘边界',50,height-125);ctx.font='20px '+css.getPropertyValue('--font-ui');ctx.fillText('witlu.com · jiangshan-map / CHGIS',50,height-65);
   const url=shareURL(location.search,year);
-  const qr=document.createElement('canvas');await QRCode.toCanvas(qr,url,{width:240,margin:2,color:{dark:token('--sky'),light:token('--text')},errorCorrectionLevel:'M'});ctx.drawImage(qr,width-280,height-290,230,230);
+  const {default:QRCode}=await import('qrcode');const qr=document.createElement('canvas');await QRCode.toCanvas(qr,url,{width:240,margin:2,color:{dark:token('--sky'),light:token('--text')},errorCorrectionLevel:'M'});ctx.drawImage(qr,width-280,height-290,230,230);
   if(alive)setPoster(out.toDataURL('image/png'));
  })().catch(e=>{if(alive)setError(String(e));});return()=>{alive=false;};},[open,year]);
  useEffect(()=>{if(!open)return;const key=(e:KeyboardEvent)=>{if(e.key==='Escape')setOpen(false);};window.addEventListener('keydown',key);return()=>window.removeEventListener('keydown',key);},[open]);

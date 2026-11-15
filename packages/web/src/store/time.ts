@@ -88,7 +88,7 @@ export function startTimeClock(boundaries: number[]) {
         frame = requestAnimationFrame(tick);
     };
     const keyboard = (e: KeyboardEvent) => {
-        if (e.defaultPrevented || (e.target as HTMLElement)?.closest('input,textarea,select,[contenteditable=true],[role=slider],button') || e.ctrlKey || e.metaKey || e.altKey || useShell.getState().about)
+        if (e.defaultPrevented || (e.target as HTMLElement)?.closest('input,textarea,select,[contenteditable=true],[role=slider],[role=dialog],button') || e.ctrlKey || e.metaKey || e.altKey || useShell.getState().about)
             return;
         if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
             e.preventDefault();

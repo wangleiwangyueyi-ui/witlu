@@ -1,3 +1,5 @@
+import {StaticAtlas} from './StaticAtlas';
+import {releaseStartupData} from '../platform/startup';
 import { useEffect, useRef, useState } from 'react';
 import { WebPlatformAdapter } from '../platform/WebPlatformAdapter';
 import { useShell } from '../state/shell';
@@ -8,10 +10,12 @@ import { useEnvironmentSettings } from '../state/environment';
 import type { CameraPose } from '@witlu/engine';
 export function TerrainCanvas({ environment = false, initialPose, territories = false }: { environment?: boolean; initialPose?: Partial<CameraPose>; territories?:boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null), readout = useRef<HTMLOutputElement>(null);
-  const [status, setStatus] = useState('loading'); const [error, setError] = useState(''); const reduced = useReducedEffects(); const { locale } = useI18n();
+  const [status, setStatus] = useState('loading'); const reduced = useReducedEffects(); const { locale } = useI18n();
   useEffect(() => { if (terrainBridge.engine) { terrainBridge.engine.camera.reducedMotion = reduced; terrainBridge.engine.environment.reducedMotion = reduced; terrainBridge.engine.morph.reducedMotion = reduced; } }, [reduced]);
   useEffect(() => {
-    const element = canvas.current!; const platform = new WebPlatformAdapter(element); let disposed = false; let cleanup = () => {};
+    const element = canvas.current!;
+    if(!element.getContext('webgl2',{antialias:false,alpha:false,powerPreference:'high-performance',preserveDrawingBuffer:false})){releaseStartupData();setStatus('error');document.documentElement.dataset.webgl='unavailable';window.dispatchEvent(new Event('atlas:no-webgl'));return;}
+    const platform = new WebPlatformAdapter(element); let disposed = false; let cleanup = () => {};
     void import('@witlu/engine').then(({ AtlasRenderer }) => {
       if (disposed) return;
       const css = getComputedStyle(document.documentElement), token = (name: string) => css.getPropertyValue(name).trim();
@@ -26,11 +30,11 @@ export function TerrainCanvas({ environment = false, initialPose, territories = 
       const applyEnvironment = () => { engine.environment.effects = { ...useEnvironmentSettings.getState().effects }; }; applyEnvironment(); applySettings();
       const environmentOff = useEnvironmentSettings.subscribe(applyEnvironment), settingsOff = useTerrainSettings.subscribe(applySettings), shellOff = useShell.subscribe((s, previous) => { if (s.quality !== previous.quality) engine.setQuality(s.quality); if (s.reducedMotion !== previous.reducedMotion) applyMotion(); });
       engine.onQuality = quality => useShell.getState().setQuality(quality);
-      engine.onStats = stats => { terrainBridge.stats = stats; element.dataset.stats = JSON.stringify(stats); element.dataset.context = stats.context; if (stats.tiles > 0 && element.dataset.ready !== 'true') { element.dataset.ready = 'true'; setStatus('ready'); } else if (!stats.tiles && stats.errors > 0 && stats.loading === 0) setStatus('missing'); terrainBridge.emit(); };
+      engine.onStats = stats => { terrainBridge.stats = stats; element.dataset.stats = JSON.stringify(stats); element.dataset.context = stats.context; if (stats.tiles > 0 && element.dataset.ready !== 'true') { element.dataset.ready = 'true'; setStatus('ready');releaseStartupData(); } else if (!stats.tiles && stats.errors > 0 && stats.loading === 0) { setStatus('missing');releaseStartupData(); } terrainBridge.emit(); };
       engine.onPick = pick => { terrainBridge.pick = pick; if (readout.current) readout.current.textContent = pick ? `${pick.lon.toFixed(4)}° E · ${pick.lat.toFixed(4)}° N · ${Math.round(pick.elevation)} m` : '—'; terrainBridge.emit(); };
       cleanup = () => { media.removeEventListener('change', applyMotion); environmentOff(); settingsOff(); shellOff(); engine.dispose(); if (terrainBridge.engine === engine) { terrainBridge.engine = null; terrainBridge.stats = null; } };
-    }).catch((e: unknown) => { if (!disposed) { setStatus('error'); setError(e instanceof Error ? e.message : String(e)); } });
+    }).catch((e: unknown) => { if (!disposed) { releaseStartupData();setStatus('error'); window.dispatchEvent(new Event('atlas:no-webgl')); element.dataset.error=e instanceof Error ? e.message : String(e); } });
     return () => { disposed = true; cleanup(); platform.dispose(); };
   }, [environment, initialPose, territories]);
-  return <div className="map-scene terrain-scene"><canvas ref={canvas} className="terrain-canvas" tabIndex={0} aria-label={locale === 'en' ? '3D terrain map. Drag to pan, wheel to zoom, Shift-drag to rotate and tilt.' : '三维地形地图：拖动平移，滚轮缩放，Shift 拖动旋转与俯仰。'} data-testid="terrain"/><div className="terrain-vignette"/>{status !== 'ready' && <p role="status" className="terrain-status">{status === 'loading' ? (locale === 'en' ? 'Loading the mountains…' : '山河正在展开…') : status === 'missing' ? '缺少地形瓦片，请运行 pnpm tiles' : `WebGL2 地形暂不可用 · ${error}`}</p>}<output ref={readout} className="terrain-pick" aria-live="polite" data-testid="terrain-pick"/></div>;
+  return <div className="map-scene terrain-scene">{status!=='ready'&&<StaticAtlas unavailable={status==='error'||status==='missing'}/>}<canvas ref={canvas} className="terrain-canvas" style={{visibility:status==='ready'?'visible':'hidden'}} tabIndex={status==='ready'?0:-1} aria-label={locale === 'en' ? '3D terrain map. Drag to pan, wheel to zoom, Shift-drag to rotate and tilt.' : '三维地形地图：拖动平移，滚轮缩放，Shift 拖动旋转与俯仰。'} data-testid="terrain"/><div className="terrain-vignette"/>{status === 'loading' && <p role="status" className="terrain-status">{locale === 'en' ? 'Loading the mountains…' : '山河正在展开…'}</p>}<output ref={readout} className="terrain-pick" aria-live="polite" data-testid="terrain-pick"/></div>;
 }
