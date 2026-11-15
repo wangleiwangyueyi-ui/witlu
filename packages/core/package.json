@@ -10,7 +10,8 @@
     "./morph": "./morph/index.ts",
     "./weather": "./weather/index.ts",
     "./places": "./places/index.ts",
-    "./explore": "./explore/index.ts"
+    "./explore": "./explore/index.ts",
+    "./deep-link": "./deep-link/index.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json"

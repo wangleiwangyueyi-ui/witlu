@@ -1,0 +1,22 @@
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--text); background: radial-gradient(ellipse at top, var(--sea-shelf), var(--sky) 70%); font: 17px/1.85 var(--font-ui); }
+a { color: var(--link); text-underline-offset: .2em; }
+a:hover { color: var(--polity-main); }
+main { max-width: 1100px; margin: auto; padding: 32px 24px 80px; }
+.top-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 5vw; border-bottom: 1px solid var(--glass-border); }
+.brand-link { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+.top-nav { display: flex; flex-wrap: wrap; gap: 18px; }
+.hero-card, .section-card, .topic-card, .content-card, section { margin-block: 24px; padding: 28px; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); background: linear-gradient(var(--glass-top),var(--glass-bottom)); box-shadow: var(--shadow-panel); }
+h1,h2,h3 { font-family: var(--font-title); line-height: 1.4; text-wrap: balance; }
+h1 { font-size: clamp(28px,4vw,42px); }
+.kicker, .eyebrow, time { color: var(--polity-main); }
+.en-sub, .meta { color: var(--text-secondary); }
+.poem-box, blockquote { border-left: 2px solid var(--polity-main); padding: 12px 24px; margin-inline: 0; }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.cta-btn { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); text-decoration: none; background: var(--sea-shelf); }
+.grid, .topic-grid, .cards-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 18px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+td,th { padding: 12px; border-bottom: 1px solid var(--glass-border); text-align: left; }
+.table-wrap { overflow-x: auto; }
+.page-footer { margin-top: 40px; border-top: 1px solid var(--glass-border); padding-top: 20px; font-size: 14px; }
+@media (max-width: 600px) { main { padding: 20px 16px; } section,.hero-card,.section-card { padding: 18px; } .top-bar { padding: 16px; } table { display: block; overflow-x: auto; } }

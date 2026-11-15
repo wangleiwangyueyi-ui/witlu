@@ -47,3 +47,12 @@ Make Me a Hanzi（https://github.com/skishore/makemeahanzi），固定提交 `bd
 # P7 程序合成环境音
 
 `scripts/build-weather-audio.mjs` 原创生成雨、风、海浪、雷声四个 WAV，不包含第三方录音或采样。生成的 WAV 资源及其来源清单位于构建目录 `packages/web/public/assets/audio/weather/`，以 [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) 提供；在法律允许的范围内放弃这些音频资源的著作权及相关权利。生成脚本仍适用本仓库 GPL-3.0 许可。`sources.json` 记录生成来源、时长、采样率和 SHA-256；`LICENSE.txt` 随资源分发。古琴保留原有上游来源与授权说明。
+
+
+## P10 发布、分享与开场素材
+
+35 个专题页正文、llms.txt、jiangshan-atlas Skill 文案及 MCP 查询实现衍生自固定提交的 DeanChensj/jiangshan-map，保留 GPL-3.0 许可和上游致谢。witlu contributors 于 2026-11-14 修改域名、展示样式与运行适配，未修改 upstream/。新 CLI 适配器只读上游数据。
+
+开场地球的海陆贴图使用上述 Natural Earth 公有领域数据，重新投影为等经纬图并采用 PLAN 色板。书法子集现为 45 个字，新增「两千四百年 · 一图观之」及简繁所需笔画，沿用 Make Me a Hanzi 固定提交和 Arphic Public License。
+
+分享海报的二维码由 [node-qrcode](https://github.com/soldair/node-qrcode) 生成，MIT License；二维码只编码 witlu.com 的公开深链，不请求第三方二维码服务。玻璃印章、OG 排版与程序化地球云层由本项目生成。

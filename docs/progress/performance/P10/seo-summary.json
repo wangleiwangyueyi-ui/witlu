@@ -1,0 +1,20 @@
+[
+  {
+    "label": "home",
+    "route": "/",
+    "score": 100,
+    "failures": []
+  },
+  {
+    "label": "topics",
+    "route": "/topics/index.html",
+    "score": 100,
+    "failures": []
+  },
+  {
+    "label": "article",
+    "route": "/topics/battle-chibi.html",
+    "score": 100,
+    "failures": []
+  }
+]

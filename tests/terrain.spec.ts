@@ -33,7 +33,11 @@ test('lab supports flyTo, switches, keyboard and WebGL context recovery', async 
 });
 test('two-finger touch pinches, rotates and inclines the terrain', async ({ page }, info) => {
   test.skip(info.project.name === 'desktop', 'Touch devices only');
-  await page.goto('/'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  await page.goto('/');
+  // The first-visit introduction owns pointer input until it is dismissed.
+  await page.getByRole('button', { name: /跳过开场/ }).click();
+  await expect(page.locator('.opening-screen')).toHaveCount(0);
+  await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
   const initial = await stats(page); const cdp = await page.context().newCDPSession(page);
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 130, y: 240, id: 1 }, { x: 230, y: 240, id: 2 }] });
   for (let i = 1; i <= 10; i++) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 130 - i, y: 240 + i, id: 1 }, { x: 230 + i * 3, y: 240 + i * 3, id: 2 }] });

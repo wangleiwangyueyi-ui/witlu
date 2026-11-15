@@ -17,14 +17,17 @@ interface TimeState {
     flight: boolean;
     haptics: boolean;
 }
+let lockedYear: number | undefined;
+export function lockTime(year: number | undefined) { lockedYear = year; }
 const rangeParams=new URLSearchParams(location.search),from=Number(rangeParams.get('from')),to=Number(rangeParams.get('to'));
-const hasRange=Number.isInteger(from)&&Number.isInteger(to)&&from!==0&&to!==0&&from>=-403&&to<=2027&&to-from>=12;
+const hasRange=Number.isInteger(from)&&Number.isInteger(to)&&from!==0&&to!==0&&from>=-403&&to<=2027&&to>from;
 const min = yearToIndex(hasRange?from:-403), max = yearToIndex(hasRange?to:2027);
-const initial = yearToIndex(useShell.getState().year);
+const initial = Math.max(min,Math.min(max,yearToIndex(useShell.getState().year)));
 const initialWidth = Math.min(120, max - min);
 const initialLeft = Math.max(min, Math.min(max - initialWidth, initial - initialWidth / 2));
 export const timeStore = createStore<TimeState>(() => ({ scrubbing: false, index: initial, speed: 1, playing: false, mode: 'jump', velocity: 0, view: [initialLeft, initialLeft + initialWidth], flow: true, flight: true, haptics: true }));
 export function seekIndex(index: number, mode: TimeMode = 'jump', velocity = 0) {
+    if (lockedYear !== undefined && index !== yearToIndex(lockedYear)) return;
     if (!Number.isFinite(index))
         return;
     const target = Math.max(min, Math.min(max, index));
@@ -35,9 +38,9 @@ export function seekIndex(index: number, mode: TimeMode = 'jump', velocity = 0) 
 }
 export function seekYear(year: number) { seekIndex(yearToIndex(year)); }
 export function stepYear(delta: number) { seekIndex(Math.floor(timeStore.getState().index) + delta); }
-export function toggleTime() { timeStore.setState(s => ({ playing: !s.playing, mode: 'play' })); }
+export function toggleTime() { if (lockedYear !== undefined) return; timeStore.setState(s => ({ playing: !s.playing, mode: 'play' })); }
 export function setTimeView(a: number, b: number) {
-    const width = Math.max(12, Math.min(max - min, b - a));
+    const width = Math.max(Math.min(12,max-min), Math.min(max - min, b - a));
     const left = Math.max(min, Math.min(max - width, a));
     timeStore.setState({ view: [left, left + width] });
 }

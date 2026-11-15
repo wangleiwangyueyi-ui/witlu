@@ -1,0 +1,182 @@
+[
+  {
+    "name": "year",
+    "query": "year=-221",
+    "passed": true
+  },
+  {
+    "name": "era year",
+    "query": "year=贞观三年",
+    "passed": true
+  },
+  {
+    "name": "place",
+    "query": "year=819&place=蓝关",
+    "passed": true
+  },
+  {
+    "name": "pinyin",
+    "query": "year=741&place=Chang-an",
+    "passed": true
+  },
+  {
+    "name": "coordinates",
+    "query": "year=230&lng=112.45&lat=34.62",
+    "passed": true
+  },
+  {
+    "name": "center",
+    "query": "center=110,30",
+    "passed": true
+  },
+  {
+    "name": "zoom",
+    "query": "zoom=2",
+    "passed": true
+  },
+  {
+    "name": "trace",
+    "query": "trace=112.45,34.62",
+    "passed": true
+  },
+  {
+    "name": "person",
+    "query": "person=sushi&stop=2",
+    "passed": true
+  },
+  {
+    "name": "four people",
+    "query": "person=libai,dufu,gaoshi,sushi",
+    "passed": true
+  },
+  {
+    "name": "journey",
+    "query": "journey=xuanzang&stop=1",
+    "passed": true
+  },
+  {
+    "name": "event",
+    "query": "event=anshi&stop=1",
+    "passed": true
+  },
+  {
+    "name": "polity",
+    "query": "year=230&polity=caowei",
+    "passed": true
+  },
+  {
+    "name": "hover",
+    "query": "year=1102&place=浔阳&hover=江州",
+    "passed": true
+  },
+  {
+    "name": "language",
+    "query": "year=741&place=長安&lang=zh-tw",
+    "passed": true
+  },
+  {
+    "name": "english",
+    "query": "lang=en",
+    "passed": true
+  },
+  {
+    "name": "search",
+    "query": "q=huoqubing",
+    "passed": true
+  },
+  {
+    "name": "search era",
+    "query": "q=貞觀三年",
+    "passed": true
+  },
+  {
+    "name": "search people",
+    "query": "q=李白,杜甫",
+    "passed": true
+  },
+  {
+    "name": "traditional person",
+    "query": "person=蘇軾&stop=2",
+    "passed": true
+  },
+  {
+    "name": "traditional era",
+    "query": "year=貞觀三年",
+    "passed": true
+  },
+  {
+    "name": "terrain legacy",
+    "query": "terrain=0",
+    "passed": true
+  },
+  {
+    "name": "layers",
+    "query": "layers=1",
+    "passed": true
+  },
+  {
+    "name": "mobile chronicle",
+    "query": "mob_chron=1",
+    "passed": true
+  },
+  {
+    "name": "mobile legend",
+    "query": "mob_leg=1",
+    "passed": true
+  },
+  {
+    "name": "quiz",
+    "query": "quiz=locate",
+    "passed": true
+  },
+  {
+    "name": "embed",
+    "query": "embed=1&year=230",
+    "passed": true
+  },
+  {
+    "name": "range",
+    "query": "from=200&to=280&year=240",
+    "passed": true
+  },
+  {
+    "name": "lock",
+    "query": "embed=1&lock=1&year=230",
+    "passed": true
+  },
+  {
+    "name": "autoplay",
+    "query": "year=230&autoplay=1",
+    "passed": true
+  },
+  {
+    "name": "route autoplay",
+    "query": "person=sushi&autoplay=1",
+    "passed": true
+  },
+  {
+    "name": "routes",
+    "query": "year=208&place=许昌,江陵,赤壁;柴桑,樊口,赤壁",
+    "passed": true
+  },
+  {
+    "name": "route years",
+    "query": "year=1079,1080,1094,1097&place=湖州,黄州,惠州,儋州",
+    "passed": true
+  },
+  {
+    "name": "explicit years",
+    "query": "place=1079:湖州,黄州:1080,惠州:1094",
+    "passed": true
+  },
+  {
+    "name": "route stop",
+    "query": "year=1079,1080,1094,1097&place=湖州,黄州,惠州,儋州&stop=2",
+    "passed": true
+  },
+  {
+    "name": "invalid",
+    "query": "year=garbage&center=NaN,40&zoom=Infinity",
+    "passed": true
+  }
+]

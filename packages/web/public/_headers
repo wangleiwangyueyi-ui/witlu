@@ -16,3 +16,7 @@
   Cache-Control: public, max-age=0, must-revalidate
 /tiles/*
   Cache-Control: public, max-age=86400
+
+/sw.js
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /

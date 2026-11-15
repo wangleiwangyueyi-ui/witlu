@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "tools": [
+    "inspect_place",
+    "inspect_person",
+    "search_atlas"
+  ],
+  "place": {
+    "year": 1102,
+    "era": "北宋徽宗·崇宁元年",
+    "dynasty": {
+      "key": "beisong",
+      "title": "北宋",
+      "seat": "东京开封府",
+      "span": [
+        960,
+        1127
+      ]
+    },
+    "place": "浔阳",
+    "resolvedName": "琵琶亭",
+    "modern": "江西九江",
+    "coord": [
+      115.98,
+      29.71
+    ],
+    "zoom": 2.5,
+    "polity": "宋",
+    "regions": [
+      "江南西路"
+    ],
+    "prefectures": [
+      "江州"
+    ],
+    "modernProvince": "江西省",
+    "nearestCity": null,
+    "lore": {
+      "badge": "名城形胜",
+      "tag": "九派浔阳 · 赣北门户",
+      "desc": "古称柴桑、寻阳（浔阳）、江州，背倚庐山、北临长江、东控鄱阳湖口，号“众水汇集、九派浔阳”。三国周瑜驻水军于柴桑，东晋至宋元置江州（陶渊明归隐、白居易《琵琶行》及《水浒》浔阳楼所在）。",
+      "tagEn": "Middle–Lower Yangtze Throat · Northern Gate of Jiangxi",
+      "descEn": "Backed by Mount Lu where Poyang Lake empties into the Yangtze River, Jiujiang (Chaisang / Xunyang / Jiangzhou) was Zhou Yu's naval base, Tao Yuanming's homeland, and the setting of Bai Juyi's Pipa Song."
+    },
+    "url": "https://witlu.com/?year=1102&place=%E6%B5%94%E9%98%B3"
+  },
+  "queryCount": 3
+}

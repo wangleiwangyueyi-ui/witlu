@@ -6,7 +6,10 @@ test('records terrain pan zoom rotate tilt and reset', async ({ browser }, info)
   const context = await browser.newContext({ viewport, baseURL: 'http://127.0.0.1:4173', deviceScaleFactor: profile.deviceScaleFactor ?? 1, isMobile: profile.isMobile ?? false, hasTouch: profile.hasTouch ?? false, ...(profile.userAgent ? { userAgent: profile.userAgent } : {}), recordVideo: { dir: 'test-results/videos', size: viewport } });
   const page = await context.newPage(), video = page.video()!;
   try {
-    await page.goto('/'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+    await page.goto('/');
+    await page.getByRole('button', { name: /跳过开场/ }).click();
+    await expect(page.locator('.opening-screen')).toHaveCount(0);
+    await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
     await expect.poll(async () => JSON.parse((await page.getByTestId('terrain').getAttribute('data-stats'))!).loading).toBe(0);
     const x = viewport.width * .5, y = viewport.height * .32;
     await page.mouse.move(x, y); await page.mouse.down(); await page.mouse.move(x + 65, y + 25, { steps: 36 }); await page.mouse.up();

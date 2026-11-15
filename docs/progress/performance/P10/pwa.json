@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "offlineShell": true,
+  "offlineDynasties": 18,
+  "caches": [
+    "witlu-v1-e094b46e0b25",
+    "witlu-v1-runtime-e094b46e0b25"
+  ]
+}

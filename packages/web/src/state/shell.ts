@@ -1,3 +1,4 @@
+import {localeFromQuery} from '@witlu/core/deep-link';
 import { create } from 'zustand';
 import type { Locale } from '../i18n/messages';
 export type Quality = 'ultra' | 'high' | 'eco';
@@ -5,7 +6,7 @@ export type Regime = 'wei' | 'shu' | 'wu';
 function saved() { try { return JSON.parse(localStorage.getItem('witlu-ui') ?? '{}') as Record<string, unknown>; } catch { return {}; } }
 const prefs = saved();
 const params = new URLSearchParams(location.search);
-const rawLocale = params.get('lang'); const queryLocale = rawLocale === 'zh-tw' ? 'zh-Hant' : rawLocale === 'zh-cn' ? 'zh-Hans' : rawLocale;
+const queryLocale = localeFromQuery(params.get('lang')??undefined);
 const locale: Locale = queryLocale === 'en' || queryLocale === 'zh-Hant' || queryLocale === 'zh-Hans' ? queryLocale : prefs.locale === 'en' || prefs.locale === 'zh-Hant' ? prefs.locale : 'zh-Hans';
 const queryYear = Number((params.get('year') ?? '230').split(',')[0]);
 interface ShellState {

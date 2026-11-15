@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-15",
+  "command": "pnpm verify",
+  "exitCode": 0,
+  "unitTests": 149,
+  "playwright": {
+    "passed": 96,
+    "skipped": 150,
+    "durationMinutes": 18.7,
+    "skipReason": "Existing device-specific and opt-in extended acceptance tests"
+  },
+  "deepLinkCases": 36,
+  "upstreamReadmeLinks": 63,
+  "openingRecordings": 3,
+  "viewports": [
+    "desktop 1440x900",
+    "iPhone 14 (Chromium emulation)",
+    "Pixel 7 (Chromium emulation)"
+  ],
+  "seo": [
+    {
+      "label": "home",
+      "route": "/",
+      "score": 100,
+      "failures": []
+    },
+    {
+      "label": "topics",
+      "route": "/topics/index.html",
+      "score": 100,
+      "failures": []
+    },
+    {
+      "label": "article",
+      "route": "/topics/battle-chibi.html",
+      "score": 100,
+      "failures": []
+    }
+  ],
+  "pwa": {
+    "passed": true,
+    "offlineShell": true,
+    "offlineDynasties": 18,
+    "caches": [
+      "witlu-v1-e094b46e0b25",
+      "witlu-v1-runtime-e094b46e0b25"
+    ]
+  }
+}

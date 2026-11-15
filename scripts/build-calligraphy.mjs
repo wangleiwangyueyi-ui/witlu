@@ -7,7 +7,7 @@ const asset = path.join(root, 'assets/calligraphy');
 await fs.mkdir(asset, { recursive: true });
 const dynasties = JSON.parse(await fs.readFile(path.join(root, 'packages/web/public/data/dynasties.json'), 'utf8'));
 const translations = JSON.parse(await fs.readFile(path.join(root, 'packages/web/public/data/i18n.json'), 'utf8'));
-const titles = dynasties.map(d => d.title);
+const titles = [...dynasties.map(d => d.title),'两千四百年一图观之'];
 const chars = new Set(titles.flatMap(t => [...t, ...[...t].map(c => translations.hant.CHAR_S2T[c] ?? c)]).filter(c => /\p{Script=Han}/u.test(c)));
 const subsetPath = path.join(asset, 'strokes.json');
 let subset;

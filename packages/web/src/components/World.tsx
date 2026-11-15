@@ -1,3 +1,4 @@
+import {Sources} from './Sources';
 import {useExplore} from '../state/explore';
 import { storyLock } from '../state/weather';
 import { useEffect, useRef, useState } from 'react';
@@ -35,13 +36,14 @@ export function WorldTracks({ mobile = false }: { mobile?: boolean }) {
           <button className="track-title" onClick={()=>useChapterSettings.getState().select(polity.key)}>{polityName(polity,locale,data)}<small>{t('dossier')} ›</small></button>
           <p className="track-era">{era ? <>{locale==='en'?era.rulerEn:historicalText(era.ruler,locale,data)} · {historicalText(era.name,locale,data)} {era.ordinal}</> : t('noRuler')}</p>
           <p className="track-capital">{t('capital')} · {historicalText(occurrence.capitals.map(c=>c.name).join(' / ')||polity.seatZh||'—',locale,data)}</p>
-          <div className="track-events">{entries.map(e=><button key={e.id} className="track-event" data-current={e.year===year} onClick={()=>{seekYear(e.year);frameSites(sameYearSites(e.year,data.events));}}><time>{formatYear(e.year,locale)}</time><span>{eventTitle(e,locale,data)}</span></button>)}{!entries.length&&<p>{t('noEvent')}</p>}</div>
+          <div className="track-events">{entries.map(e=><div key={e.id}><button className="track-event" data-current={e.year===year} onClick={()=>{seekYear(e.year);frameSites(sameYearSites(e.year,data.events));}}><time>{formatYear(e.year,locale)}</time><span>{eventTitle(e,locale,data)}</span></button><Sources event={e}/></div>)}{!entries.length&&<p>{t('noEvent')}</p>}</div>
         </GlassPanel>;
       })}
     </div>
   </section>;
 }
 export function WorldLegend() {
+  useEffect(()=>{const open=()=>{window.dispatchEvent(new Event('atlas:open-chronicle'));document.querySelector('.world-legend')?.scrollIntoView({block:'nearest'});};window.addEventListener('atlas:open-legend',open);return()=>window.removeEventListener('atlas:open-legend',open);},[]);
   const { data, phase, tracks }=useWorld(), t=useChronicleText(),locale=useShell(s=>s.locale);
   return <section className="world-legend" aria-label={t('legend')}><h2>{t('eraTracks')}</h2><p>{t('legendHint')}</p><div className="era-tracks">{tracks.map(({polity,occurrence,era})=>{
     const color=data?.colors.find(c=>c.snapshot===phase?.snapshot)?.colors.find(c=>c.polityId===polity.key)?.color;

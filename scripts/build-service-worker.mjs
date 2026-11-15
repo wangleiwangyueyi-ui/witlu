@@ -1,0 +1,18 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const dist=path.resolve(import.meta.dirname,'../packages/web/dist');
+const assets=(await fs.readdir(path.join(dist,'assets'))).filter(f=>/\.(js|css)$/.test(f)).map(f=>'/assets/'+f);
+const shell=['/','/manifest.webmanifest','/brand/seal-192.png','/brand/seal-512.png',...assets];
+const hash=createHash('sha256');for(const asset of ['index.html',...assets.map(s=>s.slice(1))])hash.update(await fs.readFile(path.join(dist,asset)));
+const version=hash.digest('hex').slice(0,12);
+const worker=`const PREFIX='witlu-v1-',STATIC=PREFIX+'${version}',RUNTIME=PREFIX+'runtime-${version}';
+const SHELL=${JSON.stringify(shell)};
+self.addEventListener('install',event=>event.waitUntil(caches.open(STATIC).then(cache=>cache.addAll(SHELL))));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith(PREFIX)&&key!==STATIC&&key!==RUNTIME)await caches.delete(key);await self.clients.claim();})()));
+let queue=Promise.resolve();
+self.addEventListener('fetch',event=>{const request=event.request,url=new URL(request.url);if(request.method!=='GET'||url.origin!==self.location.origin||request.headers.has('range'))return;
+event.respondWith((async()=>{const cached=await caches.match(request);if(cached&&request.mode!=='navigate'&&!url.pathname.startsWith('/data/'))return cached;
+try{const response=await fetch(request);if(response.ok){const copy=response.clone();event.waitUntil(queue=queue.catch(()=>{}).then(async()=>{const bytes=await copy.arrayBuffer();if(bytes.byteLength>2000000)return;const cache=await caches.open(RUNTIME);await cache.put(request,new Response(bytes,{status:copy.status,headers:copy.headers}));const keys=await cache.keys();for(const key of keys.slice(0,Math.max(0,keys.length-100)))await cache.delete(key);}));}return response;}catch{if(cached)return cached;if(request.mode==='navigate')return await caches.match('/')||Response.error();return Response.error();}})());});`;
+await fs.writeFile(path.join(dist,'sw.js'),worker);
+console.log('Generated versioned PWA cache '+version+'; runtime cache capped at 100 entries × 2 MB');

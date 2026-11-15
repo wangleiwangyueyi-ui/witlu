@@ -1,3 +1,4 @@
+import {Sources} from './Sources';
 import { GlassPanel } from './Glass';
 import { useI18n } from '../i18n';
 import { useChapterSettings } from '../state/chapters';
@@ -25,10 +26,10 @@ export function ChapterContent({mobile=false}:{mobile?:boolean}) {
   const events=data?.events.filter(e=>e.kind==='milestone'&&e.dynastyKey===dynasty?.key).sort((a,b)=>a.year-b.year)??[];
   return <div className="chapter-content">{mobile&&<><River compact/><TimeControls/><WorldTracks mobile/></>}
     <nav className="chronicle-breadcrumb" aria-label={ct('position')}><span>{ct('history')}</span><span>›</span><button onClick={()=>{if(dynasty){seekYear(dynasty.fromYear);resetTimeView();}}}>{dynasty&&chapterName(dynasty,locale,data)}</button><span>› {formatYear(year,locale)}</span></nav>
-    <TourControls/><WorldLegend/>
+    <TourControls/><WorldLegend/><Sources/>
     <section className="chapter-intro chapter-summary" key={`${dynasty?.key}:${replay}`} data-opening={opening}><h2>{ct('overview')}</h2><p>{ct('capital')} · {dynasty&&(locale==='en'?data?.translations.en.dynasties[dynasty.key]?.capital??dynasty.seat:historicalText(dynasty.seat,locale,data))}</p><p>{dynasty&&(locale==='en'?data?.translations.en.dynasties[dynasty.key]?.desc??dynasty.summary:historicalText(dynasty.summary,locale,data))}</p></section>
     <section className="chapter-intro phase-overview"><h2>{ct('phase')}{locale==='en'&&<small> · {ct('originalText')}</small>}</h2><p>{historicalText(phase?.overview??'',locale,data)}</p></section>
-    <section className="chronicle-section"><h2>{ct('nearby')}</h2>{events.map(e=><button className="chronicle-event" data-current={e.year===year} key={e.id} onClick={()=>seekYear(e.year)}><time>{formatYear(e.year,locale)}</time><span>{eventTitle(e,locale,data)}</span></button>)}</section>
+    <section className="chronicle-section"><h2>{ct('nearby')}</h2>{events.map(e=><div key={e.id}><button className="chronicle-event" data-current={e.year===year} onClick={()=>seekYear(e.year)}><time>{formatYear(e.year,locale)}</time><span>{eventTitle(e,locale,data)}</span></button><Sources event={e}/></div>)}</section>
     {error&&<p role="alert">{ct('loadError')} · {error}</p>}<p className="chapter-disclaimer">{t('disclaimer')}</p><Credits/>
   </div>;
 }

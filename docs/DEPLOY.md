@@ -30,7 +30,7 @@ P1 代码放在本地 `codex/p1-liquid-glass` 分支。先完成下面的 Cloudf
 | Build output directory | `packages/web/dist` |
 | Root directory (advanced) → Path | 留空，使用仓库根目录；**不要**填 `packages/web` |
 
-7. 展开 **Environment variables**，添加 `NODE_VERSION = 22.16.0` 和 `PNPM_VERSION = 10.20.0`。后续在 **Settings → Builds & deployments** 的环境变量编辑处，将这两个值同时配置到 **Production** 和 **Preview**。如界面使用 **Build / Variables and Secrets** 分栏，在对应构建环境填写相同值。
+7. 展开 **Environment variables**，添加 `NODE_VERSION = 22.19.0` 和 `PNPM_VERSION = 10.20.0`。后续在 **Settings → Builds & deployments** 的环境变量编辑处，将这两个值同时配置到 **Production** 和 **Preview**。如界面使用 **Build / Variables and Secrets** 分栏，在对应构建环境填写相同值。
 8. 点 **Save and Deploy**。构建日志应依次完成依赖安装、印章资源构建、全量数据导入、198 快照几何与配色、parity、strict typecheck 和 Vite build。字体子集与许可证已提交，构建不需要 Python，也不从 Google Fonts 下载任何文件。
 
    P2 起 `pnpm build` 还会运行 `pnpm tiles`：首次下载 AWS Terrarium z0–8、生成 Natural Earth 海岸掩码与 z3–8 黛青浮雕。约一万张 WebP 是构建产物，不提交 Git；全部随 `packages/web/dist/tiles/` 自托管。首次构建明显更慢，检查日志的 `DEM …/5242`、`Relief …/4728` 进度。后续若构建环境保留 `packages/web/public/tiles/` 与 `.cache/terrain/`，会校验后复用；不要假定 Pages 默认缓存这些自定义目录。构建环境必须可访问 AWS S3 和 GitHub raw，无 token。
@@ -55,7 +55,7 @@ P3 的 `pnpm tiles` 会在浮雕完成后生成海岸距离场、双层海水法
 |---|---|
 | 找不到 packages 或 scripts | Root directory 应留空；输出目录才是 `packages/web/dist` |
 | 找不到 upstream/js | 确认 GitHub 中 upstream 是 gitlink，`.gitmodules` 已提交，构建命令包含 submodule update |
-| Vite 报 Node 版本不符 | Preview / Production 都设 Node >=22.12；本指南固定 22.16.0 |
+| Vite 报 Node 版本不符 | Preview / Production 都设 Node >=22.19；本指南固定 22.19.0 |
 | 没有预览记录 | 检查推送是否到同一仓库、Preview branch control 是否启用、分支未被排除 |
 | 手机打开仍是旧版本 | 对照 Deployment 的 commit 和 Aliases；HTML 使用 no-cache，数据须重新验证 |
 | 字体缺字 | 本地更新标题键后运行 `pnpm fonts` 并提交 WOFF2 与 manifest；见 FONTS.md |
@@ -63,3 +63,14 @@ P3 的 `pnpm tiles` 会在浮雕完成后生成海岸距离场、双层海水法
 `public/_headers` 会由 Vite 原样复制到 dist，设置 HTML 不缓存、静态资源缓存、数据重新验证与基础响应头。Cloudflare 预览自身还会添加 `X-Robots-Tag: noindex`。本地 Vite 不应用 `_headers`，应在实际部署后通过浏览器 Network 检查响应头。
 
 本阶段不修改域名或 DNS。后续绑定 witlu.com 时沿用 PLAN 第 10 节，在 Pages 项目 **Custom domains** 中添加域名，再依界面提示配置 DNS。
+
+
+## P10 静态发布与 PWA
+
+`pnpm build` 现在还生成 35 个专题 HTML、sitemap.xml、robots.txt、1200×630 OG 图片、llms.txt、Skill 和版本化 sw.js，输出目录保持 `packages/web/dist`。专题正文无需 JavaScript 即可读取。canonical、分享海报二维码和 AI 接口公开链接统一指向 https://witlu.com；本地或分支预览的 SEO 验收并不表示域名已经部署。
+
+Service Worker 只在生产构建注册，开发服务器不注册。安装缓存应用 JS、CSS、首页和印章图标；访问过的同源资源进入最多 100 项、每项不超过 2 MB 的缓存。断网可以打开应用外壳和仍在缓存中的已访问数据；不承诺离线覆盖全部朝代、所有音频或全部地形瓦片。新版本等待旧页面关闭后接管，更新时仅清理本应用 `witlu-v1-` 前缀缓存。sw.js 使用 no-cache，不要改为长期缓存。
+
+本地生产验收：先 `pnpm build`，另开终端运行 `pnpm --filter @witlu/web exec vite preview --host 127.0.0.1 --port 4176`，再运行 `pnpm test:seo`。脚本保存首页、专题目录和赤壁专题的 Lighthouse JSON / HTML，SEO 低于 95 即失败，并检查 Service Worker 离线外壳及已访问朝代数据。
+
+分享按钮生成本地 PNG：地图、地名、年份、二维码、免责声明与上游 / CHGIS 致谢。微信内使用图片长按保存；下载链接作为其他浏览器的补充。真实微信的菜单由微信客户端控制，手机模拟器不等于真机验收。

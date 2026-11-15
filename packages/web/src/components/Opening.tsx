@@ -1,0 +1,15 @@
+import {useEffect,useRef,useState} from 'react';
+import {terrainBridge} from '../state/terrain';
+import {useShell} from '../state/shell';
+import {GlassButton,useReducedEffects} from './Glass';
+import {Calligraphy} from './Calligraphy';
+import {useExploreText} from './Explore';
+const key='witlu-intro-v1';
+function firstVisit(){try{return localStorage.getItem('witlu-intro-enabled')!=='false'&&!localStorage.getItem(key)&&!location.search&&location.pathname==='/';}catch{return !location.search;}}
+export function Opening({force=false}:{force?:boolean}){const [visible,setVisible]=useState(()=>force||firstVisit()),[error,setError]=useState(''),root=useRef<HTMLDivElement>(null),t=useExploreText(),reduced=useReducedEffects();
+ useEffect(()=>{const replay=()=>{setError('');setVisible(true);};window.addEventListener('atlas:opening',replay);return()=>window.removeEventListener('atlas:opening',replay);},[]);
+ const finish=()=>{try{localStorage.setItem(key,'seen');}catch{/* Storage may be disabled. */}terrainBridge.engine?.opening.stop();setVisible(false);};
+ useEffect(()=>{if(!visible)return;let alive=true,started=false,frame=0;const mark=()=>{try{localStorage.setItem(key,'seen');}catch{/* Private mode. */}};const start=()=>{const e=terrainBridge.engine;if(!e||started)return;started=true;void e.opening.start(reduced||useShell.getState().quality==='eco').then(()=>{if(!alive){e.opening.stop();return;}mark();const tick=()=>{if(!alive)return;const p=e.opening.progress;if(root.current){root.current.style.setProperty('--descent',String(Math.max(0,(p-.72)/.28)));root.current.dataset.progress=p.toFixed(3);}if(!e.opening.active){setVisible(false);return;}frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);}).catch(e=>{if(alive)setError(String(e));});};start();const off=terrainBridge.subscribe(start);return()=>{alive=false;off();cancelAnimationFrame(frame);terrainBridge.engine?.opening.stop();};},[visible,reduced]);
+ if(!visible)return null;return <div ref={root} className="opening-screen" role="dialog" aria-modal="true" aria-label={t('开场地球','Opening globe')}><div className="opening-title"><small>WITLU · 江山</small><Calligraphy text="两千四百年 · 一图观之" label={t('两千四百年 · 一图观之','2,400 years · One living atlas')}/><p>{t('循历史长河，观万里江山','Follow the river of history')}</p></div><div className="opening-cloud"/><GlassButton className="opening-skip" onClick={finish}>{t('跳过开场','Skip introduction')} ↘</GlassButton>{error&&<p className="opening-error" role="alert">{error}</p>}</div>;}
+
+export function OpeningSettings(){const t=useExploreText(),[enabled,setEnabled]=useState(()=>{try{return localStorage.getItem('witlu-intro-enabled')!=='false';}catch{return true;}});return <><button type="button" className="toggle-row" role="switch" aria-checked={enabled} onClick={()=>{setEnabled(!enabled);try{localStorage.setItem('witlu-intro-enabled',String(!enabled));}catch{/* Optional preference. */}}}>{t('首次访问开场地球','First-visit globe')}<i aria-hidden="true"><b/></i></button><button type="button" className="text-button" onClick={()=>window.dispatchEvent(new Event('atlas:opening'))}>{t('重播开场','Replay introduction')}</button></>;}

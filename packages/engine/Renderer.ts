@@ -1,3 +1,4 @@
+import {Opening} from './opening/Opening';
 import {Cartography} from './cartography/Cartography';
 import { Color, Scene, SRGBColorSpace, WebGLRenderer } from 'three';
 import type { WebGLRendererParameters } from 'three';
@@ -19,6 +20,7 @@ import { Weather } from './weather/Weather';
 export interface EngineStats { cartography:ReturnType<Cartography['stats']>; fps: number; frameMs: number; cpuMs: number; drawCalls: number; triangles: number; tiles: number; cached: number; loading: number; errors: number; zoom: number; quality: Quality; pixelRatio: number; context: 'ready' | 'lost'; pose: ReturnType<AtlasRenderer['pose']>; environment: ReturnType<Environment['stats']>; weather:ReturnType<Weather['stats']>; morph:ReturnType<Morph['stats']> }
 export class AtlasRenderer {
   readonly cartography:Cartography; readonly weather:Weather; readonly resonance: Resonance; readonly timeFlight: TimeFlight; readonly camera: MapCamera; readonly quality: QualityController; readonly terrain: TerrainManager; readonly environment: Environment; readonly morph:Morph;
+  readonly opening:Opening;
   readonly renderer: WebGLRenderer; private scene = new Scene(); private frame = 0; private alive = true; private visible = true; private lost = false;
   private previous = 0; private lastLod = -Infinity; private lastReport = 0; private samples: number[] = []; private cpu: number[] = [];
   private cleanup: (() => void)[] = [];
@@ -29,6 +31,7 @@ export class AtlasRenderer {
     const viewport = platform.viewport(); this.camera = new MapCamera(viewport.mobile); this.quality = new QualityController(initialQuality);
     this.renderer = new WebGLRenderer({ canvas: platform.canvas as NonNullable<WebGLRendererParameters['canvas']>, antialias: false, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: false });
     this.renderer.outputColorSpace = SRGBColorSpace; this.scene.background = new Color(palette.sky);
+    this.opening=new Opening(platform,palette.sky,palette.weather?.blue??palette.land);
     this.environment = new Environment(platform, palette.environment ?? { sky: palette.sky, horizon: palette.sky, shelf: palette.sea, coast: palette.sea, flow: palette.sea, wave: palette.sea, cloud: palette.sky }, this.scene);
     void this.environment.load();
     this.weather=new Weather(platform,this.scene,this.environment,palette.weather??{blue:palette.land,gold:palette.land,fire:palette.land,smoke:palette.land});
@@ -76,7 +79,8 @@ export class AtlasRenderer {
     const lens=this.cartography.paths.lensState(),ratio=this.renderer.getPixelRatio();(this.morph.uniforms.territoryLens!.value as Vector3).set(lens.x*ratio,(this.camera.height-lens.y)*ratio,lens.radius*ratio);
     this.morph.update(now,this.quality.level);
     this.cartography.update(now,this.camera,this.quality.level,this.environment.reducedMotion,this.renderer.getPixelRatio());
-    this.renderer.render(this.scene, this.camera.camera);
+    this.opening.update(dt,this.quality.level);
+    if(this.opening.active)this.opening.render(this.renderer,this.camera.width,this.camera.height);else this.renderer.render(this.scene, this.camera.camera);
     if (dt < 250) { this.samples.push(dt); this.cpu.push(this.platform.now() - start); }
     const change = this.quality.sample(dt); if (change) { this.terrain.setQuality(change); this.resize(); this.onQuality?.(change); }
     if (now - this.lastReport >= 500) this.report(now);
@@ -89,5 +93,5 @@ export class AtlasRenderer {
   }
   renderNow() { if (!this.lost) this.renderer.render(this.scene, this.camera.camera); }
   prepareWeather(){this.weather.warm(this.renderer,this.camera.camera);}
-  dispose() { this.alive = false; this.platform.cancelFrame(this.frame); this.cleanup.forEach(fn => fn()); this.camera.cancel(); this.terrain.dispose(); this.resonance.dispose(); this.timeFlight.dispose(); this.cartography.dispose(); this.weather.dispose(); this.environment.dispose(); this.morph.dispose(); this.renderer.dispose(); }
+  dispose() { this.alive = false; this.platform.cancelFrame(this.frame); this.cleanup.forEach(fn => fn()); this.opening.dispose(); this.camera.cancel(); this.terrain.dispose(); this.resonance.dispose(); this.timeFlight.dispose(); this.cartography.dispose(); this.weather.dispose(); this.environment.dispose(); this.morph.dispose(); this.renderer.dispose(); }
 }
