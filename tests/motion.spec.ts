@@ -1,3 +1,4 @@
+import {ensureToolbar} from './toolbar';
 import fs from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
 test('glass button presses to 0.96 and springs back', async ({ browser }, info) => {
@@ -6,7 +7,7 @@ test('glass button presses to 0.96 and springs back', async ({ browser }, info) 
   const page = await context.newPage(), video = page.video()!;
   try {
     await page.goto('/'); await page.evaluate(() => document.fonts.ready);
-    const button = page.getByRole('button', { name: '分享', exact: true });
+    await ensureToolbar(page,'分享');const button = page.getByRole('button', { name: '分享', exact: true });
     await button.hover(); const original = (await button.boundingBox())!;
     await page.mouse.down();
     await expect.poll(async () => (await button.boundingBox())!.width / original.width).toBeLessThan(.98);

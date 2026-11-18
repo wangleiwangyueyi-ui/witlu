@@ -40,8 +40,7 @@ export function RollingYear() {
     return <strong className="rolling-year" aria-label={formatYear(year,locale)}>{year < 0 && <small>{locale==='en'?'BCE':'前'}</small>}{String(Math.abs(year)).split('').map((digit, i) => <span className="digit-window" key={i}><span style={{ transform: `translateY(-${Number(digit) * 10}%)` }}>{'0123456789'.split('').map(d => <b key={d}>{d}</b>)}</span></span>)}</strong>;
 }
 export function TimeDock() {
-    const ct=useChronicleText();
-    return <GlassPanel className="time-dock"><div className="time-dock-year"><RollingYear /><TimeControls /></div><div className="time-stream"><div className="time-stream-title"><span>{ct('river')}</span><span>{ct('riverHint')}</span></div><River /></div></GlassPanel>;
+    return <GlassPanel className="time-dock"><div className="time-dock-year"><TimeControls /></div><div className="time-stream"><River /></div></GlassPanel>;
 }
 export function TimeEffectControls() {
     const ct=useChronicleText();

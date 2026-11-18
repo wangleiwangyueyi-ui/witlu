@@ -19,15 +19,15 @@ export function useWorld() {
   const tracks = data && phase ? activeTracks(year, phase, data.registry, data.eras, data.events) : [];
   return { data, year, phase, tracks };
 }
-export function WorldTracks({ mobile = false }: { mobile?: boolean }) {
+export function WorldTracks({ mobile = false, summary = false }: { mobile?: boolean; summary?: boolean }) {
   const { data, year, phase, tracks } = useWorld(), locale = useShell(s => s.locale), t = useChronicleText();
   const reduced=useReducedEffects();
   const [page, setPage] = useState(0), [selected, setSelected] = useState(''), strip = useRef<HTMLDivElement>(null);
-  const group = Math.min(page, Math.max(0, Math.ceil(tracks.length / 4) - 1)), visible = mobile ? tracks : tracks.slice(group * 4, group * 4 + 4);
+  const group = Math.min(page, Math.max(0, Math.ceil(tracks.length / 4) - 1)), visible = mobile || summary ? tracks : tracks.slice(group * 4, group * 4 + 4);
   const selectedKey = tracks.some(r => r.polity.key === selected) ? selected : tracks[0]?.polity.key ?? '';
   if (!data || !phase) return null;
   return <section className={`world-tracks ${mobile ? 'mobile-tracks' : ''}`} aria-label={t('chronology')} data-track-count={tracks.length}>
-    <div className="tracks-heading"><h2>{t('chronology')}</h2><small>{formatYear(year, locale)}</small>{!mobile && tracks.length > 4 && <div><button aria-label={t('previousPage')} disabled={group === 0} onClick={() => setPage(group - 1)}>‹</button><span>{group + 1}/{Math.ceil(tracks.length / 4)}</span><button aria-label={t('nextPage')} disabled={(group + 1) * 4 >= tracks.length} onClick={() => setPage(group + 1)}>›</button></div>}</div>
+    <div className="tracks-heading"><h2>{summary?(locale==='en'?'The world now':'此刻天下'):t('chronology')}</h2>{!summary&&<small>{formatYear(year, locale)}</small>}{!mobile && !summary && tracks.length > 4 && <div><button aria-label={t('previousPage')} disabled={group === 0} onClick={() => setPage(group - 1)}>‹</button><span>{group + 1}/{Math.ceil(tracks.length / 4)}</span><button aria-label={t('nextPage')} disabled={(group + 1) * 4 >= tracks.length} onClick={() => setPage(group + 1)}>›</button></div>}</div>
     {mobile && <SegmentedControl label={t('eraTracks')} value={selectedKey} options={tracks.map(r => ({value:r.polity.key,label:polityName(r.polity,locale,data)}))} onChange={key => {setSelected(key);const i=tracks.findIndex(r=>r.polity.key===key);strip.current?.scrollTo({left:i*strip.current.clientWidth,behavior:reduced?'auto':'smooth'});}}/>}
     <div className="tracks-grid" ref={strip} style={{'--track-count':visible.length} as CSSProperties} onScroll={e=>{if(mobile){const i=Math.round(e.currentTarget.scrollLeft/e.currentTarget.clientWidth);setSelected(tracks[i]?.polity.key??'');}}}>
       {visible.map(({polity,occurrence,era,events}) => { const color=data.colors.find(c=>c.snapshot===phase.snapshot)?.colors.find(c=>c.polityId===polity.key)?.color;
@@ -36,14 +36,13 @@ export function WorldTracks({ mobile = false }: { mobile?: boolean }) {
           <button className="track-title" onClick={()=>useChapterSettings.getState().select(polity.key)}>{polityName(polity,locale,data)}<small>{t('dossier')} ›</small></button>
           <p className="track-era">{era ? <>{locale==='en'?era.rulerEn:historicalText(era.ruler,locale,data)} · {historicalText(era.name,locale,data)} {era.ordinal}</> : t('noRuler')}</p>
           <p className="track-capital">{t('capital')} · {historicalText(occurrence.capitals.map(c=>c.name).join(' / ')||polity.seatZh||'—',locale,data)}</p>
-          <div className="track-events">{entries.map(e=><div key={e.id}><button className="track-event" data-current={e.year===year} onClick={()=>{seekYear(e.year);frameSites(sameYearSites(e.year,data.events));}}><time>{formatYear(e.year,locale)}</time><span>{eventTitle(e,locale,data)}</span></button><Sources event={e}/></div>)}{!entries.length&&<p>{t('noEvent')}</p>}</div>
+          {!summary&&<div className="track-events">{entries.map(e=><div key={e.id}><button className="track-event" data-current={e.year===year} onClick={()=>{seekYear(e.year);frameSites(sameYearSites(e.year,data.events));}}><time>{formatYear(e.year,locale)}</time><span>{eventTitle(e,locale,data)}</span></button><Sources event={e}/></div>)}{!entries.length&&<p>{t('noEvent')}</p>}</div>}
         </GlassPanel>;
       })}
     </div>
   </section>;
 }
 export function WorldLegend() {
-  useEffect(()=>{const open=()=>{window.dispatchEvent(new Event('atlas:open-chronicle'));document.querySelector('.world-legend')?.scrollIntoView({block:'nearest'});};window.addEventListener('atlas:open-legend',open);return()=>window.removeEventListener('atlas:open-legend',open);},[]);
   const { data, phase, tracks }=useWorld(), t=useChronicleText(),locale=useShell(s=>s.locale);
   return <section className="world-legend" aria-label={t('legend')}><h2>{t('eraTracks')}</h2><p>{t('legendHint')}</p><div className="era-tracks">{tracks.map(({polity,occurrence,era})=>{
     const color=data?.colors.find(c=>c.snapshot===phase?.snapshot)?.colors.find(c=>c.polityId===polity.key)?.color;

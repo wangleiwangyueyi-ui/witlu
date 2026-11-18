@@ -1,10 +1,13 @@
+import { useEffect, useState } from 'react';
 import {MotionSensor} from './MotionSensor';
 import {useTerrainSettings} from '../state/terrain';
 import {OpeningSettings} from './Opening';
 import {CartographyControls} from './Places';
 import { SearchButton } from './Explore';
+import {useExplore} from '../state/explore';
+import {TourControls} from './Tour';
 import { Listening } from './Listening';
-import { GlassButton, GlassChip, Popover, SegmentedControl } from './Glass';
+import { GlassButton, Popover, SegmentedControl } from './Glass';
 import { useI18n } from '../i18n';
 import { useShell } from '../state/shell';
 import type { Quality } from '../state/shell';
@@ -17,16 +20,25 @@ function Music() {
   const {t}=useI18n(),playing=useAudioState(s=>s.enabled),toast=useToast();
   return <GlassButton icon="music" label={playing?t('pauseMusic'):t('playMusic')} aria-pressed={playing} onClick={()=>void weatherMixer.toggle().catch(()=>toast(t('musicError')))}/>;
 }
-export function Toolbar({ refractionSupported }: { refractionSupported: boolean }) {
+export function Toolbar({ refractionSupported, mobile }: { refractionSupported: boolean; mobile: boolean }) {
   const { t, locale } = useI18n(); const state = useShell(); const automatic=useTerrainSettings(s=>s.automatic); const toast = useToast();
   const layers: MessageKey[] = ['territories', 'divisions', 'prefectures', 'modern', 'rivers', 'places'];
   const qualities = (['ultra', 'high', 'eco'] as Quality[]).map(value => ({ value, label: t(value) }));
+  const [openLayers, setOpenLayers] = useState(0);
+  useEffect(() => {
+    const show = () => setOpenLayers(n => n + 1);
+    window.addEventListener('atlas:open-layers', show);
+    return () => window.removeEventListener('atlas:open-layers', show);
+  }, []);
   const share = () => window.dispatchEvent(new Event('atlas:share'));
-  return <><header className="app-header"><div className="glass brand-capsule"><img src="/brand/seal.svg" alt="" width="46" height="46"/><div className="brand-text"><strong>{t('brand')}</strong><span>{t('app')}</span></div><span className="brand-divider"/><SearchButton/></div><nav className="toolbar" aria-label={t('uiSettings')}>
-    <Popover label={t('layers')} icon="layers"><p className="popover-note">{t('referenceHint')}</p>{layers.map(key => <Toggle key={key} label={t(key)} checked={state.layers[key] ?? false} onChange={() => state.toggleLayer(key)}/>) }<CartographyControls/></Popover>
-    <Music/><Listening/>
-    <Popover label={t('language')} icon="language"><SegmentedControl label={t('language')} value={locale} options={[{ value: 'zh-Hans', label: '简' }, { value: 'zh-Hant', label: '繁' }, { value: 'en', label: 'EN' }] satisfies { value: Locale; label: string }[]} onChange={state.setLocale}/></Popover>
-    <GlassButton icon="share" label={t('share')} onClick={() => void share()}/>
-    <Popover label={t('more')} icon="more"><OpeningSettings/><a href="/topics/index.html" className="text-button">{locale==='en'?'Historical topics':'历史专题图志'} ↗</a><h4>{t('quality')}</h4><SegmentedControl label={t('quality')} value={state.quality} options={qualities} onChange={value=>{useTerrainSettings.setState({automatic:false});state.setQuality(value);}}/><Toggle label={locale==='en'?'Automatic quality':locale==='zh-Hant'?'自動畫質':'自动画质'} checked={automatic} onChange={()=>useTerrainSettings.setState({automatic:!automatic})}/><MotionSensor/><Toggle label={t('highlight')} checked={state.highlight} onChange={() => state.toggle('highlight')}/><Toggle label={t('refraction')} checked={state.refraction && refractionSupported} disabled={!refractionSupported} onChange={() => state.toggle('refraction')}/><Toggle label={t('pressMotion')} checked={state.pressMotion} onChange={() => state.toggle('pressMotion')}/><Toggle label={t('motion')} checked={state.reducedMotion} onChange={() => state.toggle('reducedMotion')}/><button type="button" className="text-button" onClick={() => state.setAbout(true)}>{t('about')} <span>↗</span></button></Popover>
-  </nav></header><div className="map-meta"><GlassChip>{t('reference')}</GlassChip><span>{t('caption')}</span></div><div className="camera-controls"><GlassButton icon="compass" label={t('reset')} onClick={() => { terrainBridge.engine?.camera.reset(); toast(t('resetDone')); }}/><span>{t('north')}</span></div></>;
+  const tools = <>
+    <Popover text={t('layers')} label={t('layers')} icon="layers" openSignal={openLayers}><p className="popover-note">{t('referenceHint')}</p>{layers.map(key => <Toggle key={key} label={t(key)} checked={state.layers[key] ?? false} onChange={() => state.toggleLayer(key)}/>) }<CartographyControls/></Popover>
+    <Listening><Music/></Listening>
+    <Popover text="繁·EN" label={t('language')} icon="language"><SegmentedControl label={t('language')} value={locale} options={[{ value: 'zh-Hans', label: '简' }, { value: 'zh-Hant', label: '繁' }, { value: 'en', label: 'EN' }] satisfies { value: Locale; label: string }[]} onChange={state.setLocale}/></Popover>
+    <GlassButton icon="share" label={t('share')} onClick={() => void share()}>{t('share')}</GlassButton>
+  </>;
+  return <><header className="app-header"><div className="glass brand-capsule"><img src="/brand/seal.svg" alt="" width="46" height="46"/><div className="brand-text"><strong>{t('brand')}</strong><span>{t('app')}</span></div></div><form className="header-search" onSubmit={e=>{e.preventDefault();useExplore.setState({searchOpen:true});}}><input aria-label={locale==='en'?'Search people, places or eras':'搜索人物、地名、年号'} placeholder={locale==='en'?'People, places, eras…':'搜索人物 / 地名 / 年号…'} onChange={e=>useExplore.setState({query:e.target.value})}/><SearchButton/></form><nav className="toolbar" aria-label={t('uiSettings')}>
+    {!mobile && tools}
+    <Popover label={t('more')} icon="more" openSignal={mobile ? openLayers : 0}>{mobile && <div className="mobile-tools">{tools}</div>}<TourControls/><OpeningSettings/><a href="/topics/index.html" className="text-button">{locale==='en'?'Historical topics':'历史专题图志'} ↗</a><h4>{t('quality')}</h4><SegmentedControl label={t('quality')} value={state.quality} options={qualities} onChange={value=>{useTerrainSettings.setState({automatic:false});state.setQuality(value);}}/><Toggle label={locale==='en'?'Automatic quality':locale==='zh-Hant'?'自動畫質':'自动画质'} checked={automatic} onChange={()=>useTerrainSettings.setState({automatic:!automatic})}/><MotionSensor/><Toggle label={t('highlight')} checked={state.highlight} onChange={() => state.toggle('highlight')}/><Toggle label={t('refraction')} checked={state.refraction && refractionSupported} disabled={!refractionSupported} onChange={() => state.toggle('refraction')}/><Toggle label={t('pressMotion')} checked={state.pressMotion} onChange={() => state.toggle('pressMotion')}/><Toggle label={t('motion')} checked={state.reducedMotion} onChange={() => state.toggle('reducedMotion')}/><button type="button" className="text-button" onClick={() => state.setAbout(true)}>{t('about')} <span>↗</span></button></Popover>
+  </nav></header><div className="camera-controls"><GlassButton icon="compass" label={t('reset')} onClick={() => { terrainBridge.engine?.camera.reset(); toast(t('resetDone')); }}/><span>{t('north')}</span></div></>;
 }

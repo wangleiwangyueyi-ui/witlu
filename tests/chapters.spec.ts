@@ -6,24 +6,24 @@ test('P6 five historical worlds, dossiers, tour and calligraphy',async({page},in
   test.setTimeout(180000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('/?year=230');await fs.mkdir(shots,{recursive:true});
   await expect(page.locator('.world-tracks')).toHaveAttribute('data-track-count','4');
-  await expect(page.locator('.calligraphy-glyphs svg')).toHaveCount(2);
+  await expect(page.locator('.chapter-panel,.calligraphy-glyphs svg')).toHaveCount(0);
   const mobile=info.project.name!=='desktop';
   if(mobile){await page.getByRole('slider',{name:'收起 / 半开 / 全开'}).focus();await page.keyboard.press('End');}
   for(const [year,count]of [[230,4],[500,3],[950,12],[1140,4],[-100,1]]){
     await page.locator('#history-year').fill(String(year));await page.locator('#history-year').press('Enter');
     await expect(page.locator('.world-tracks')).toHaveAttribute('data-track-count',String(count));
     await expect.poll(async()=>{const s=JSON.parse(await page.getByTestId('terrain').getAttribute('data-stats')??'{}');return s.morph?.ready&&!s.morph?.preparing&&!s.morph?.playing;},{timeout:40000}).toBe(true);
-    if(mobile){await page.locator('.world-tracks').scrollIntoViewIfNeeded();await expect(page.locator('.world-tracks [role=tab]')).toHaveCount(count!);}else expect(await page.locator('.world-track').count()).toBe(Math.min(4,count!));
+    if(mobile)await page.locator('.world-tracks').scrollIntoViewIfNeeded();await expect(page.locator('.world-track')).toHaveCount(count!);
     await page.waitForTimeout(2200);
     await page.screenshot({path:`${shots}/${info.project.name}-${year}.png`});
   }
   await page.locator('#history-year').fill('230');await page.locator('#history-year').press('Enter');await expect(page.locator('.world-tracks')).toHaveAttribute('data-track-count','4');
   if(mobile){const handle=page.getByRole('slider',{name:'收起 / 半开 / 全开'});await handle.focus();await page.keyboard.press('Home');await page.waitForTimeout(600);await page.screenshot({path:`${shots}/${info.project.name}-map.png`});await page.keyboard.press('ArrowUp');await page.waitForTimeout(600);await page.screenshot({path:`${shots}/${info.project.name}-half.png`});await page.keyboard.press('End');}
   await page.locator('.track-title').first().click();await expect(page.getByRole('dialog',{name:'政权档案'})).toContainText('君主世系');await expect(page.locator('.ruler-lineage li')).not.toHaveCount(0);await page.screenshot({path:`${shots}/${info.project.name}-dossier.png`});await page.keyboard.press('Escape');
-  await page.getByRole('button',{name:'开始导览',exact:true}).click();await expect(page.getByRole('button',{name:'暂停导览',exact:true})).toBeVisible();await page.getByRole('button',{name:'暂停导览',exact:true}).click();
+  await page.getByRole('button',{name:'更多',exact:true}).click();await page.getByRole('button',{name:'开始导览',exact:true}).click();await expect(page.getByRole('button',{name:'暂停导览',exact:true})).toBeVisible();await page.getByRole('button',{name:'暂停导览',exact:true}).click();
   const paused=await page.locator('#history-year').inputValue();await page.waitForTimeout(600);await expect(page.locator('#history-year')).toHaveValue(paused);
   await page.getByRole('button',{name:'下一章',exact:true}).click();await expect(page.locator('h1')).toHaveAccessibleName('西晋');await page.getByRole('button',{name:'结束导览',exact:true}).click();
-  if(mobile){await page.locator('.world-tracks').scrollIntoViewIfNeeded();const targets=await page.locator('.world-tracks button,.tour-buttons button,.legend-entry button').evaluateAll(ns=>ns.map(n=>{const r=n.getBoundingClientRect();return {text:n.textContent,width:r.width,height:r.height};}));for(const target of targets){expect(target.width,target.text??'').toBeGreaterThanOrEqual(44);expect(target.height,target.text??'').toBeGreaterThanOrEqual(44);}await fs.mkdir('docs/progress/performance/P6',{recursive:true});await fs.writeFile(`docs/progress/performance/P6/${info.project.name}-targets.json`,JSON.stringify(targets,null,2));}
+  await page.keyboard.press('Escape');if(mobile){await page.locator('.world-tracks').scrollIntoViewIfNeeded();const targets=await page.locator('.world-tracks button,.tour-buttons button,.legend-entry button').evaluateAll(ns=>ns.filter(n=>n.getClientRects().length>0).map(n=>{const r=n.getBoundingClientRect();return {text:n.textContent,width:r.width,height:r.height};}));for(const target of targets){expect(target.width,target.text??'').toBeGreaterThanOrEqual(44);expect(target.height,target.text??'').toBeGreaterThanOrEqual(44);}await fs.mkdir('docs/progress/performance/P6',{recursive:true});await fs.writeFile(`docs/progress/performance/P6/${info.project.name}-targets.json`,JSON.stringify(targets,null,2));}
   expect(errors).toEqual([]);
 });
 test('P6 translated P5 controls, reduced motion and same-year camera',async({page},info)=>{
@@ -41,7 +41,7 @@ test('P6 translated P5 controls, reduced motion and same-year camera',async({pag
   await page.locator('#history-year').fill('唐貞觀三年');await page.locator('#history-year').press('Enter');await expect(page.locator('#history-year')).toHaveValue('629');
   await page.locator('#history-year').fill('1140');await page.locator('#history-year').press('Enter');
   await page.screenshot({path:`${shots}/${info.project.name}-hant.png`});
-  await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.calligraphy')).toHaveAttribute('data-animated','false');
+  await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.atlas-app')).toHaveAttribute('data-reduced-motion','true');
   await page.emulateMedia({reducedMotion:'no-preference'});
   await expect.poll(async()=>page.evaluate(async()=>{const {terrainBridge}=await import('/src/state/terrain.ts' as string);return !!terrainBridge.engine?.morph.stats().ready;}),{timeout:40000}).toBe(true);
   const resonance=await page.evaluate(async()=>{const {terrainBridge}=await import('/src/state/terrain.ts' as string);const {loadChronicle}=await import('/src/store/chronicle.ts' as string);const {frameSites}=await import('/src/state/camera-story.ts' as string);const data=await loadChronicle();const sites=data.events.filter((e:{year:number})=>e.year===1140).flatMap((e:{coord?:[number,number];siteCoords?:[number,number][]})=>e.siteCoords??(e.coord?[e.coord]:[]));terrainBridge.engine!.resonance.trigger(sites);frameSites(sites,0);return sites;});
@@ -59,7 +59,7 @@ test('P6 recorded chapter tour and cross-snapshot drag performance',async({brows
     await page.goto('http://127.0.0.1:4173/?year=230');const stats=async()=>JSON.parse(await page.getByTestId('terrain').getAttribute('data-stats')??'{}') as EngineStats;
     await expect.poll(async()=>(await stats()).morph?.ready,{timeout:40000}).toBe(true);
     if(name!=='desktop'){await page.getByRole('slider',{name:'收起 / 半开 / 全开'}).focus();await page.keyboard.press('End');}
-    await page.getByRole('button',{name:'开始导览',exact:true}).click();await page.waitForTimeout(6500);await page.getByRole('button',{name:'暂停导览',exact:true}).click();await page.getByRole('button',{name:'下一章',exact:true}).click();await page.waitForTimeout(2500);await page.getByRole('button',{name:'结束导览',exact:true}).click();
+    await page.getByRole('button',{name:'更多',exact:true}).click();await page.getByRole('button',{name:'开始导览',exact:true}).click();await page.waitForTimeout(6500);await page.getByRole('button',{name:'暂停导览',exact:true}).click();await page.getByRole('button',{name:'下一章',exact:true}).click();await page.waitForTimeout(2500);await page.getByRole('button',{name:'结束导览',exact:true}).click();
     const runs=[];
     for(const [label,a,b]of [['matched-P5',220,240],['cross-snapshots',210,285]] as const){
       await page.evaluate(async({a,b})=>{const {setTimeView,seekYear}=await import('/src/store/time.ts' as string);seekYear(230);setTimeView(a,b);},{a,b});
@@ -88,3 +88,5 @@ test('P6 held drag defers SDF, then refines without losing cached geometry',asyn
   expect(audit.gaps).toBe(0);expect(audit.invalid).toBe(0);expect(audit.mismatches).toBe(0);
   expect((await stats()).morph.error).toBeNull();
 });
+
+test('R1 calligraphy remains testable in the chapter lab',async({page})=>{await page.goto('/lab/chapters?year=230');await expect(page.locator('.calligraphy-glyphs svg')).toHaveCount(2);await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.calligraphy')).toHaveAttribute('data-animated','false');});

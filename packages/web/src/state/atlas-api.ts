@@ -80,7 +80,7 @@ async function restoreQuery(q:Query){
  if(link.polity){const p=c.registry.find(p=>p.key===link.polity||p.titles.includes(link.polity!));if(p)useChapterSettings.getState().select(p.key);}
  if(link.hover){useShell.setState(s=>({layers:{...s.layers,prefectures:true}}));const phase=phaseAtYear(useShell.getState().year,c.phases);if(phase){const geo=await snapshotData(phase.snapshot),fold=(s:string)=>normalize(s).replace(/(?:prefecture|commandery|province|fu|zhou|jun|州|府|郡)$/i,'');const f=geo.features.find(f=>[f.properties.title??'',historicalText(f.properties.title??'','en',c),historicalText(f.properties.title??'','zh-Hant',c)].some(n=>fold(n)===fold(link.hover!)));if(f?.properties.anchor){frameSites([f.properties.anchor],0);usePlaces.setState({hover:await inspectCoordinate(f.properties.anchor)});}else usePlaces.setState({hover:f?.properties.title??link.hover});}}
  const engine=terrainBridge.engine;if(link.center||link.zoom)engine?.camera.flyTo({...link.center?{lon:link.center[0],lat:link.center[1]}:{},...link.zoom?{distance:8200/link.zoom}:{}},0);
- if(link.layers)document.querySelector<HTMLButtonElement>('.toolbar button[aria-label="图层"],.toolbar button[aria-label="Layers"],.toolbar button[aria-label="圖層"]')?.click();
+ if(link.layers)window.dispatchEvent(new Event('atlas:open-layers'));
  if(link.chronicle)window.dispatchEvent(new Event('atlas:open-chronicle'));
  if(link.legend)window.dispatchEvent(new Event('atlas:open-legend'));
  if(link.autoplay&&!link.locked){if(useExplore.getState().keys.length)useExplore.setState({playing:true});else timeStore.setState({playing:true,mode:'play'});}

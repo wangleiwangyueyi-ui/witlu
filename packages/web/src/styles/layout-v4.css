@@ -1,0 +1,81 @@
+.atlas-app { --sidebar-width: 360px; --dock-height: 52px; }
+.mobile-tools { display: none; }
+.atlas-app[data-sidebar='false'] { --sidebar-width: 0px; }
+.atlas-app .app-header { top: 0; left: 0; right: 0; height: 52px; padding: 4px 12px; flex-wrap: nowrap; gap: 12px; background: var(--sky); border-bottom: 1px solid var(--glass-border); }
+.atlas-app .brand-capsule { min-height: 44px; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; flex-shrink: 0; }
+.atlas-app .brand-capsule img { width: 32px; height: 32px; }
+.atlas-app .brand-text { flex-direction: row; align-items: center; gap: 10px; padding: 0; }
+.atlas-app .brand-text strong { font-size: 22px; }
+.atlas-app .brand-text span { font-size: 12px; }
+.header-search { display: flex; align-items: center; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); flex: 1; max-width: 480px; min-width: 100px; }
+.header-search input { width: 100%; min-width: 0; height: 40px; padding: 8px; background: transparent; color: var(--text); }
+.atlas-app .toolbar { width: auto; gap: 8px; flex-shrink: 0; }
+.atlas-app .app-header .glass-button { min-height: 44px; height: 44px; padding: 4px 10px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 4px; font-size: 14px; }
+.atlas-app .app-header .glass-icon { width: 24px; height: 24px; }
+.atlas-app .terrain-scene { top: 52px; bottom: var(--dock-height); right: var(--sidebar-width); height: auto; }
+.atlas-app .polity-labels, .atlas-app .place-labels { top: 52px; right: var(--sidebar-width); bottom: var(--dock-height); }
+.chronicle-sidebar { position: absolute; top: 52px; bottom: var(--dock-height); right: 0; width: 360px; overflow-y: auto; border-radius: 0; border-left: 1px solid var(--glass-border); padding: 16px; }
+.chronicle-meta { display: flex; align-items: baseline; gap: 4px; overflow-x: auto; white-space: nowrap; font-size: 12px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px; }
+.chronicle-meta h1 { display: inline; font-size: 14px; }
+.chronicle-content h2 { font-size: 16px; margin: 16px 0 12px; }
+.chronicle-content .world-tracks { position: static; width: auto; margin: 0; }
+.chronicle-content .tracks-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.chronicle-content .world-track { min-width: 0; height: auto; max-height: none; padding: 10px; border-radius: var(--radius-sm); border-top: 0; border-left: 3px solid var(--track-color); }
+.chronicle-content .track-title { font-size: 16px; min-height: 44px; }
+.chronicle-content .track-era, .chronicle-content .track-capital { font-size: 14px; }
+.chronicle-content .chronicle-event { font-size: 14px; }
+.sidebar-toggle { position: absolute; z-index: 25; right: var(--sidebar-width); top: 55px; min-width: 44px; min-height: 44px; background: var(--sea-shelf); color: var(--text); border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.atlas-app .time-dock { bottom: 0; left: 0; right: 0; height: var(--dock-height); min-height: 0; margin: 0; padding: 4px 12px; border-radius: 0; gap: 12px; }
+.atlas-app .time-dock-year { flex-direction: row; gap: 0; }
+.atlas-app .time-controls { flex-wrap: nowrap; gap: 8px; }
+.atlas-app .year-form { width: 100px; }
+.atlas-app .year-form label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.atlas-app .year-entry input { width: 60px; }
+.atlas-app .playback { gap: 4px; }
+.atlas-app .playback .icon-button { display: flex; width: 44px; height: 44px; }
+.atlas-app .time-stream { min-width: 0; flex: 1; }
+.atlas-app .history-river { height: 52px; }
+.atlas-app .river-years, .atlas-app .river-legend { display: none; }
+.atlas-app .river-control { display: flex; align-items: center; }
+.atlas-app .river-canvas-wrap { flex: 1; min-width: 0; }
+.atlas-app .river-zoom { flex-shrink: 0; }
+.map-legend { position: absolute; z-index: 20; left: 12px; bottom: 76px; padding: 8px; max-width: 300px; border-radius: var(--radius-sm); font-size: 12px; }
+.map-legend summary { min-height: 28px; cursor: pointer; }
+.map-legend .credits { max-height: 160px; overflow-y: auto; }
+.atlas-app .camera-controls { left: auto; right: calc(var(--sidebar-width) + 16px); bottom: 80px; }
+.atlas-app .place-card { right: 0; top: 52px; bottom: 52px; width: 360px; max-height: none; border-radius: 0; }
+@media (max-width: 768px) {
+  .mobile-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+  .atlas-app { --sidebar-width: 0px; }
+  .atlas-app .terrain-scene { inset: 0; }
+  .atlas-app .polity-labels, .atlas-app .place-labels { inset: 0; }
+  .atlas-app .app-header { padding-top: var(--space-safe-top); height: calc(52px + var(--space-safe-top)); }
+  .atlas-app .brand-capsule { width: auto; }
+  .atlas-app .brand-text span { display: none; }
+  .atlas-app .chapter-sheet { display: flex; flex-direction: column; position: absolute; z-index: 15; inset: auto 0 0; padding-bottom: var(--space-safe-bottom); border-radius: 16px 16px 0 0; }
+  .atlas-app .sheet-grabber { flex-shrink: 0; height: 24px; }
+  .atlas-app .sheet-heading { padding: 0; flex-shrink: 0; height: 96px; }
+  .atlas-app .sheet-toggle { right: 0; top: -28px; }
+  .atlas-app .sheet-content { height: auto; min-height: 0; flex: 1; padding: 12px; }
+  .atlas-app .sheet-heading .time-dock { position: static; display: flex; flex-direction: column; height: 96px; padding: 0 8px; gap: 0; }
+  .atlas-app .time-dock-year, .atlas-app .time-controls { width: 100%; justify-content: space-between; }
+  .atlas-app .time-stream { width: 100%; }
+  .atlas-app .history-river { height: 44px; }
+  .atlas-app .river-zoom { display: none; }
+  .atlas-app .camera-controls { right: 12px; bottom: 160px; }
+  .map-legend { bottom: 160px; max-width: 230px; }
+  .atlas-app .place-card { inset: 60px 0 140px; width: 100%; }
+}
+
+.atlas-app .time-dock .river-zoom { position: static; }
+.atlas-app .chapter-sheet[data-snap='1'] .time-controls { display: flex; }
+.atlas-app .chapter-sheet[data-snap='0'] .sheet-content { visibility: hidden; }
+
+.atlas-app .time-dock .history-river { height: 44px; }
+.atlas-app .time-dock .river-control { padding-bottom: 0; }
+
+.map-legend[open] { max-height: min(450px, 65dvh); overflow-y: auto; }
+
+.atlas-app[data-embed='true'] { --sidebar-width: 0px; }
+.atlas-app[data-embed='true'] :is(.chronicle-sidebar, .sidebar-toggle) { display: none; }
+.atlas-app[data-embed='true'] :is(.terrain-scene, .polity-labels, .place-labels) { top: 0; }

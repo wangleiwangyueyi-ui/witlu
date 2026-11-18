@@ -1,0 +1,26 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "map": {
+    "x": 0,
+    "y": 52,
+    "width": 1080,
+    "height": 796
+  },
+  "header": {
+    "x": 0,
+    "y": 0,
+    "width": 1440,
+    "height": 52
+  },
+  "dock": {
+    "x": 0,
+    "y": 848,
+    "width": 1440,
+    "height": 52
+  },
+  "overlayPixels": 10536.34375,
+  "visibleShare": 0.6552034384645061
+}

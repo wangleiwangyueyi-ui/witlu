@@ -8,6 +8,7 @@ test('loads complete data, credits, and the responsive atlas shell', async ({ pa
   const manifest = await response.json() as { upstreamCommit: string; counts: Record<string, number> };
   await page.goto('/');
   await expect(page.getByTestId('data-status')).toHaveText('全量史料已载入');
+  if(info.project.name!=='desktop'){await page.getByRole('slider',{name:'收起 / 半开 / 全开'}).focus();await page.keyboard.press('ArrowUp');}
   await expect(page.getByRole('heading', { name: '三国', exact: true })).toBeVisible();
   await page.getByRole('button', { name: '更多', exact: true }).click();
   await page.getByRole('button', { name: /关于与致谢/ }).click();

@@ -11,6 +11,7 @@ import './styles/weather.css';
 import './styles/places.css';
 import './styles/explore.css';
 import './styles/publishing.css';
+import './styles/layout-v4.css';
 import { App } from './App';
 const OpeningLab=lazy(()=>import('./lab/OpeningLab'));
 const ExploreLab=lazy(()=>import('./lab/ExploreLab'));

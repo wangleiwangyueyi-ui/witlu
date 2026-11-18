@@ -1,3 +1,5 @@
+import {ensureToolbar} from './toolbar';
+import {clickToolbar} from './toolbar';
 import fs from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
 test('language, quality, popovers and debug console work', async ({ page }, info) => {
@@ -8,7 +10,7 @@ test('language, quality, popovers and debug console work', async ({ page }, info
   await page.getByRole('tab', { name: 'Eco', exact: true }).click();
   await expect(page.locator('.atlas-app')).toHaveAttribute('data-quality', 'eco');
   await expect(page.locator('.atlas-app')).toHaveAttribute('data-refraction', 'false');
-  await page.getByRole('button', { name: 'Language', exact: true }).click();
+  await clickToolbar(page,'Language');
   await page.getByRole('tab', { name: '繁', exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-Hant');
   await expect(page.getByRole('heading', { name: '三國', exact: true })).toBeVisible();
@@ -31,7 +33,7 @@ test('sheet settles across all three states and handles a swipe', async ({ page 
   await handle.focus(); await page.keyboard.press('Home');
   await expect(page.locator('.chapter-sheet')).toHaveAttribute('data-snap', '0');
   await page.keyboard.press('End'); await expect(page.locator('.chapter-sheet')).toHaveAttribute('data-snap', '2');
-  await expect.poll(async () => Math.abs((await page.locator('.chapter-sheet').boundingBox())!.y - 144)).toBeLessThan(2);
+  await expect.poll(async () => Math.abs((await page.locator('.chapter-sheet').boundingBox())!.y - 60)).toBeLessThan(2);
   const box = (await handle.boundingBox())!;
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down();
   await page.mouse.move(box.x + box.width / 2, page.viewportSize()!.height - 100, { steps: 12 }); await page.mouse.up();
@@ -49,7 +51,7 @@ test('liquid press has an independent effect switch', async ({ page }) => {
   await page.getByRole('switch', { name: 'Liquid press', exact: true }).click();
   await expect(page.getByRole('switch', { name: 'Liquid press', exact: true })).toHaveAttribute('aria-checked', 'false');
   await page.keyboard.press('Escape'); await expect(page.getByRole('dialog')).toHaveCount(0);
-  const button = page.getByRole('button', { name: 'Share', exact: true }); await button.hover();
+  await ensureToolbar(page,'Share');const button = page.getByRole('button', { name: 'Share', exact: true }); await button.hover();
   const width = (await button.boundingBox())!.width; await page.mouse.down(); await page.waitForTimeout(180);
   expect((await button.boundingBox())!.width).toBeCloseTo(width, 1);
   await page.mouse.move(5, 5); await page.mouse.up();
@@ -68,10 +70,10 @@ test('preserves upstream single-year and multi-year URLs on initial load', async
 test('tablet and phone landscape use the side panel', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop', 'One layout sweep');
   await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/'); await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator('.chapter-panel')).toBeVisible();
+  await expect(page.locator('.chronicle-sidebar')).toBeVisible();
   await page.screenshot({ path: 'docs/progress/screenshots/P5/regression/p4/regression/p1/tablet.png' });
   await page.setViewportSize({ width: 844, height: 390 });
-  await expect(page.locator('.chapter-panel')).toBeVisible();
+  await expect(page.locator('.chronicle-sidebar')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'docs/progress/screenshots/P5/regression/p4/regression/p1/landscape.png' });
 });

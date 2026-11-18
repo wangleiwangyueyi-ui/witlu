@@ -7,7 +7,7 @@ import { closestSheetSnap, sheetOffsets } from './sheet-model';
 export function Sheet({ children, heading }: { children: ReactNode; heading: ReactNode }) {
   const { t } = useI18n(); const reduced = useReducedEffects();
   const [height, setHeight] = useState(() => window.visualViewport?.height ?? innerHeight);
-  const [snap, setSnap] = useState(1); const y = useMotionValue(0); const drag = useDragControls();
+  const [snap, setSnap] = useState(0); const y = useMotionValue(0); const drag = useDragControls();
   const dragOrigin = useRef(0);
   const { height: sheetHeight, offsets } = sheetOffsets(height);
   useEffect(() => { const resize = () => setHeight(window.visualViewport?.height ?? innerHeight); window.visualViewport?.addEventListener('resize', resize); window.addEventListener('resize', resize); return () => { window.visualViewport?.removeEventListener('resize', resize); window.removeEventListener('resize', resize); }; }, []);

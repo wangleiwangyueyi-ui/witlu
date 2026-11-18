@@ -29,9 +29,10 @@ export function SegmentedControl<T extends string>({ label, value, options, onCh
     if (step || event.key === 'Home' || event.key === 'End') { event.preventDefault(); onChange(options[next]!.value); (event.currentTarget.parentElement?.children[next] as HTMLButtonElement)?.focus(); }
   }}>{option.label}</button>)}</div>;
 }
-export function Popover({ label, icon, children, className = '' }: { label: string; icon: IconName; children: ReactNode; className?: string }) {
+export function Popover({ label, icon, children, className = '', text, openSignal = 0 }: { label: string; icon: IconName; children: ReactNode; className?: string; text?: string; openSignal?: number }) {
   const reduced = useReducedEffects();
   const [open, setOpen] = useState(false); const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (openSignal) setOpen(true); }, [openSignal]);
   useEffect(() => {
     if (!open) return;
     const close = (e: globalThis.PointerEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
@@ -40,5 +41,5 @@ export function Popover({ label, icon, children, className = '' }: { label: stri
     (ref.current?.querySelector<HTMLElement>('[role="dialog"] [aria-selected="true"]') ?? ref.current?.querySelector<HTMLElement>('[role="dialog"] input, [role="dialog"] button'))?.focus();
     return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', escape); };
   }, [open]);
-  return <div className={`popover-anchor ${className}`} ref={ref}><GlassButton icon={icon} label={label} data-popover-trigger={icon} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}/><AnimatePresence>{open && <motion.div className="popover-wrap" initial={reduced ? false : { opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .16 }}><GlassPanel role="dialog" aria-label={label} className="popover"><h3>{label}</h3>{children}</GlassPanel></motion.div>}</AnimatePresence></div>;
+  return <div className={`popover-anchor ${className}`} ref={ref}><GlassButton icon={icon} label={label} data-popover-trigger={icon} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}>{text}</GlassButton><AnimatePresence>{open && <motion.div className="popover-wrap" initial={reduced ? false : { opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .16 }}><GlassPanel role="dialog" aria-label={label} className="popover"><h3>{label}</h3>{children}</GlassPanel></motion.div>}</AnimatePresence></div>;
 }
