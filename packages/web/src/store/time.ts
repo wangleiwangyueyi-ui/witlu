@@ -13,6 +13,7 @@ interface TimeState {
         number,
         number
     ];
+    cropped: boolean;
     flow: boolean;
     flight: boolean;
     haptics: boolean;
@@ -22,10 +23,11 @@ export function lockTime(year: number | undefined) { lockedYear = year; }
 const rangeParams=new URLSearchParams(location.search),from=Number(rangeParams.get('from')),to=Number(rangeParams.get('to'));
 const hasRange=Number.isInteger(from)&&Number.isInteger(to)&&from!==0&&to!==0&&from>=-403&&to<=2027&&to>from;
 const min = yearToIndex(hasRange?from:-403), max = yearToIndex(hasRange?to:2027);
+export const timeBounds = [min, max] as const;
 const initial = Math.max(min,Math.min(max,yearToIndex(useShell.getState().year)));
 const initialWidth = Math.min(120, max - min);
 const initialLeft = Math.max(min, Math.min(max - initialWidth, initial - initialWidth / 2));
-export const timeStore = createStore<TimeState>(() => ({ scrubbing: false, index: initial, speed: 1, playing: false, mode: 'jump', velocity: 0, view: [initialLeft, initialLeft + initialWidth], flow: true, flight: true, haptics: true }));
+export const timeStore = createStore<TimeState>(() => ({ scrubbing: false, index: initial, speed: 1, playing: false, mode: 'jump', velocity: 0, view: [initialLeft, initialLeft + initialWidth], cropped: false, flow: true, flight: true, haptics: true }));
 export function seekIndex(index: number, mode: TimeMode = 'jump', velocity = 0) {
     if (lockedYear !== undefined && index !== yearToIndex(lockedYear)) return;
     if (!Number.isFinite(index))
@@ -38,15 +40,29 @@ export function seekIndex(index: number, mode: TimeMode = 'jump', velocity = 0) 
 }
 export function seekYear(year: number) { seekIndex(yearToIndex(year)); }
 export function stepYear(delta: number) { seekIndex(Math.floor(timeStore.getState().index) + delta); }
+let eventYears: readonly number[] = [];
+export function stepEvent(direction: -1 | 1) {
+    const now = Math.floor(timeStore.getState().index);
+    const next = direction === 1 ? eventYears.find(year=>year>now) : [...eventYears].reverse().find(year=>year<now);
+    if (next !== undefined) seekIndex(next);
+}
 export function toggleTime() { if (lockedYear !== undefined) return; timeStore.setState(s => ({ playing: !s.playing, mode: 'play' })); }
 export function setTimeView(a: number, b: number) {
     const width = Math.max(Math.min(12,max-min), Math.min(max - min, b - a));
     const left = Math.max(min, Math.min(max - width, a));
-    timeStore.setState({ view: [left, left + width] });
+    const [oldLeft,oldRight] = timeStore.getState().view;
+    if (oldLeft!==left || oldRight!==left+width) timeStore.setState({ view: [left, left + width] });
 }
-export function resetTimeView() { const i = timeStore.getState().index; setTimeView(i - 60, i + 60); }
+export function resetTimeView() { const i = timeStore.getState().index; setTimeView(i - 60, i + 60); timeStore.setState({cropped:false}); }
+export function setTimelineCrop(start: number, end: number) {
+    timeStore.setState({playing:false,cropped:true});
+    setTimeView(Math.round(start),Math.round(end));
+    const {index,view} = timeStore.getState(), target = Math.min(view[1],Math.max(view[0],index));
+    if (target!==index) seekIndex(target);
+}
 /** One clock for canvas and engine. React only sees the calendar year at <= 8 Hz. */
-export function startTimeClock(boundaries: number[]) {
+export function startTimeClock(boundaries: number[], events: number[] = []) {
+    eventYears = [...new Set(events)].filter(i=>i>=min&&i<=max).sort((a,b)=>a-b);
     let frame = 0, before = performance.now(), lastPublish = 0, publishing = false;
     const publish = () => {
         publishing = true;
@@ -81,6 +97,11 @@ export function startTimeClock(boundaries: number[]) {
                 timeStore.setState({ playing: false });
         }
         if (now - lastPublish >= 125) {
+            const [a,b] = s.view;
+            if (s.index<a || s.index>b || s.playing && s.index>b-(b-a)*.08) {
+                const half=(b-a)/2;
+                setTimeView(s.index-half,s.index+half);
+            }
             publish();
             lastPublish = now;
         }
@@ -92,7 +113,8 @@ export function startTimeClock(boundaries: number[]) {
             return;
         if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
             e.preventDefault();
-            stepYear((e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 10 : 1));
+            const direction=e.key==='ArrowLeft'?-1:1;
+            if(e.shiftKey)stepEvent(direction);else stepYear(direction);
         }
         if (e.code === 'Space') {
             e.preventDefault();

@@ -1,0 +1,58 @@
+.timeline-dock {
+  display: grid;
+  grid-template: "play chart year" 1fr / auto minmax(0, 1fr) auto;
+  gap: 8px;
+  place-items: center stretch;
+}
+.atlas-app { --dock-height: 52px; }
+.atlas-app .time-dock.timeline-dock { padding-block: 0; gap: 8px; }
+.timeline-dock .playback { grid-area: play; display: flex; align-items: center; gap: 4px; }
+.timeline-dock :is(.timeline-narration, .year-stepper > button) {
+  min-height: 44px;
+  min-width: 44px;
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  border-radius: var(--radius-sm);
+}
+.timeline-dock button[aria-pressed='true'] { color: var(--gold-glow); }
+.timeline-dock .timeline-narration:disabled { opacity: .55; cursor: default; }
+.timeline-dock .playback .play-button { width: 44px; height: 44px; }
+.timeline-dock .playback select { width: 49px; }
+.timeline-dock .year-stepper { grid-area: year; display: flex; align-items: center; gap: 2px; justify-self: end; }
+.timeline-dock .year-stepper > button { font-size: 24px; }
+.atlas-app .timeline-dock .year-form { width: 63px; }
+.timeline-dock .year-entry input { width: 100%; text-align: center; font-variant-numeric: tabular-nums; }
+.timeline-dock .year-entry > button, .timeline-dock .year-form > label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.timeline-dock .year-entry > button:focus-visible {
+  width: 44px;
+  height: 44px;
+  inset: auto 0 100% auto;
+  clip-path: none;
+  background: var(--sea-deep);
+}
+.timeline-dock .year-results { right: 0; }
+.timeline-dock .timeline-chart { grid-area: chart; height: 50px; }
+.atlas-app .place-card { bottom: var(--dock-height); }
+
+@media (width <= 768px) {
+  .atlas-app { --dock-height: 96px; }
+  .atlas-app:not([data-locked='true']) .time-dock.timeline-dock {
+    display: grid;
+    grid-template: "play year" 44px "chart chart" 50px / 1fr 1fr;
+    height: 96px;
+    padding: 0 8px;
+    gap: 0 4px;
+  }
+  .atlas-app .place-card { bottom: 140px; }
+}

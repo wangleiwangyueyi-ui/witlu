@@ -26,8 +26,8 @@ test('P5 recorded river interactions and frame samples', async ({ browser }, inf
             await page.keyboard.press('End');
             await page.waitForTimeout(500);
         }
-        await page.evaluate(async () => { const { setTimeView } = await import('/src/store/time.ts' as string); setTimeView(220, 240); });
-        const river = page.locator('.history-river'), box = (await river.boundingBox())!, samples: EngineStats[] = [];
+        await page.evaluate(async () => { const { setTimelineCrop } = await import('/src/store/time.ts' as string); setTimelineCrop(220, 240); });
+        const river = page.locator('.timeline-year-track'), box = (await river.boundingBox())!, samples: EngineStats[] = [];
         for (let round = 0; round < 2; round++) {
             const direction = round ? -1 : 1;
             await page.mouse.move(box.x + box.width * (direction > 0 ? .1 : .9), box.y + box.height / 2);

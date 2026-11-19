@@ -18,10 +18,10 @@ function eraOrdinal(n: number) {
   return (n >= 20 ? numerals[Math.floor(n / 10)] : '') + '十' + (n % 10 ? numerals[n % 10] : '');
 }
 
-export function reignText(era: NonNullable<ActiveTrack['era']>, locale: Locale, data?: Chronicle) {
-  if (locale === 'en') return [era.rulerEn || era.ruler, historicalText(era.name,locale,data), `Year ${era.ordinal}`].filter(Boolean).join(' ');
+export function reignText(era: NonNullable<ActiveTrack['era']>, locale: Locale, data?: Chronicle, separator = ' ') {
+  if (locale === 'en') return [era.rulerEn || era.ruler, `${historicalText(era.name,locale,data)} Year ${era.ordinal}`].filter(Boolean).join(separator);
   const shortened = era.name.replace(eraPrefixes,'');
   const name = era.ruler && shortened ? shortened : era.name;
   const reign = name === era.ruler ? '' : era.ruler;
-  return historicalText([reign,`${name}${eraOrdinal(era.ordinal)}年`].filter(Boolean).join(' '),locale,data);
+  return historicalText([reign,`${name}${eraOrdinal(era.ordinal)}年`].filter(Boolean).join(separator),locale,data);
 }

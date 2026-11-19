@@ -36,7 +36,7 @@ test('P6 translated P5 controls, reduced motion and same-year camera',async({pag
   await page.screenshot({path:`${shots}/${info.project.name}-en.png`});
   await page.evaluate(async()=>{const {useShell}=await import('/src/state/shell.ts' as string);useShell.getState().setLocale('zh-Hant');});
   await expect(page.getByRole('button',{name:'跳轉年份',exact:true})).toBeAttached();
-  await expect(page.getByRole('slider',{name:/歷史長河/})).toBeAttached();
+  await expect(page.getByRole('slider',{name:/年份滑塊/})).toBeAttached();
   if(info.project.name!=='desktop'){await page.getByRole('slider',{name:'收起 / 半開 / 全開'}).focus();await page.keyboard.press('End');}
   await page.locator('#history-year').fill('唐貞觀三年');await page.locator('#history-year').press('Enter');await expect(page.locator('#history-year')).toHaveValue('629');
   await page.locator('#history-year').fill('1140');await page.locator('#history-year').press('Enter');
@@ -62,9 +62,9 @@ test('P6 recorded chapter tour and cross-snapshot drag performance',async({brows
     await page.getByRole('button',{name:'更多',exact:true}).click();await page.getByRole('button',{name:'开始导览',exact:true}).click();await page.waitForTimeout(6500);await page.getByRole('button',{name:'暂停导览',exact:true}).click();await page.getByRole('button',{name:'下一章',exact:true}).click();await page.waitForTimeout(2500);await page.getByRole('button',{name:'结束导览',exact:true}).click();
     const runs=[];
     for(const [label,a,b]of [['matched-P5',220,240],['cross-snapshots',210,285]] as const){
-      await page.evaluate(async({a,b})=>{const {setTimeView,seekYear}=await import('/src/store/time.ts' as string);seekYear(230);setTimeView(a,b);},{a,b});
-      await expect(page.locator('.river-years span').first()).toHaveText(`${a}年`);await expect(page.locator('.river-years span').last()).toHaveText(`${b}年`);
-      const river=page.locator('.history-river');await river.scrollIntoViewIfNeeded();const box=(await river.boundingBox())!,samples:EngineStats[]=[];
+      await page.evaluate(async({a,b})=>{const {setTimelineCrop,seekYear}=await import('/src/store/time.ts' as string);seekYear(230);setTimelineCrop(a,b);},{a,b});
+      await expect(page.locator('.timeline-year-track')).toHaveAttribute('aria-valuemin',String(a));await expect(page.locator('.timeline-year-track')).toHaveAttribute('aria-valuemax',String(b));
+      const river=page.locator('.timeline-year-track');await river.scrollIntoViewIfNeeded();const box=(await river.boundingBox())!,samples:EngineStats[]=[];
       for(let round=0;round<2;round++){await page.mouse.move(box.x+box.width*(round?.9:.1),box.y+box.height/2);await page.mouse.down();for(let i=0;i<=30;i++){await page.mouse.move(box.x+box.width*(round?.9-.8*i/30:.1+.8*i/30),box.y+box.height/2);await page.waitForTimeout(100);if(i%3===0)samples.push(await stats());}await page.mouse.up();await page.waitForTimeout(500);}
       await expect.poll(async()=>(await stats()).morph?.preview,{timeout:40000}).toBe(false);
       const fps=samples.map(s=>s.fps);runs.push({label,meanFps:fps.reduce((a,b)=>a+b,0)/fps.length,minFps:Math.min(...fps),maxFrameMs:Math.max(...samples.map(s=>s.frameMs)),samples});
