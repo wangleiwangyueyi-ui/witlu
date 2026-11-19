@@ -4,7 +4,7 @@ import type { EngineStats } from '../packages/engine/Renderer';
 const stats = async (page: import('@playwright/test').Page) => JSON.parse((await page.getByTestId('terrain').getAttribute('data-stats'))!) as EngineStats;
 test('real terrain renders and remains interactive in each viewport', async ({ page }, info) => {
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message)); page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
-  await page.goto('/?lang=en'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  await page.goto('/?lang=en&terrain=1'); await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
   await expect.poll(async () => (await stats(page)).loading).toBe(0);
   const initial = await stats(page); expect(initial.tiles).toBeGreaterThan(0); expect(initial.drawCalls).toBeLessThanOrEqual(250); expect(initial.pose.pitch).toBe(info.project.name === 'desktop' ? 45 : 40);
   await fs.mkdir('docs/progress/screenshots/P5/regression/p4/regression', { recursive: true }); await page.screenshot({ path: `docs/progress/screenshots/P5/regression/p4/regression/${info.project.name}.png` });
@@ -33,7 +33,7 @@ test('lab supports flyTo, switches, keyboard and WebGL context recovery', async 
 });
 test('two-finger touch pinches, rotates and inclines the terrain', async ({ page }, info) => {
   test.skip(info.project.name === 'desktop', 'Touch devices only');
-  await page.goto('/');
+  await page.goto('/?terrain=1');
   // The first-visit introduction owns pointer input until it is dismissed.
   await page.getByRole('button', { name: /跳过开场/ }).click();
   await expect(page.locator('.opening-screen')).toHaveCount(0);

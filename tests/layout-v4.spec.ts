@@ -13,7 +13,7 @@ test('R1 allocated map area, unique sections and pinned timeline',async({page},i
  if(info.project.name==='desktop'){
   const map=(await page.getByTestId('terrain').boundingBox())!,header=(await page.locator('.app-header').boundingBox())!,dock=(await page.locator('.time-dock').boundingBox())!;
   expect(header.height).toBe(52);expect(dock.height).toBeLessThanOrEqual(120);expect(dock.x).toBe(0);expect(dock.width).toBe(1440);expect(dock.y+dock.height).toBe(900);
-  const overlays=await page.locator('.map-legend,.camera-controls,.sidebar-toggle').evaluateAll(ns=>ns.reduce((area,n)=>{const r=n.getBoundingClientRect();return area+r.width*r.height;},0));
+  const overlays=await page.locator('.map-legend,.camera-controls,.flat-map-controls,.sidebar-toggle').evaluateAll(ns=>ns.reduce((area,n)=>{const r=n.getBoundingClientRect();return area+r.width*r.height;},0));
   const visibleShare=(map.width*map.height-overlays)/(1440*900);
   expect(visibleShare).toBeGreaterThanOrEqual(.65);
   await fs.mkdir('docs/progress/performance/R1',{recursive:true});

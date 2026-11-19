@@ -14,6 +14,9 @@ export interface Chronicle {
             polityId: string;
             color: string;
             strokeOnly: boolean;
+            anchor?: [number,number];
+            role: string;
+            title: string;
         }[];
     }[];
     registry: RegistryPolity[];

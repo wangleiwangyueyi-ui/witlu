@@ -1,5 +1,6 @@
 import { InstancedBufferAttribute, InstancedMesh, Matrix4, PlaneGeometry, Quaternion, ShaderMaterial, Vector3, Vector4 } from 'three';
-import type { IUniform, PerspectiveCamera, Scene } from 'three';
+import type { IUniform, Scene } from 'three';
+import type { AtlasCamera } from '../camera/MapCamera';
 import { cloudCohorts, cloudFade } from './model';
 import type { EnvironmentEffects } from './model';
 export class Clouds {
@@ -15,7 +16,7 @@ export class Clouds {
     });
     this.mesh = new InstancedMesh(geometry, material, 24); this.mesh.frustumCulled = false; this.mesh.renderOrder = 4; this.mesh.count = 0; scene.add(this.mesh);
   }
-  update(time: number, distance: number, anchor: { x: number; z: number }, camera: PerspectiveCamera, effects: EnvironmentEffects, layers: number, limit: number, enabled: boolean) {
+  update(time: number, distance: number, anchor: { x: number; z: number }, camera: AtlasCamera, effects: EnvironmentEffects, layers: number, limit: number, enabled: boolean) {
     const cohorts = cloudCohorts(time, limit), fade = cloudFade(distance), data = this.uniforms.cloudData!.value as Vector4[], details = this.uniforms.cloudDetails!.value as Vector4[];
     const storm=(this.uniforms.weatherStorm?.value??0) as number;
     if(storm>0){if(cohorts.length>=limit)cohorts.pop();cohorts.push({id:-999,age:0,offsetX:-300,offsetZ:-1700+Math.min(1,((this.uniforms.weatherTime?.value??0) as number)/3)*1000,alpha:storm*.25});}

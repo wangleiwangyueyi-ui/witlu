@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-19T03:48:04.198Z",
+  "projection": "orthographic",
+  "firstInteractiveObservedMs": 5338.699999988079,
+  "first3DObservedMs": 5338.699999988079,
+  "territoryReadyMs": 16097.59999999404,
+  "staticImages": [
+    {
+      "url": "http://127.0.0.1:4188/fallback/initial.webp",
+      "responseEnd": 816.1999999880791
+    },
+    {
+      "url": "http://127.0.0.1:4188/fallback/images/s_sanguo_a-0a2f59867117.webp",
+      "responseEnd": 3185.9000000059605
+    }
+  ],
+  "paints": [
+    {
+      "name": "first-paint",
+      "ms": 924
+    },
+    {
+      "name": "first-contentful-paint",
+      "ms": 924
+    }
+  ],
+  "simulation": true,
+  "network": {
+    "downBytesPerSecond": 200000,
+    "upBytesPerSecond": 93750,
+    "latencyMs": 150,
+    "cpuSlowdown": 4
+  },
+  "limitMs": 3000,
+  "passed": false,
+  "note": "Local gzip server, simulated network and CPU. Real 4G and device GPU require the device checklist."
+}

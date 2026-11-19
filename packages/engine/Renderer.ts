@@ -23,20 +23,21 @@ export class AtlasRenderer {
   readonly opening:Opening;
   readonly renderer: WebGLRenderer; private scene = new Scene(); private frame = 0; private alive = true; private visible = true; private lost = false;
   private previous = 0; private lastLod = -Infinity; private lastReport = 0; private samples: number[] = []; private cpu: number[] = [];
+  private loadingEnvironment = false;
   private cleanup: (() => void)[] = [];
   onStats: ((stats: EngineStats) => void) | null = null;
   onQuality: ((quality: Quality) => void) | null = null;
   onPick: ((pick: TerrainPick | null) => void) | null = null;
-  constructor(private platform: PlatformAdapter, palette: TerrainPalette, initialQuality: Quality = 'high') {
-    const viewport = platform.viewport(); this.camera = new MapCamera(viewport.mobile); this.quality = new QualityController(initialQuality);
+  constructor(private platform: PlatformAdapter, palette: TerrainPalette, initialQuality: Quality = 'high', readonly flat = false) {
+    const viewport = platform.viewport(); this.camera = new MapCamera(viewport.mobile,flat); this.quality = new QualityController(initialQuality);
     this.renderer = new WebGLRenderer({ canvas: platform.canvas as NonNullable<WebGLRendererParameters['canvas']>, antialias: false, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: false });
-    this.renderer.outputColorSpace = SRGBColorSpace; this.scene.background = new Color(palette.sky);
+    this.renderer.outputColorSpace = SRGBColorSpace; this.scene.background = new Color(flat ? palette.sea : palette.sky);
     this.opening=new Opening(platform,palette.sky,palette.weather?.blue??palette.land);
     this.environment = new Environment(platform, palette.environment ?? { sky: palette.sky, horizon: palette.sky, shelf: palette.sea, coast: palette.sea, flow: palette.sea, wave: palette.sea, cloud: palette.sky }, this.scene);
-    void this.environment.load();
+    if (!flat) void this.environment.load();
     this.weather=new Weather(platform,this.scene,this.environment,palette.weather??{blue:palette.land,gold:palette.land,fire:palette.land,smoke:palette.land});
     this.timeFlight = new TimeFlight(this.scene, this.environment.uniforms);
-    this.terrain = new TerrainManager(platform, this.scene, palette, initialQuality, viewport.mobile, this.environment.uniforms);
+    this.terrain = new TerrainManager(platform, this.scene, palette, initialQuality, viewport.mobile, this.environment.uniforms, flat);
     this.resonance = new Resonance(this.scene, this.terrain, palette.morph?.gold ?? palette.land);
     this.morph=new Morph(platform,this.renderer,this.terrain,this.scene,palette.morph??{gold:palette.land,white:palette.land,cinnabar:palette.land,dust:palette.land});Object.assign(this.environment.uniforms,this.morph.uniforms);
     this.cartography=new Cartography(platform,this.scene,this.renderer,this.terrain,palette.morph?.gold??palette.land,palette.weather?.blue??palette.land,palette.morph?.white??palette.land);
@@ -48,13 +49,22 @@ export class AtlasRenderer {
   }
   frameSites(sites: [number,number][], rect: {left:number;top:number;width:number;height:number}, duration=1100) {
     if(!sites.length)return;
+    if(this.flat){
+      const points=sites.map(c=>project(...c)),xs=points.map(p=>p.x),zs=points.map(p=>p.z);
+      const minX=Math.min(...xs),maxX=Math.max(...xs),minZ=Math.min(...zs),maxZ=Math.max(...zs);
+      const scale=Math.max(this.camera.metresPerPixel(2600)/1000,(maxX-minX)/(rect.width*.82),(maxZ-minZ)/(rect.height*.82));
+      const distance=Math.min(11000,scale*1000/this.camera.metresPerPixel(1)),kmPerPixel=this.camera.metresPerPixel(distance)/1000;
+      const center=unproject((minX+maxX)/2+(this.camera.width/2-rect.left-rect.width/2)*kmPerPixel,(minZ+maxZ)/2+(this.camera.height/2-rect.top-rect.height/2)*kmPerPixel);
+      this.camera.flyTo({...center,distance},duration);
+      return;
+    }
     const camera=new MapCamera(this.camera.mobile);camera.resize(this.camera.width,this.camera.height);
     let pose={...this.camera.pose,lon:sites.reduce((s,c)=>s+c[0],0)/sites.length,lat:sites.reduce((s,c)=>s+c[1],0)/sites.length,bearing:0,distance:2600};
     for(let i=0;i<8;i++){
       camera.flyTo(pose,0);
       const points=sites.map(c=>{const q=project(...c);const p=new Vector3(q.x,this.terrain.heightAt(q.x,q.z)+8,q.z).project(camera.camera);return {x:(p.x+1)*.5*camera.width,y:(1-p.y)*.5*camera.height};});
       const minX=Math.min(...points.map(p=>p.x)),maxX=Math.max(...points.map(p=>p.x)),minY=Math.min(...points.map(p=>p.y)),maxY=Math.max(...points.map(p=>p.y));
-      const scale=pose.distance*2*Math.tan(21*Math.PI/180)/camera.height,q=project(pose.lon,pose.lat);
+      const scale=camera.metresPerPixel(pose.distance)/1000,q=project(pose.lon,pose.lat);
       const center=unproject(q.x+((minX+maxX)/2-rect.left-rect.width/2)*scale,q.z+((minY+maxY)/2-rect.top-rect.height/2)*scale/Math.sin(pose.pitch*Math.PI/180));
       pose={...pose,lon:center.lon,lat:center.lat,distance:Math.min(11000,pose.distance*Math.max(1,(maxX-minX)/(rect.width*.82),(maxY-minY)/(rect.height*.82)))};
     }
@@ -73,6 +83,7 @@ export class AtlasRenderer {
     this.resonance.update(dt, this.quality.level, this.environment.reducedMotion);
     this.camera.update(dt);
     this.environment.update(dt, this.camera, this.quality.level);
+    if(this.flat && !this.environment.ready && !this.environment.error && this.terrain.visible.length && !this.loadingEnvironment){this.loadingEnvironment=true;void this.environment.load();}
     this.weather.update(now,this.camera,this.quality.level,this.terrain);
     if (now - this.lastLod >= 120) { this.terrain.update(this.camera.camera, this.camera.height, now); this.lastLod = now; }
     this.morph.precomputeEnabled=!this.weather.stats().active;

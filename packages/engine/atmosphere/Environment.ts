@@ -66,7 +66,7 @@ export class Environment {
     this.uniforms.cloudShadowStrength!.value = this.state.shadows;
     const azimuth = sunAzimuth(this.time, this.effects.lightCycle) * Math.PI / 180;
     (this.uniforms.sunDirection!.value as Vector3).set(Math.sin(azimuth) * .66, .75, -Math.cos(azimuth) * .66).normalize();
-    this.sky.visible = active && this.effects.sky; this.sky.position.copy(camera.camera.position);
+    this.sky.visible = active && this.effects.sky && !camera.flat; this.sky.position.copy(camera.camera.position);
     this.clouds.update(this.time, camera.pose.distance, project(camera.pose.lon, camera.pose.lat), camera.camera, this.effects, this.state.cloudLayers, this.state.cloudLimit, active);
     this.currents.update(this.slowTime, this.state.currents, active);
   }

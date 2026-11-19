@@ -14,7 +14,7 @@
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json",
     "lint": "eslint packages scripts tests && stylelint \"packages/web/src/**/*.css\" && node scripts/lint-boundaries.mjs",
     "fonts": "node scripts/build-fonts.mjs",
-    "tiles": "node scripts/build-dem.mjs && node scripts/bake-relief.mjs && node scripts/bake-coast-distance.mjs",
+    "tiles": "node scripts/build-dem.mjs && node scripts/bake-relief.mjs && node scripts/bake-coast-distance.mjs && node scripts/bake-map-coverage.mjs",
     "tiles:preview": "node scripts/build-dem.mjs --max-zoom 5 && node scripts/bake-relief.mjs --preview",
     "assets": "node scripts/build-brand.mjs && node scripts/build-calligraphy.mjs && node scripts/build-weather-audio.mjs",
     "test": "vitest run",

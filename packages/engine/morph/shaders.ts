@@ -20,7 +20,7 @@ void main(){
 export const territoryGLSL = /*glsl*/ `
 precision highp sampler2DArray;
 uniform sampler2DArray territoryFields;
-uniform sampler2D territoryStyleCache;uniform float territoryStyleReady;uniform float territoryStyleSize;
+uniform float flatTerritory;uniform sampler2D territoryStyleCache;uniform float territoryStyleReady;uniform float territoryStyleSize;
 uniform vec3 territoryLens;uniform float territoryLabelSize;uniform float territoryFieldSize;uniform float polityFocus;uniform float territoryEdges;uniform float territoryEnabled;uniform sampler2D polityA;uniform sampler2D polityB;uniform sampler2D polityCurrent;uniform sampler2D polityPalette;
 uniform vec4 territoryBounds;uniform float territoryProgress;uniform float territoryCrossfade;uniform float territoryOpacity;uniform float territoryFront;uniform float territoryInk;uniform vec3 territoryGold;
 float polityId(vec2 rg){return floor(rg.x*255.0+.5)+floor(rg.y*255.0+.5)*256.0;}
@@ -30,8 +30,8 @@ vec4 polityStyle(float id,float row){return texture2D(polityPalette,vec2((id+.5)
 vec4 smoothPolity(sampler2D labels,vec2 uv,float row,float size){
  // At national scale a screen pixel already covers multiple label texels.
  // Keep the four-tap reconstruction for close views where texels become visible.
- if(max(fwidth(uv.x),fwidth(uv.y))*size>=1.0)return polityStyle(polityId(texture2D(labels,uv).rg),row);
- vec2 p=uv*size-.5,base=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ if(max(fwidth(uv.x),fwidth(uv.y))*size>=mix(1.,2.,flatTerritory))return polityStyle(polityId(texture2D(labels,uv).rg),row);
+ vec2 p=uv*size-.5,base=floor(p),f=fract(p);f=mix(f*f*(3.-2.*f),f,flatTerritory);
  float a=polityId(texture2D(labels,(base+vec2(.5,.5))/size).rg),b=polityId(texture2D(labels,(base+vec2(1.5,.5))/size).rg),c=polityId(texture2D(labels,(base+vec2(.5,1.5))/size).rg),d=polityId(texture2D(labels,(base+vec2(1.5,1.5))/size).rg);
  if(a==b&&a==c&&a==d)return polityStyle(a,row);
  return mix(mix(polityStyle(a,row),polityStyle(b,row),f.x),mix(polityStyle(c,row),polityStyle(d,row),f.x),f.y);
@@ -43,7 +43,7 @@ vec4 timeStyle(float id){vec4 a=polityStyle(id,.125),b=polityStyle(id,.375);retu
 vec4 grownStyle(vec2 uv,out float edgePx,out float owner){
  float originalA=polityId(texture2D(polityA,uv).rg),originalB=polityId(texture2D(polityB,uv).rg);
  owner=originalA;edgePx=1e5;
- if(originalA==originalB&&max(fwidth(uv.x),fwidth(uv.y))*territoryLabelSize>=1.0)return timeStyle(originalA);
+ if(originalA==originalB&&max(fwidth(uv.x),fwidth(uv.y))*territoryLabelSize>=mix(1.,2.,flatTerritory))return timeStyle(originalA);
  vec2 base=floor(uv*territoryFieldSize-.5);
  vec4 ids=vec4(edgeId((base+vec2(.5,.5))/territoryFieldSize),edgeId((base+vec2(1.5,.5))/territoryFieldSize),edgeId((base+vec2(.5,1.5))/territoryFieldSize),edgeId((base+vec2(1.5,1.5))/territoryFieldSize));
  owner=ids.x;edgePx=1e5;
@@ -83,7 +83,7 @@ float edgeId(vec2 uv){
 vec3 polityEdge(vec3 color,vec4 style,float id,float distancePx){
   if(polityFocus>.0)color*=abs(id-polityFocus)<.5?1.25:.55;
   if(territoryEdges<.5||style.a<=0.0||territoryProgress<=0.0||territoryProgress>=1.0)return color;
-  float core=1.-smoothstep(.45,1.25,abs(distancePx)),halo=exp(-distancePx*distancePx/12.)*.12;
+  float core=1.-smoothstep(.4,1.26,abs(distancePx)),halo=exp(-distancePx*distancePx/12.)*.12;
   return mix(color,style.rgb,core*.65+halo);
 
 }
@@ -95,9 +95,9 @@ vec3 territoryColor(vec3 ground,vec3 world){
   float t=territoryProgress;
   // A stationary point in time can reuse palette reconstruction as the camera
   // moves. Keep the exact ID/SDF path for close views and transient effects.
-  if(territoryStyleReady>.5&&territoryInk<.5&&territoryFront<.5&&max(fwidth(uv.x),fwidth(uv.y))*territoryStyleSize>=1.0){
+  if(territoryStyleReady>.5&&territoryInk<.5&&territoryFront<.5&&max(fwidth(uv.x),fwidth(uv.y))*territoryStyleSize>=mix(1.,.55,flatTerritory)){
     vec4 style=texture2D(territoryStyleCache,uv);float id=polityFocus>0.?edgeId(uv):0.;
-    float edge=length(fwidth(style.rgb));return polityEdge(polityBlend(ground,style,uv),style,id,edge>.025?.9:1e5);
+    float edge=max(length(fwidth(style.rgb)),fwidth(style.a));float strength=smoothstep(.015,.16,edge);return polityEdge(polityBlend(ground,style,uv),style,id,mix(8.,.5,strength));
   }
   if(t<=0.0){float id=polityId(texture2D(polityA,uv).rg);vec4 s=smoothPolity(polityA,uv,.125,territoryLabelSize);return polityEdge(polityBlend(ground,s,uv),s,id,0.);}
   if(t>=1.0){float id=polityId(texture2D(polityB,uv).rg);vec4 s=smoothPolity(polityB,uv,.375,territoryLabelSize);return polityEdge(polityBlend(ground,s,uv),s,id,0.);}

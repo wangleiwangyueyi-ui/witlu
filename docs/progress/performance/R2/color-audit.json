@@ -1,0 +1,60 @@
+{
+  "palette": [
+    {
+      "hex": "#849AD6",
+      "lightness": 64.05569724730674
+    },
+    {
+      "hex": "#CF8E66",
+      "lightness": 64.62271783654327
+    },
+    {
+      "hex": "#6EAF98",
+      "lightness": 66.70308038862525
+    },
+    {
+      "hex": "#AC83C8",
+      "lightness": 60.934767130002555
+    },
+    {
+      "hex": "#D38395",
+      "lightness": 63.55252354896129
+    },
+    {
+      "hex": "#A5A66B",
+      "lightness": 66.77423259221354
+    },
+    {
+      "hex": "#67AABF",
+      "lightness": 66.05301254517462
+    },
+    {
+      "hex": "#BD93AC",
+      "lightness": 65.48786965167376
+    },
+    {
+      "hex": "#A29BB9",
+      "lightness": 65.45699658129067
+    },
+    {
+      "hex": "#9AAF73",
+      "lightness": 68.582623994958
+    }
+  ],
+  "modes": [
+    "normal",
+    "protanopia",
+    "deuteranopia",
+    "tritanopia"
+  ],
+  "snapshots": 198,
+  "edges": 1292,
+  "minimum": {
+    "snapshot": "s_zhanguo_a",
+    "a": "qin_state",
+    "b": "han_state",
+    "deltaE": 8.478922848176532
+  },
+  "minColorDistance": 8,
+  "passes": true
+}

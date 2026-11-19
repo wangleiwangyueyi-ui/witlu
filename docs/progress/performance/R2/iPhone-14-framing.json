@@ -1,0 +1,47 @@
+[
+  {
+    "year": -221,
+    "key": "s_qin_a",
+    "width": 390,
+    "height": 664,
+    "span": 0.73,
+    "offsetX": 2.5579538487363607e-13,
+    "offsetY": 1.1368683772161603e-13
+  },
+  {
+    "year": 230,
+    "key": "s_sanguo_a",
+    "width": 390,
+    "height": 664,
+    "span": 0.7300000000000001,
+    "offsetX": 0,
+    "offsetY": 1.1368683772161603e-13
+  },
+  {
+    "year": 589,
+    "key": "s_sui",
+    "width": 390,
+    "height": 664,
+    "span": 0.73,
+    "offsetX": 2.842170943040401e-14,
+    "offsetY": 1.1368683772161603e-13
+  },
+  {
+    "year": 1127,
+    "key": "s_nansong_a0",
+    "width": 390,
+    "height": 664,
+    "span": 0.7300000000000001,
+    "offsetX": 1.1368683772161603e-13,
+    "offsetY": 1.1368683772161603e-13
+  },
+  {
+    "year": 1700,
+    "key": "s_qing_b",
+    "width": 390,
+    "height": 664,
+    "span": 0.73,
+    "offsetX": 8.526512829121202e-14,
+    "offsetY": 5.684341886080802e-14
+  }
+]

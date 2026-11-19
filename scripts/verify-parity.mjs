@@ -1,3 +1,4 @@
+import {minColorDistance,regimeTokens,separation} from './lib/regime-colors.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -54,13 +55,13 @@ try {
   for (const c of colors) {
     assert(c.saturatedColorCount <= 5);
     for (const item of c.colors) {
-      if (item.role === 'main') assert.equal(item.color, '#F2C46D');
+      if (item.role === 'main') assert(regimeTokens().includes(item.color));
       if (item.role === 'neighbor') assert.equal(item.fill, null);
       if (item.role === 'protectorate') { assert.equal(item.fillOpacity, 0.18); assert.equal(item.pattern, 'diagonal'); }
     }
     for (const [a, b] of c.adjacency) {
       const ca = c.colors.find(x => x.polityId === a), cb = c.colors.find(x => x.polityId === b);
-      if (ca.fill && cb.fill) assert.notEqual(ca.color, cb.color);
+      if (ca.fill && cb.fill) assert(separation(ca.color, cb.color) >= minColorDistance, `${c.snapshot}: ${a}, ${b}`);
     }
   }
   for (const p of readJSON('polities')) assert.equal(new Set(p.occurrences.map(o => o.snapshot)).size, p.occurrences.length);

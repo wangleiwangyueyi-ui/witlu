@@ -20,7 +20,7 @@ export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Wo
     try{image.src=url;await image.decode();const surface=document.createElement('canvas');surface.width=image.width;surface.height=image.height;const context=surface.getContext('2d',{willReadFrequently:true});if(!context)throw Error('Image decoding context unavailable');context.drawImage(image,0,0);const pixels=context.getImageData(0,0,image.width,image.height);return {width:pixels.width,height:pixels.height,data:new Uint8Array(pixels.data.buffer)};}finally{URL.revokeObjectURL(url);}
   }
 
-  viewport() { const box = this.canvas.getBoundingClientRect(); return { width: box.width, height: box.height, pixelRatio: devicePixelRatio, mobile: matchMedia('(pointer: coarse)').matches || box.width < 768 }; }
+  viewport() { const box = this.canvas.getBoundingClientRect(); return { width: box.width, height: box.height, pixelRatio: devicePixelRatio, mobile: matchMedia('(pointer: coarse), (max-width: 768px)').matches }; }
   createWorker(path: string):WorkerPort {
     const worker=path==='labels'?new Worker(new URL('../workers/labels.worker.ts',import.meta.url),{type:'module'}):path==='growth'?new Worker(new URL('../workers/growth.worker.ts',import.meta.url),{type:'module'}):new Worker(path,{type:'module'});
     return{post:(message,transfer=[])=>worker.postMessage(message,transfer),onMessage:fn=>{const listener=(e:MessageEvent<unknown>)=>fn(e.data);worker.addEventListener('message',listener);return()=>worker.removeEventListener('message',listener);},onError:fn=>{const listener=(e:ErrorEvent)=>fn(e.message);worker.addEventListener('error',listener);return()=>worker.removeEventListener('error',listener);},terminate:()=>worker.terminate()};

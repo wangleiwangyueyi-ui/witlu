@@ -1,3 +1,4 @@
+import {MapScale} from './MapScale';
 import { useEffect, useState } from 'react';
 import {MotionSensor} from './MotionSensor';
 import {useTerrainSettings} from '../state/terrain';
@@ -20,7 +21,7 @@ function Music() {
   const {t}=useI18n(),playing=useAudioState(s=>s.enabled),toast=useToast();
   return <GlassButton icon="music" label={playing?t('pauseMusic'):t('playMusic')} aria-pressed={playing} onClick={()=>void weatherMixer.toggle().catch(()=>toast(t('musicError')))}/>;
 }
-export function Toolbar({ refractionSupported, mobile }: { refractionSupported: boolean; mobile: boolean }) {
+export function Toolbar({ refractionSupported, mobile, flat }: { refractionSupported: boolean; mobile: boolean; flat: boolean }) {
   const { t, locale } = useI18n(); const state = useShell(); const automatic=useTerrainSettings(s=>s.automatic); const toast = useToast();
   const layers: MessageKey[] = ['territories', 'divisions', 'prefectures', 'modern', 'rivers', 'places'];
   const qualities = (['ultra', 'high', 'eco'] as Quality[]).map(value => ({ value, label: t(value) }));
@@ -40,5 +41,5 @@ export function Toolbar({ refractionSupported, mobile }: { refractionSupported: 
   return <><header className="app-header"><div className="glass brand-capsule"><img src="/brand/seal.svg" alt="" width="46" height="46"/><div className="brand-text"><strong>{t('brand')}</strong><span>{t('app')}</span></div></div><form className="header-search" onSubmit={e=>{e.preventDefault();useExplore.setState({searchOpen:true});}}><input aria-label={locale==='en'?'Search people, places or eras':'搜索人物、地名、年号'} placeholder={locale==='en'?'People, places, eras…':'搜索人物 / 地名 / 年号…'} onChange={e=>useExplore.setState({query:e.target.value})}/><SearchButton/></form><nav className="toolbar" aria-label={t('uiSettings')}>
     {!mobile && tools}
     <Popover label={t('more')} icon="more" openSignal={mobile ? openLayers : 0}>{mobile && <div className="mobile-tools">{tools}</div>}<TourControls/><OpeningSettings/><a href="/topics/index.html" className="text-button">{locale==='en'?'Historical topics':'历史专题图志'} ↗</a><h4>{t('quality')}</h4><SegmentedControl label={t('quality')} value={state.quality} options={qualities} onChange={value=>{useTerrainSettings.setState({automatic:false});state.setQuality(value);}}/><Toggle label={locale==='en'?'Automatic quality':locale==='zh-Hant'?'自動畫質':'自动画质'} checked={automatic} onChange={()=>useTerrainSettings.setState({automatic:!automatic})}/><MotionSensor/><Toggle label={t('highlight')} checked={state.highlight} onChange={() => state.toggle('highlight')}/><Toggle label={t('refraction')} checked={state.refraction && refractionSupported} disabled={!refractionSupported} onChange={() => state.toggle('refraction')}/><Toggle label={t('pressMotion')} checked={state.pressMotion} onChange={() => state.toggle('pressMotion')}/><Toggle label={t('motion')} checked={state.reducedMotion} onChange={() => state.toggle('reducedMotion')}/><button type="button" className="text-button" onClick={() => state.setAbout(true)}>{t('about')} <span>↗</span></button></Popover>
-  </nav></header><div className="camera-controls"><GlassButton icon="compass" label={t('reset')} onClick={() => { terrainBridge.engine?.camera.reset(); toast(t('resetDone')); }}/><span>{t('north')}</span></div></>;
+  </nav></header>{flat?<div className="flat-map-controls"><MapScale/><button type="button" onClick={()=>terrainBridge.engine?.camera.reset()}>{locale==='en'?'Reset view':locale==='zh-Hant'?'復位視圖':'复位视图'}</button></div>:<div className="camera-controls"><GlassButton icon="compass" label={t('reset')} onClick={() => { terrainBridge.engine?.camera.reset(); toast(t('resetDone')); }}/><span>{t('north')}</span></div>}</>;
 }

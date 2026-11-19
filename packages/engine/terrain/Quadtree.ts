@@ -1,14 +1,14 @@
-import { Box3, Frustum, Matrix4, Vector3 } from 'three';
-import type { PerspectiveCamera } from 'three';
+import { Box3, Frustum, Matrix4, OrthographicCamera, Vector3 } from 'three';
+import type { AtlasCamera } from '../camera/MapCamera';
 import { children, roots, tileBounds, tileKey } from './geo';
 import type { TileId } from './geo';
 
 export function screenError(tile: TileId, distance: number, viewportHeight: number, fov: number) { return tileBounds(tile).size / 256 * viewportHeight / (2 * Math.tan(fov * Math.PI / 360) * Math.max(distance, 1)); }
-export function selectTiles(camera: PerspectiveCamera, height: number, maxZoom: number, error: number, budget: number): TileId[] {
+export function selectTiles(camera: AtlasCamera, height: number, maxZoom: number, error: number, budget: number): TileId[] {
   const frustum = new Frustum().setFromProjectionMatrix(new Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
   const box = new Box3(), center = new Vector3();
   const visible = (tile: TileId) => { const b = tileBounds(tile); box.min.set(b.x, -12, b.z); box.max.set(b.x + b.size, 30, b.z + b.size); return frustum.intersectsBox(box); };
-  const score = (tile: TileId) => { const b = tileBounds(tile); center.set(b.x + b.size / 2, 0, b.z + b.size / 2); const distance = Math.max(camera.position.y, camera.position.distanceTo(center) - b.size * .55); return screenError(tile, distance, height, camera.fov); };
+  const score = (tile: TileId) => { const b = tileBounds(tile); if(camera instanceof OrthographicCamera)return b.size / 256 * height / (camera.top - camera.bottom); center.set(b.x + b.size / 2, 0, b.z + b.size / 2); const distance = Math.max(camera.position.y, camera.position.distanceTo(center) - b.size * .55); return screenError(tile, distance, height, camera.fov); };
   const leaves = roots().filter(visible);
   while (leaves.length < budget) {
     let best = -1, largest = error;

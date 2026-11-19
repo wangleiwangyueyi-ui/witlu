@@ -5,7 +5,7 @@ import {GlassButton,useReducedEffects} from './Glass';
 import {Calligraphy} from './Calligraphy';
 import {useExploreText} from './Explore';
 const key='witlu-intro-v1';
-function firstVisit(){try{return localStorage.getItem('witlu-intro-enabled')!=='false'&&!localStorage.getItem(key)&&!location.search&&location.pathname==='/';}catch{return !location.search;}}
+function firstVisit(){try{return localStorage.getItem('witlu-intro-enabled')!=='false'&&!localStorage.getItem(key)&&(!location.search||location.search==='?terrain=1')&&location.pathname==='/';}catch{return !location.search;}}
 export function Opening({force=false}:{force?:boolean}){const [visible,setVisible]=useState(()=>force||firstVisit()),[error,setError]=useState(''),root=useRef<HTMLDivElement>(null),t=useExploreText(),reduced=useReducedEffects();
  useEffect(()=>{const unavailable=()=>setVisible(false);if(document.documentElement.dataset.webgl==='unavailable')unavailable();window.addEventListener('atlas:no-webgl',unavailable);return()=>window.removeEventListener('atlas:no-webgl',unavailable);},[]);
  useEffect(()=>{const replay=()=>{setError('');setVisible(true);};window.addEventListener('atlas:opening',replay);return()=>window.removeEventListener('atlas:opening',replay);},[]);

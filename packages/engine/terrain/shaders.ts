@@ -1,5 +1,44 @@
 import { environmentUniformsGLSL } from '../atmosphere/shared-shaders';
 import { territoryGLSL } from '../morph/shaders';
+export const flatVertex = /* glsl */`
+varying vec2 vUv;
+varying vec3 vWorld;
+void main(){
+  vUv = uv;
+  vec4 world = modelMatrix * vec4(position, 1.0);
+  vWorld = world.xyz;
+  gl_Position = projectionMatrix * viewMatrix * world;
+}`;
+
+export const flatFragment = /* glsl */`
+${environmentUniformsGLSL}
+${territoryGLSL}
+uniform sampler2D reliefMap;
+uniform vec3 landColor;
+uniform vec3 seaColor;
+uniform vec4 clipBounds;
+uniform float reliefEnabled;
+uniform float flatWater;
+uniform float waterMotion;
+varying vec2 vUv;
+varying vec3 vWorld;
+void main(){
+  if (vWorld.x < clipBounds.x || vWorld.z < clipBounds.y || vWorld.x > clipBounds.z || vWorld.z > clipBounds.w) discard;
+  vec4 relief = texture2D(reliefMap, vUv);
+  vec3 color = seaColor;
+  float landMask=clamp(relief.a*255.-254.,0.,1.);
+  float coverage=smoothstep(.23,.77,landMask);
+  if (coverage > 0.) {
+    float luma = dot(relief.rgb,vec3(.2126,.7152,.0722));
+    vec3 land = landColor * mix(1.0,.89+.22*smoothstep(.012,.09,luma),reliefEnabled);
+    if (envEnabled > .5) land *= cloudShadow(vWorld);
+    color = mix(color,territoryColor(land,vWorld),coverage);
+  } else if (flatWater > .5 && waterMotion > .5) {
+    color *= 1.0 + .035 * sin(dot(vWorld.xz,vec2(.007,.006)) + envTime*.28);
+  }
+  gl_FragColor = vec4(weatherGrade(color,vWorld),1.0);
+  #include <colorspace_fragment>
+}`;
 export const terrainVertex = /* glsl */`
 uniform sampler2D heightMap;
 uniform float tileY;

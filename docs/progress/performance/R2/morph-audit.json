@@ -1,0 +1,26 @@
+[
+  {
+    "t": 0.2,
+    "pixels": 1048576,
+    "gaps": 0,
+    "invalid": 0,
+    "mismatches": 0,
+    "hash": 2299830600
+  },
+  {
+    "t": 0.5,
+    "pixels": 1048576,
+    "gaps": 0,
+    "invalid": 0,
+    "mismatches": 0,
+    "hash": 1571259744
+  },
+  {
+    "t": 0.8,
+    "pixels": 1048576,
+    "gaps": 0,
+    "invalid": 0,
+    "mismatches": 0,
+    "hash": 897743077
+  }
+]

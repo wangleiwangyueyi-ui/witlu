@@ -3,6 +3,8 @@
   --land-low: #1A2E3B; --land-high: #26404F; --land-ridge: #3D5E72; --land-snow: #9CC0D6; --terrain-shadow: #0F1E28;
   --river: #3C7FBF; --sky: #0A1830; --horizon: #2C5A8C;
   --polity-main: #F2C46D; --polity-coral: #FF8A7A; --polity-jade: #5FD3B5; --polity-blue: #7DB8FF; --polity-purple: #B79CFF;
+  --regime-indigo: #849AD6; --regime-ochre: #CF8E66; --regime-pine: #6EAF98; --regime-plum: #AC83C8; --regime-rose: #D38395;
+  --regime-olive: #A5A66B; --regime-teal: #67AABF; --regime-mauve: #BD93AC; --regime-lavender: #A29BB9; --regime-leaf: #9AAF73;
   --neighbor: #8FB0D8; --text: #FFFFFF; --text-secondary: rgb(255 255 255 / 72%); --text-muted: rgb(255 255 255 / 50%);
   --cinnabar: #E8553E; --gold-glow: #FFD27A; --link: #6CB4FF;
   --glass-top: color-mix(in srgb, var(--sea-deep) 94%, transparent);

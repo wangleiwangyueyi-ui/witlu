@@ -20,7 +20,7 @@ test('P9 five local guqin tracks and ordered narration consent',async({page},inf
 });
 test('P9 route autoplay, local audio playback and reduced meteor fallback',async({page},info)=>{
  test.skip(info.project.name!=='desktop');test.setTimeout(120000);
- await page.goto('/?person=sushi&stop=3');const panel=page.locator('.exploration-panel');await expect(panel).toHaveAttribute('data-step','3');await expect.poll(async()=>(await stats(page)).morph?.ready,{timeout:45000}).toBe(true);
+ await page.goto('/?terrain=1&person=sushi&stop=3');const panel=page.locator('.exploration-panel');await expect(panel).toHaveAttribute('data-step','3');await expect.poll(async()=>(await stats(page)).morph?.ready,{timeout:45000}).toBe(true);
  await page.getByRole('button',{name:'播放行迹',exact:true}).click();await expect(panel).toHaveAttribute('data-step','4',{timeout:9000});await page.getByRole('button',{name:'暂停行迹',exact:true}).click();await clickToolbar(page,'播放古琴');
  const audio=()=>page.evaluate(async()=>{const {weatherMixer}=await import('/src/audio/WeatherMixer.ts' as string);return weatherMixer.stats();});await expect.poll(async()=>(await audio()).musicTime,{timeout:12000}).toBeGreaterThan(0);
  await expect(page.getByLabel('古琴曲目')).toBeVisible();for(const i of [1,2,3,4,0]){await page.getByLabel('古琴曲目').selectOption(String(i));await expect.poll(async()=>(await audio()).track).toBe(i);await expect.poll(async()=>(await audio()).musicTime,{timeout:10000}).toBeGreaterThan(0);}await clickToolbar(page,'暂停古琴');expect((await audio()).enabled).toBe(false);await clickToolbar(page,'古琴与解说');await expect(page.getByRole('dialog',{name:'古琴与解说'})).toBeHidden();

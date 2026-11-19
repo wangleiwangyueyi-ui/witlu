@@ -38,7 +38,15 @@ test('P11 sustained real frame load lowers automatic quality, manual selection s
  await fs.mkdir('docs/progress/videos/P11',{recursive:true});
  const context=await browser.newContext({viewport:{width:1440,height:900},recordVideo:{dir:'test-results/p11-video',size:{width:1440,height:900}}}),page=await context.newPage();
  try{await page.goto((info.project.use.baseURL??'http://127.0.0.1:4173')+'/lab/terrain?debug=1');await expect(page.getByTestId('terrain')).toHaveAttribute('data-ready','true');
- const result=await page.evaluate(async()=>{const {terrainBridge,useTerrainSettings}=await import('/src/state/terrain.ts' as string);const engine=terrainBridge.engine!;useTerrainSettings.setState({automatic:true});engine.setQuality('high');const heat=()=>new Promise<void>(resolve=>{const start=performance.now();const tick=()=>{const until=performance.now()+32;while(performance.now()<until){/* Measured main-thread load, not fabricated frame samples. */}if(performance.now()-start>3300)resolve();else requestAnimationFrame(tick);};requestAnimationFrame(tick);});await heat();const automatic=engine.quality.level;useTerrainSettings.setState({automatic:false});engine.setQuality('high');await heat();return {automatic,manual:engine.quality.level};});
+ const result=await page.evaluate(async()=>{const {terrainBridge,useTerrainSettings}=await import('/src/state/terrain.ts' as string);const engine=terrainBridge.engine!;useTerrainSettings.setState({automatic:true});engine.setQuality('high');const heat=async()=>{
+ const original=engine.renderer.render;
+ engine.renderer.render=(...args:Parameters<import('three').WebGLRenderer['render']>)=>{
+  const until=performance.now()+32;
+  while(performance.now()<until){/* Sustain real main-thread load on every rendered frame. */}
+  return original.apply(engine.renderer,args);
+ };
+ try{await new Promise(resolve=>setTimeout(resolve,3300));}finally{engine.renderer.render=original;}
+ };await heat();const automatic=engine.quality.level;useTerrainSettings.setState({automatic:false});engine.setQuality('high');await heat();return {automatic,manual:engine.quality.level};});
  expect(result).toEqual({automatic:'eco',manual:'high'});await page.screenshot({path:'docs/progress/screenshots/P11/desktop-auto-quality.png'});
  }finally{await context.close();const file=await page.video()?.path();if(file)await fs.copyFile(file,'docs/progress/videos/P11/desktop-auto-quality.webm');}
 });

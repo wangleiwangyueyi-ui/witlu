@@ -110,6 +110,7 @@ export class Morph {
         this.resolveMesh = new Mesh(new PlaneGeometry(2, 2), material);
         this.resolveScene.add(this.resolveMesh);
         this.styleTarget.texture.minFilter=this.styleTarget.texture.magFilter=LinearFilter;
+        this.uniforms.flatTerritory={value:Number(this.terrain.flat)};
         this.uniforms.territoryStyleCache={value:this.styleTarget.texture};this.uniforms.territoryStyleReady={value:0};this.uniforms.territoryStyleSize={value:2048};
         this.styleMesh=new Mesh(new PlaneGeometry(2,2),new ShaderMaterial({glslVersion:GLSL3,depthTest:false,depthWrite:false,uniforms:this.uniforms,vertexShader:resolveVertex,fragmentShader:styleCacheFragment}));this.styleScene.add(this.styleMesh);
         // Dummy is no longer needed after the first pair, but retained for context reset.

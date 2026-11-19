@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import {chromium,devices} from '@playwright/test';
-const base=process.env.P11_URL??'http://127.0.0.1:4180',out='docs/progress/performance/P11';await fs.mkdir(out,{recursive:true});
+const base=process.env.P11_URL??'http://127.0.0.1:4180',out=process.env.ATLAS_PERF_OUT??'docs/progress/performance/P11';await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({args:process.platform==='win32'?['--use-angle=d3d11','--enable-gpu']:[]}),reports=[];
 try{for(const [name,options] of [['desktop',{viewport:{width:1440,height:900}}],['iPhone-14',devices['iPhone 14']],['Pixel-7',devices['Pixel 7']]]){
  const context=await browser.newContext({...options,serviceWorkers:'block'}),page=await context.newPage();await page.addInitScript(()=>{localStorage.setItem('witlu-ui',JSON.stringify({quality:'high'}));localStorage.setItem('witlu-intro-v1','seen');});
