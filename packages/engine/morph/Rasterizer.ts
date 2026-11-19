@@ -7,16 +7,17 @@ export const territoryTransform = new Vector4(nw.x, se.z, se.x - nw.x, se.z - nw
 export function territoryUV(lon: number, lat: number) { const p = project(lon, lat); return { x: (p.x - nw.x) / (se.x - nw.x), y: (se.z - p.z) / (se.z - nw.z) }; }
 export function rings(feature: PolityGeometry['features'][number]): number[][][][] { return feature.geometry.type === 'Polygon' ? [feature.geometry.coordinates as number[][][]] : feature.geometry.coordinates as number[][][][]; }
 export function renderTarget(size: number) { const target = new WebGLRenderTarget(size, size, { depthBuffer: false, stencilBuffer: false, minFilter: NearestFilter, magFilter: NearestFilter }); target.texture.colorSpace = NoColorSpace; target.texture.generateMipmaps = false; return target; }
+const roleOrder: Record<string, number> = { neighbor: 0, main: 1, rival: 2, protectorate: 3 };
 export class Rasterizer {
     private camera = new OrthographicCamera(nw.x, se.x, -nw.z, -se.z, .1, 100);
     private scene = new Scene();
     constructor(private renderer: WebGLRenderer) { this.camera.position.z = 10; }
-    rasterize(data: PolityGeometry, ids: Map<string, number>, size: number) {
+    geometry(data: PolityGeometry, ids: Map<string, number>, flat = false) {
         const positions: number[] = [], labels: number[] = [];
-        // Stable draw precedence: neighbors below Chinese polities, then source order.
-        for (const feature of [...data.features].sort((a, b) => Number(a.properties.role !== 'neighbor') - Number(b.properties.role !== 'neighbor'))) {
+        // Match upstream painter order. The source order breaks ties.
+        for (const feature of [...data.features].sort((a, b) => (roleOrder[a.properties.role] ?? 0) - (roleOrder[b.properties.role] ?? 0))) {
             const id = ids.get(feature.properties.polityId);
-            if (!id)
+            if (!id || flat && feature.properties.role === 'neighbor')
                 continue;
             for (const polygon of rings(feature)) {
                 const projected = polygon.map(ring => ring.slice(0, ring.length > 1 && ring[0]![0] === ring.at(-1)![0] && ring[0]![1] === ring.at(-1)![1] ? -1 : undefined).map(p => { const q = project(p[0]!, p[1]!); return new Vector2(q.x, -q.z); }));
@@ -27,7 +28,7 @@ export class Rasterizer {
                 for (const triangle of triangles)
                     for (const index of triangle) {
                         const p = points[index]!;
-                        positions.push(p.x, p.y, 0);
+                        positions.push(p.x, flat ? 0 : p.y, flat ? -p.y : 0);
                         labels.push((id & 255) / 255, (id >> 8) / 255);
                     }
             }
@@ -35,6 +36,10 @@ export class Rasterizer {
         const geometry = new BufferGeometry();
         geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
         geometry.setAttribute('label', new Float32BufferAttribute(labels, 2));
+        return geometry;
+    }
+    rasterize(data: PolityGeometry, ids: Map<string, number>, size: number) {
+        const geometry = this.geometry(data, ids);
         const material = new ShaderMaterial({ depthTest: false, depthWrite: false, blending: NoBlending, side: 2, vertexShader: 'attribute vec2 label;varying vec2 vLabel;void main(){vLabel=label;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}', fragmentShader: 'varying vec2 vLabel;void main(){gl_FragColor=vec4(vLabel,0.0,1.0);}' });
         const mesh = new Mesh(geometry, material);
         mesh.frustumCulled = false;

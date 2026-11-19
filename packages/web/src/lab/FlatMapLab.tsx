@@ -5,7 +5,7 @@ import { useChronicle } from '../store/chronicle';
 export default function FlatMapLab() {
   const {data} = useChronicle();
   return <main className="flat-map-lab" data-map-mode="flat">
-    <TerrainCanvas flat territories environment/>
+    <TerrainCanvas flat territories environment vectorEdges/>
     <MorphTimeline phases={data?.phases ?? []}/>
   </main>;
 }

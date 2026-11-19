@@ -1,6 +1,6 @@
 # v4 政权配色
 
-色板：#849AD6、#CF8E66、#6EAF98、#AC83C8、#D38395、#A5A66B、#67AABF、#BD93AC、#A29BB9、#9AAF73。CIELAB L* 为 60.9–68.6。对原始相交边做约束着色，优先延续同一政权配色。普通视觉及三种全色盲模拟中的最小 CIELAB ΔE76 为 8.48，门槛 8。保护区沿用所属朝代的斜线样式，邻国仅描边。
+色板：#6E97F8、#F28643、#42BB91、#BC7BE3、#EF7091、#A8A627、#41B4DD、#E685C0、#A394EE、#8DB13C。CIELAB L* 为 62.0–68.7。对原始相交边做约束着色，优先延续同一政权配色。普通视觉及三种全色盲模拟中的最小 CIELAB ΔE76 为 8.08，门槛 8。保护区沿用所属朝代的斜线样式，邻国仅描边。
 
 | 快照 | 政权组 | 邻接 | 填色数量 | 仅描边组 |
 |---|---:|---:|---:|---|
@@ -43,13 +43,13 @@
 | s_donghan | 1 | 0 | 1 | — |
 | s_donghan_d1 | 10 | 19 | 4 | — |
 | s_donghan_d2 | 9 | 18 | 4 | — |
-| s_donghan_d | 8 | 15 | 4 | — |
-| s_donghan_e0 | 8 | 15 | 4 | — |
-| s_donghan_e1 | 6 | 10 | 4 | — |
-| s_donghan_e | 5 | 6 | 3 | — |
-| s_donghan_e2 | 4 | 4 | 3 | — |
-| s_donghan_f | 4 | 4 | 3 | — |
-| s_sanguo_a | 4 | 4 | 3 | — |
+| s_donghan_d | 8 | 15 | 5 | — |
+| s_donghan_e0 | 8 | 15 | 5 | — |
+| s_donghan_e1 | 6 | 10 | 5 | — |
+| s_donghan_e | 5 | 6 | 5 | — |
+| s_donghan_e2 | 4 | 4 | 4 | — |
+| s_donghan_f | 4 | 4 | 4 | — |
+| s_sanguo_a | 4 | 4 | 4 | — |
 | s_sanguo | 3 | 3 | 3 | — |
 | s_sanguo_b | 2 | 1 | 2 | — |
 | s_sanguo_c | 2 | 1 | 2 | — |
@@ -148,11 +148,11 @@
 | s_beisong_b1 | 4 | 4 | 4 | — |
 | s_beisong_b2 | 4 | 4 | 4 | — |
 | s_beisong_c | 5 | 5 | 4 | — |
-| s_beisong_d | 4 | 4 | 3 | — |
-| s_nansong_a0 | 4 | 3 | 3 | — |
-| s_nansong_a | 4 | 3 | 3 | — |
-| s_nansong_b0 | 5 | 5 | 3 | — |
-| s_nansong_c | 5 | 5 | 3 | — |
+| s_beisong_d | 4 | 4 | 4 | — |
+| s_nansong_a0 | 4 | 3 | 4 | — |
+| s_nansong_a | 4 | 3 | 4 | — |
+| s_nansong_b0 | 5 | 5 | 4 | — |
+| s_nansong_c | 5 | 5 | 4 | — |
 | s_nansong_d | 4 | 4 | 3 | — |
 | s_nansong_e | 3 | 3 | 3 | — |
 | s_nansong_b | 2 | 1 | 2 | — |

@@ -1,6 +1,6 @@
 import {Opening} from './opening/Opening';
 import {Cartography} from './cartography/Cartography';
-import { Color, Scene, SRGBColorSpace, WebGLRenderer } from 'three';
+import { OrthographicCamera, Color, Scene, SRGBColorSpace, WebGLRenderer } from 'three';
 import type { WebGLRendererParameters } from 'three';
 import type { PlatformAdapter } from './platform/PlatformAdapter';
 import { MapCamera } from './camera/MapCamera';
@@ -88,7 +88,7 @@ export class AtlasRenderer {
     if (now - this.lastLod >= 120) { this.terrain.update(this.camera.camera, this.camera.height, now); this.lastLod = now; }
     this.morph.precomputeEnabled=!this.weather.stats().active;
     const lens=this.cartography.paths.lensState(),ratio=this.renderer.getPixelRatio();(this.morph.uniforms.territoryLens!.value as Vector3).set(lens.x*ratio,(this.camera.height-lens.y)*ratio,lens.radius*ratio);
-    this.morph.update(now,this.quality.level);
+    this.morph.update(now,this.quality.level,this.camera.camera instanceof OrthographicCamera ? this.camera.camera : undefined);
     this.cartography.update(now,this.camera,this.quality.level,this.environment.reducedMotion,this.renderer.getPixelRatio());
     this.opening.update(dt,this.quality.level);
     if(this.opening.active)this.opening.render(this.renderer,this.camera.width,this.camera.height);else this.renderer.render(this.scene, this.camera.camera);

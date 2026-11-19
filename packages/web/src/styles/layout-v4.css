@@ -79,3 +79,10 @@
 .atlas-app[data-embed='true'] { --sidebar-width: 0px; }
 .atlas-app[data-embed='true'] :is(.chronicle-sidebar, .sidebar-toggle) { display: none; }
 .atlas-app[data-embed='true'] :is(.terrain-scene, .polity-labels, .place-labels) { top: 0; }
+
+.atlas-app .map-legend :is(summary, p, small) { font-size: 12px; }
+@media (width <= 768px) {
+  .atlas-app:has(.chapter-sheet[data-snap='1']) :is(.map-legend, .flat-map-controls) { bottom: calc(48dvh + 10px); }
+  .atlas-app:has(.chapter-sheet[data-snap='2']) :is(.map-legend:not([open]), .flat-map-controls) { visibility: hidden; }
+  .atlas-app:has(.chapter-sheet[data-snap='2']) .map-legend[open] { top: calc(60px + var(--space-safe-top)); bottom: auto; }
+}

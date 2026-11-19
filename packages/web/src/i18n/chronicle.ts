@@ -29,6 +29,12 @@ export const chronicleMessages = {
   labHelp: ['左右键逐年，Shift 十年；空格播放；拖动及双指缩放。', '左右鍵逐年，Shift 十年；空格播放；拖動及雙指縮放。', 'Arrows: one year; Shift: ten years; Space: play; drag and pinch to zoom.'],
   flightHelp: ['跨越 300 年时拔高穿云，再俯冲到新年代。', '跨越 300 年時拔高穿雲，再俯衝到新年代。', 'Jumps over 300 years rise through clouds and descend into the new era.'],
   chapterLab: ['章节与同期共鸣实验室', '章節與同期共鳴實驗室', 'Chapters and resonance laboratory'],
+  worldNow: ['此刻天下', '此刻天下', 'The world now'],
+  dynasticEvents: ['本朝大事', '本朝大事', 'Dynastic events'],
+  filterPolities: ['按政权筛选', '按政權篩選', 'Filter by polity'],
+  allPolities: ['全部', '全部', 'All'],
+  mapChange: ['疆域变化', '疆域變化', 'Territorial change'],
+  eventPlace: ['事发地点', '事發地點', 'Event location'],
   reignYears: ['纪年跨度', '紀年跨度', 'Recorded reign spans'], approximation: ['座标为上游候选都城', '座標為上游候選都城', 'Coordinates are upstream capital candidates'],
 } satisfies Record<string, [string, string, string]>;
 export type ChronicleKey = keyof typeof chronicleMessages;

@@ -20,6 +20,9 @@ void main(){
 export const territoryGLSL = /*glsl*/ `
 precision highp sampler2DArray;
 uniform sampler2DArray territoryFields;
+#ifdef FLAT_SCREEN_COVERAGE
+uniform sampler2D screenStyle;uniform vec3 screenStyleSize;
+#endif
 uniform float flatTerritory;uniform sampler2D territoryStyleCache;uniform float territoryStyleReady;uniform float territoryStyleSize;
 uniform vec3 territoryLens;uniform float territoryLabelSize;uniform float territoryFieldSize;uniform float polityFocus;uniform float territoryEdges;uniform float territoryEnabled;uniform sampler2D polityA;uniform sampler2D polityB;uniform sampler2D polityCurrent;uniform sampler2D polityPalette;
 uniform vec4 territoryBounds;uniform float territoryProgress;uniform float territoryCrossfade;uniform float territoryOpacity;uniform float territoryFront;uniform float territoryInk;uniform vec3 territoryGold;
@@ -66,12 +69,13 @@ vec4 grownStyle(vec2 uv,out float edgePx,out float owner){
 }
 vec3 polityBlend(vec3 ground,vec4 style,vec2 uv){
   if(style.a<=0.0)return ground*.85;
+  if(flatTerritory>.5)ground*=mix(.85,1.,clamp(style.a/.4,0.,1.));
   float luma=dot(ground,vec3(.2126,.7152,.0722)),source=dot(style.rgb,vec3(.2126,.7152,.0722));
   // L1 uses the same relief signal with a raised exposure; L0 is untouched.
   float reliefLuma=min(.48,.32*pow(clamp(luma/.018,.25,2.0),.65));
   vec3 tinted=style.rgb*reliefLuma/max(.0001,source);
   float opacity=style.a*territoryOpacity/.4;
-  if(style.a<.2)opacity*=mix(.5,1.0,step(.45,fract((uv.x+uv.y)*420.0)));
+  if(style.a>.16&&style.a<.2)opacity*=mix(.5,1.0,step(.45,fract((uv.x+uv.y)*420.0)));
   vec3 mixed=mix(ground,tinted,opacity);
   return mixed*min(1.0,.15/max(.0001,dot(mixed,vec3(.2126,.7152,.0722))));
 }
@@ -93,6 +97,13 @@ vec3 territoryColor(vec3 ground,vec3 world){
   vec2 uv=vec2((world.x-territoryBounds.x)/territoryBounds.z,(territoryBounds.y-world.z)/territoryBounds.w);
   if(any(lessThan(uv,vec2(0.0)))||any(greaterThan(uv,vec2(1.0))))return ground*.85;
   float t=territoryProgress;
+  #ifdef FLAT_SCREEN_COVERAGE
+  if(screenStyleSize.z>.5){
+    vec4 style=texture2D(screenStyle,gl_FragCoord.xy/screenStyleSize.xy);
+    style.rgb/=max(style.a,.001);
+    return polityEdge(polityBlend(ground,style,uv),style,polityFocus>0.?edgeId(uv):0.,0.);
+  }
+  #endif
   // A stationary point in time can reuse palette reconstruction as the camera
   // moves. Keep the exact ID/SDF path for close views and transient effects.
   if(territoryStyleReady>.5&&territoryInk<.5&&territoryFront<.5&&max(fwidth(uv.x),fwidth(uv.y))*territoryStyleSize>=mix(1.,.55,flatTerritory)){

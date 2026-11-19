@@ -11,6 +11,7 @@ void main(){
 }`;
 
 export const flatFragment = /* glsl */`
+#define FLAT_SCREEN_COVERAGE
 ${environmentUniformsGLSL}
 ${territoryGLSL}
 uniform sampler2D reliefMap;
@@ -30,7 +31,7 @@ void main(){
   float coverage=smoothstep(.23,.77,landMask);
   if (coverage > 0.) {
     float luma = dot(relief.rgb,vec3(.2126,.7152,.0722));
-    vec3 land = landColor * mix(1.0,.89+.22*smoothstep(.012,.09,luma),reliefEnabled);
+    vec3 land = landColor * mix(1.0,.79+.63*smoothstep(.012,.087,luma),reliefEnabled);
     if (envEnabled > .5) land *= cloudShadow(vWorld);
     color = mix(color,territoryColor(land,vWorld),coverage);
   } else if (flatWater > .5 && waterMotion > .5) {

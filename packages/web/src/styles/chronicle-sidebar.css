@@ -1,0 +1,118 @@
+.atlas-app .chronicle-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  height: 100%;
+  font-size: 14px;
+  color: var(--text);
+}
+.atlas-app .chronicle-meta {
+  flex: none;
+  display: grid;
+  gap: 5px;
+  white-space: normal;
+  overflow: visible;
+  padding-bottom: 12px;
+  font-size: 14px;
+}
+.chronicle-reign { font-size: 18px; font-weight: 650; margin: 0; line-height: 1.45; }
+.chronicle-dynasty { line-height: 1.5; }
+.atlas-app .chronicle-dynasty h1 { font: inherit; font-weight: 650; }
+.atlas-app .chronicle-content h2 { margin: 12px 0 8px; }
+.atlas-app .chronicle-content .world-tracks {
+  position: static;
+  inset: auto;
+  overflow: visible;
+  border: 0;
+  padding: 0;
+}
+.atlas-app .chronicle-content .tracks-grid {
+  gap: 6px;
+  max-height: min(52dvh, 468px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.atlas-app .chronicle-content .world-track {
+  position: relative;
+  padding: 0;
+  background: var(--sea-deep);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--track-color);
+  min-height: 0;
+}
+.atlas-app .world-track:has(.polity-focus[aria-pressed='true']) { border-color: var(--track-color); }
+.polity-focus {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 9px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.38;
+}
+.polity-focus strong { padding-right: 84px; font-size: 15px; }
+.polity-recent { color: var(--text); }
+.atlas-app .chronicle-content .track-title {
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 0;
+  width: auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--text);
+}
+.chronicle-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 125px;
+}
+.event-filters { display: flex; flex: none; gap: 5px; overflow-x: auto; margin-bottom: 6px; }
+.event-filters button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+  min-height: 44px;
+  padding: 3px 9px;
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  background: var(--sea-deep);
+  font-size: 12px;
+}
+.event-filters button[aria-pressed='true'] { border-color: var(--gold-glow); }
+.chronicle-events { flex: 1; min-height: 64px; overflow-y: auto; overscroll-behavior: contain; }
+.atlas-app .chronicle-content .chronicle-event {
+  display: grid;
+  grid-template-columns: 8px max-content 1fr auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px;
+  min-height: 44px;
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  width: 100%;
+}
+.atlas-app .chronicle-content .chronicle-event[data-current='true'] { border-color: var(--glass-border); background: var(--sea-deep); }
+.chronicle-event time { white-space: nowrap; }
+.event-dot, .event-filters i { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--track-color); }
+.event-map-change { width: 16px; height: 16px; align-self: center; color: var(--gold-glow); }
+.atlas-app .chronicle-content .event-sources { font-size: 12px; margin: 0 8px 4px 24px; }
+.atlas-app .chronicle-content .event-sources p { font-size: 14px; }
+.atlas-app .chronicle-content .event-sources summary { color: var(--text); min-height: 30px; }
+.atlas-app .chronicle-content .event-sources a { color: var(--text); text-decoration: underline; }
+
+@media (width <= 768px) {
+  .atlas-app .chronicle-content .tracks-grid { max-height: 28dvh; }
+  .atlas-app .chronicle-content { height: auto; min-height: 100%; }
+  .chronicle-events { max-height: 28dvh; }
+}

@@ -2,7 +2,7 @@ import { eraAt, yearToIndex } from './index';
 import type { Eras, Era } from './chronology';
 export interface Chapter { key: string; title: string; fromYear: number; toYear: number; summary: string; seat: string; focusYear: number }
 export interface ChapterPhase { from: number; to: number; snapshot: string; dynastyKey: string; overview: string }
-export interface ChronicleEvent { id: string; year: number; title: string; regime: string | null; kind: string; importance: number; dynastyKey: string; coord?: [number, number]; siteCoords?: [number, number][]; mood?: string }
+export interface ChronicleEvent { id: string; year: number; title: string; regime: string | null; kind: string; importance: number; dynastyKey: string; coord?: [number, number]; siteCoords?: [number, number][]; snapshot?: string | null; site?: string; siteEn?: string; en?: string; isMapChange?: boolean; mood?: string }
 export interface RegistryPolity { key: string; zh?: string; en?: string; titles: string[]; from: number; to: number; seatZh?: string; seatEn?: string; rulersZh?: string; rulersEn?: string; summaryZh?: string; summaryEn?: string; occurrences: { snapshot: string; role: string; areaKm2: number; capitals: { name: string; coord: [number, number]; certainty?: string }[] }[] }
 export interface ActiveTrack { polity: RegistryPolity; occurrence: RegistryPolity['occurrences'][number]; era: ReturnType<typeof eraAt>; spans: Era[]; events: ChronicleEvent[] }
 export function activeTracks(year: number, phase: ChapterPhase, registry: RegistryPolity[], eras: Eras, events: ChronicleEvent[]): ActiveTrack[] {

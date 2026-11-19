@@ -13,8 +13,9 @@ test('loads complete data, credits, and the responsive atlas shell', async ({ pa
   await page.getByRole('button', { name: '更多', exact: true }).click();
   await page.getByRole('button', { name: /关于与致谢/ }).click();
   await expect(page.getByText(/不代表正统评价/)).toBeVisible();
-  await expect(page.getByRole('dialog', { name: '关于与致谢' })).toContainText('CHGIS, Version: 6.');
-  await page.getByRole('button', { name: '关闭', exact: true }).click();
+  const about = page.getByRole('dialog', { name: '关于与致谢' });
+  await expect(about).toContainText('CHGIS, Version: 6.');
+  await about.getByRole('button', { name: '关闭', exact: true }).click();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await page.locator('.map-scene').click();

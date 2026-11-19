@@ -43,6 +43,9 @@ export function MorphTimeline({ phases }: {
             started = true;
             apply();
             const blend = timeline(state.index), key = `${blend.snapshotA}|${blend.snapshotB}`, token = ++request;
+            // Paused calendar years use the upstream phase's discrete geometry.
+            const settled = engine.morph.vectorEdges && !state.playing && !state.scrubbing && !state.velocity && (state.mode !== 'drag' || Number.isInteger(state.index));
+            const progress = settled ? 0 : blend.t;
             const jump = state.mode === 'jump', reduced = engine.environment.reducedMotion;
             if (jump && state.flight && !reduced && Math.abs(state.index - previousIndex) > 300)
                 engine.timeFlight.start(engine.camera);
@@ -53,7 +56,7 @@ export function MorphTimeline({ phases }: {
                 if (current !== key) {
                     current = key;
                     if (state.mode !== 'drag')
-                        preparing = engine.morph.play(blend.snapshotA, blend.snapshotB, 1100, blend.t);
+                        preparing = engine.morph.play(blend.snapshotA, blend.snapshotB, 1100, progress);
                     else
                         preparing = engine.morph.prepare(blend.snapshotA, blend.snapshotB, true);
                 }
@@ -63,10 +66,10 @@ export function MorphTimeline({ phases }: {
                 if (state.mode === 'drag' || !state.playing && !jump) {
                     const phase = phases.slice().reverse().find(p => yearToIndex(p.from) <= state.index);
                     const span = phase ? Math.max(1, yearToIndex(phase.to) - yearToIndex(phase.from)) : 1;
-                    engine.morph.setProgress(blend.t, 'drag', Math.abs(state.velocity) > 300 ? 301 : state.velocity / span);
+                    engine.morph.setProgress(progress, 'drag', Math.abs(state.velocity) > 300 ? 301 : state.velocity / span);
                 }
                 else
-                    engine.morph.animateTo(blend.t, 1100);
+                    engine.morph.animateTo(progress, 1100);
                 if (state.mode === 'drag') {
                     const next = timeline(state.index + (state.velocity < 0 ? -30 : 30));
                     engine.morph.prefetchGeometry(next.snapshotA, next.snapshotB);
@@ -76,7 +79,7 @@ export function MorphTimeline({ phases }: {
                         void preparing.then(() => {
                             const latest = timeline(timeStore.getState().index);
                             if (current === key && latest.snapshotA === blend.snapshotA && latest.snapshotB === blend.snapshotB)
-                                engine.morph.setProgress(latest.t, 'seek');
+                                engine.morph.setProgress(settled ? 0 : latest.t, 'seek');
                         }).catch(() => {});
                     }, 250);
                 }

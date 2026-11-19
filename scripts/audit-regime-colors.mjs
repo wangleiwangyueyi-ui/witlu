@@ -5,7 +5,7 @@ import {lightness,minColorDistance,regimeTokens,separation,simulatedColor} from 
 const read=async name=>JSON.parse(await fs.readFile(`packages/web/public/data/${name}.json`,'utf8'));
 const [snapshots,phases]=await Promise.all([read('polity-colors'),read('phases')]);
 const colors=regimeTokens(), modes=['normal','protanopia','deuteranopia','tritanopia'];
-const samples=[-221,230,589,1127,1700].map(year=>({year,key:phases.slice().reverse().find(p=>p.from<=year).snapshot}));
+const samples=(process.env.ATLAS_PERF_OUT ? [230,383,1127,1279] : [-221,230,589,1127,1700]).map(year=>({year,key:phases.slice().reverse().find(p=>p.from<=year).snapshot}));
 const edges=[];
 for(const snapshot of snapshots){
  const filled=new Map(snapshot.colors.filter(s=>s.fill).map(s=>[s.polityId,s.color]));
@@ -15,9 +15,13 @@ for(const snapshot of snapshots){
  }
 }
 edges.sort((a,b)=>a.deltaE-b.deltaE);
-const minimum=edges[0], out='docs/progress/performance/R2';
+const minimum=edges[0], out=process.env.ATLAS_PERF_OUT??'docs/progress/performance/R2';
+const comparison=snapshots.find(row=>row.snapshot==='s_nansong_a0');
+const jin=comparison.colors.find(c=>c.polityId==='jin_jurchen').color;
+const dali=comparison.colors.find(c=>c.polityId==='dali').color;
+const jinAndDali={snapshot:comparison.snapshot,jin,dali,deltaE:separation(jin,dali)};
 await fs.mkdir(out,{recursive:true});
-await fs.writeFile(`${out}/color-audit.json`,JSON.stringify({palette:colors.map(hex=>({hex,lightness:lightness(hex)})),modes,snapshots:snapshots.length,edges:edges.length,minimum,minColorDistance,passes:minimum.deltaE>=minColorDistance},null,2)+'\n');
+await fs.writeFile(`${out}/color-audit.json`,JSON.stringify({palette:colors.map(hex=>({hex,lightness:lightness(hex)})),modes,snapshots:snapshots.length,edges:edges.length,minimum,jinAndDali,minColorDistance,passes:minimum.deltaE>=minColorDistance&&jinAndDali.deltaE>=minColorDistance},null,2)+'\n');
 
 const rows=[{title:'Complete palette',swatches:colors},...samples.map(({year,key})=>({title:String(year),swatches:[...new Set(snapshots.find(s=>s.snapshot===key).colors.filter(p=>p.fill).map(p=>p.color))]}))];
 const width=1000,rowHeight=108,head=70,height=head+rowHeight*rows.length+16;
@@ -32,4 +36,4 @@ const swatches=rows.map(({title,swatches},i)=>{
 const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><style>text{font:15px sans-serif;fill:#FFFFFF}.heading{font-weight:700}</style><rect width="100%" height="100%" fill="#0A1830"/>${headings}${swatches}</svg>`;
 await sharp(Buffer.from(svg)).webp({quality:92}).toFile(`${out}/vision-simulation.webp`);
 console.log(`${edges.length} filled adjacencies; worst ΔE76 ${minimum.deltaE.toFixed(2)} in ${minimum.snapshot}`);
-if(minimum.deltaE<minColorDistance)process.exitCode=1;
+if(minimum.deltaE<minColorDistance||jinAndDali.deltaE<minColorDistance)process.exitCode=1;

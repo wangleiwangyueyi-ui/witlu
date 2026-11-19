@@ -10,7 +10,7 @@ import { useReducedEffects } from './Glass';
 import { useI18n } from '../i18n';
 import { useEnvironmentSettings } from '../state/environment';
 import type { CameraPose } from '@witlu/engine';
-export function TerrainCanvas({ environment = false, initialPose, territories = false, flat = false }: { environment?: boolean; initialPose?: Partial<CameraPose> | undefined; territories?:boolean; flat?:boolean }) {
+export function TerrainCanvas({ environment = false, initialPose, territories = false, flat = false, vectorEdges = false }: { environment?: boolean; initialPose?: Partial<CameraPose> | undefined; territories?:boolean; flat?:boolean; vectorEdges?:boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null), readout = useRef<HTMLOutputElement>(null);
   const [status, setStatus] = useState('loading'); const reduced = useReducedEffects(); const { locale } = useI18n();
   useEffect(() => { if (terrainBridge.engine) { terrainBridge.engine.camera.reducedMotion = reduced; terrainBridge.engine.environment.reducedMotion = reduced; terrainBridge.engine.morph.reducedMotion = reduced; } }, [reduced]);
@@ -25,9 +25,9 @@ export function TerrainCanvas({ environment = false, initialPose, territories = 
     void Promise.all([import('@witlu/engine'),home]).then(([{ AtlasRenderer }, bounds]) => {
       if (disposed) return;
       const css = getComputedStyle(document.documentElement), token = (name: string) => css.getPropertyValue(name).trim();
-      const engine = new AtlasRenderer(platform, { sky: token('--sky'), land: token('--land-low'), sea: token(flat ? '--sky' : '--sea-deep'), weather:{blue:token('--land-snow'),gold:token('--gold-glow'),fire:token('--cinnabar'),smoke:token('--land-ridge')}, morph: { gold:token('--gold-glow'),white:token('--text'),cinnabar:token('--cinnabar'),dust:token('--land-snow') }, environment: { sky: token('--sky'), horizon: token('--horizon'), shelf: token('--sea-shelf'), coast: token('--sea-coast'), flow: token('--sea-flow'), wave: token('--coastline'), cloud: token('--land-snow') } }, useShell.getState().quality, flat);
+      const engine = new AtlasRenderer(platform, { sky: token('--sky'), land: token(flat ? '--land-flat' : '--land-low'), sea: token(flat ? '--sky' : '--sea-deep'), weather:{blue:token('--land-snow'),gold:token('--gold-glow'),fire:token('--cinnabar'),smoke:token('--land-ridge')}, morph: { gold:token('--gold-glow'),white:token('--text'),cinnabar:token('--cinnabar'),dust:token('--land-snow') }, environment: { sky: token('--sky'), horizon: token('--horizon'), shelf: token('--sea-shelf'), coast: token('--sea-coast'), flow: token('--sea-flow'), wave: token('--coastline'), cloud: token('--land-snow') } }, useShell.getState().quality, flat);
       terrainBridge.engine = engine; engine.camera.reducedMotion = useShell.getState().reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches;
-      engine.morph.enabled=territories; engine.morph.reducedMotion=engine.camera.reducedMotion; engine.environment.enabled = environment; engine.environment.reducedMotion = engine.camera.reducedMotion;
+      engine.morph.enabled=territories; engine.morph.vectorEdges=vectorEdges; engine.morph.reducedMotion=engine.camera.reducedMotion; engine.environment.enabled = environment; engine.environment.reducedMotion = engine.camera.reducedMotion;
       const media = matchMedia('(prefers-reduced-motion: reduce)');
       const applyMotion = () => { const value = useShell.getState().reducedMotion || media.matches; engine.camera.reducedMotion = value; engine.environment.reducedMotion = value; engine.morph.reducedMotion=value; };
       media.addEventListener('change', applyMotion);

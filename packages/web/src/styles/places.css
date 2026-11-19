@@ -25,3 +25,14 @@
 .modern-lens { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 220px; height: 220px; border: 2px solid var(--polity-blue); border-radius: 50%; box-shadow: 0 0 12px var(--shadow-blue); pointer-events: auto; touch-action: none; z-index: 10; }
 
 .camera-controls { z-index: 11; }
+
+.atlas-app .place-card {
+  background: var(--sky);
+  color: var(--text);
+  animation: place-sidebar-enter var(--duration-ui) var(--ease-out) both;
+}
+.atlas-app .place-card :is(p, blockquote, li, button) { font-size: 14px; }
+.atlas-app .place-card small { font-size: 12px; }
+@keyframes place-sidebar-enter { from { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .atlas-app .place-card { animation: none; } }
+.atlas-app[data-reduced-motion='true'] .place-card { animation: none; }

@@ -1,0 +1,109 @@
+{
+  "date": "2026-11-19T07:23:41.552Z",
+  "productionURL": "http://127.0.0.1:43863",
+  "passed": false,
+  "reports": [
+    {
+      "name": "desktop",
+      "simulation": false,
+      "quality": "high",
+      "automatic": false,
+      "environment": {
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.8127.18 Safari/537.36",
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009BC4) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "dpr": 1
+      },
+      "fps": 54.224150192006825,
+      "p95Ms": 16.80000000000109,
+      "maxMs": 100,
+      "heapBytes": 97400000,
+      "paint": [
+        {
+          "name": "first-paint",
+          "startTime": 956
+        },
+        {
+          "name": "first-contentful-paint",
+          "startTime": 956
+        }
+      ],
+      "checks": {
+        "fps": false,
+        "quality": true,
+        "drawCalls": true,
+        "jsHeap": true
+      },
+      "memoryCaveat": "JS heap excludes GPU/native memory; physical-device total memory remains a manual check.",
+      "samples": 22,
+      "frameCount": 610
+    },
+    {
+      "name": "iPhone-14",
+      "simulation": true,
+      "quality": "high",
+      "automatic": false,
+      "environment": {
+        "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Mobile/15E148 Safari/604.1",
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009BC4) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "dpr": 3
+      },
+      "fps": 51.35429111463776,
+      "p95Ms": 33.400000000000546,
+      "maxMs": 100,
+      "heapBytes": 64000000,
+      "paint": [
+        {
+          "name": "first-paint",
+          "startTime": 52
+        },
+        {
+          "name": "first-contentful-paint",
+          "startTime": 52
+        }
+      ],
+      "checks": {
+        "fps": true,
+        "quality": true,
+        "drawCalls": true,
+        "jsHeap": true
+      },
+      "memoryCaveat": "JS heap excludes GPU/native memory; physical-device total memory remains a manual check.",
+      "samples": 22,
+      "frameCount": 576
+    },
+    {
+      "name": "Pixel-7",
+      "simulation": true,
+      "quality": "high",
+      "automatic": false,
+      "environment": {
+        "ua": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.8127.18 Mobile Safari/537.36",
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009BC4) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "dpr": 2.625
+      },
+      "fps": 56.46747455338125,
+      "p95Ms": 16.800000000000182,
+      "maxMs": 83.30000000000018,
+      "heapBytes": 64000000,
+      "paint": [
+        {
+          "name": "first-paint",
+          "startTime": 84
+        },
+        {
+          "name": "first-contentful-paint",
+          "startTime": 84
+        }
+      ],
+      "checks": {
+        "fps": true,
+        "quality": true,
+        "drawCalls": true,
+        "jsHeap": true
+      },
+      "memoryCaveat": "JS heap excludes GPU/native memory; physical-device total memory remains a manual check.",
+      "samples": 22,
+      "frameCount": 623
+    }
+  ]
+}

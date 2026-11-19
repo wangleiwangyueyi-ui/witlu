@@ -15,7 +15,7 @@ import { useShell } from './state/shell';
 import { useI18n } from './i18n';
 import { ToastProvider } from './components/Toast';
 import { Toolbar } from './components/Toolbar';
-import {ChronicleSidebar, MapLegend} from './components/ChronicleSidebar';
+import { MapLegend } from './components/MapLegend';
 import {useChapterSettings} from './state/chapters';
 import { TimeDock } from './components/TimeDock';
 import { Sheet } from './components/Sheet';
@@ -32,6 +32,8 @@ const MOBILE_POSE = {lon:110,lat:20,distance:8200,pitch:40};
 const MAIN_POSE = {lon:120,lat:18,distance:8200};
 const DebugConsole = lazy(() => import('./components/DebugConsole').then(module => ({ default: module.DebugConsole })));
 const PolityDossier = lazy(() => import('./components/PolityDossier').then(module => ({ default: module.PolityDossier })));
+const ChronicleSidebar = lazy(() => import('./components/ChronicleSidebar'));
+const CurrentEventCards = lazy(() => import('./components/CurrentEventCards'));
 const About = lazy(() => import('./components/About').then(module => ({ default: module.About })));
 export function App() {
   const { t, locale } = useI18n(); const state = useShell(); const reduced = useReducedEffects();
@@ -52,7 +54,7 @@ export function App() {
   const flat = new URLSearchParams(location.search).get('terrain') !== '1';
   const debug = new URLSearchParams(location.search).get('debug') === '1';
   return <MotionConfig reducedMotion={reduced ? 'always' : 'never'}><ToastProvider><div className="atlas-app" data-capture-root="true" data-sidebar={sidebar} data-map-mode={flat?'flat':'terrain'} data-locked={new URLSearchParams(location.search).get('lock')==='1'} data-embed={new URLSearchParams(location.search).get('embed')==='1'&&new URLSearchParams(location.search).get('debug')!=='1'} data-quality={state.quality} data-highlight={state.highlight && !reduced} data-refraction={state.refraction && refractionSupported && state.quality === 'ultra' && !reduced} data-reduced-motion={reduced}>
-    <a className="skip-link" href="#history-controls" onClick={()=>window.dispatchEvent(new Event('atlas:open-chronicle'))}>{locale==='en'?'Skip to timeline':'跳到时间轴'}</a><MotionSensorDriver/><AtlasAccess/><PlacesDriver/><ExplorationDriver/><NarrationDriver/><TimeDriver/><WeatherDriver/><TourDriver/><ResonanceDriver/><Refraction/><div className="app-content" inert={state.about}><TerrainCanvas environment territories flat={flat} initialPose={flat?undefined:mobile ? MOBILE_POSE : MAIN_POSE}/><MorphTimeline phases={phases}/><PolityLabels flat={flat}/><PlaceLabels flat={flat}/><MapInspection/><WeatherCaption/><Toolbar refractionSupported={refractionSupported} mobile={mobile} flat={flat}/><MapLegend/>{mobile && new URLSearchParams(location.search).get('embed')!=='1' ? <Sheet heading={<TimeDock/>}><ChronicleSidebar/></Sheet> : <><button className="sidebar-toggle" aria-expanded={sidebar} aria-controls="chronicle-sidebar" onClick={()=>setSidebar(v=>!v)}>{sidebar?(locale==='en'?'Map':'全图'):(locale==='en'?'Chronicle':'史志')}</button>{sidebar&&<aside id="chronicle-sidebar" className="chronicle-sidebar glass"><ChronicleSidebar/></aside>}<TimeDock/></>}<span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
+    <a className="skip-link" href="#history-controls" onClick={()=>window.dispatchEvent(new Event('atlas:open-chronicle'))}>{locale==='en'?'Skip to timeline':'跳到时间轴'}</a><MotionSensorDriver/><AtlasAccess/><PlacesDriver/><ExplorationDriver/><NarrationDriver/><TimeDriver/><WeatherDriver/><TourDriver/><ResonanceDriver/><Refraction/><div className="app-content" inert={state.about}><TerrainCanvas environment territories flat={flat} vectorEdges={flat} initialPose={flat?undefined:mobile ? MOBILE_POSE : MAIN_POSE}/><MorphTimeline phases={phases}/><PolityLabels flat={flat}/><PlaceLabels flat={flat}/><MapInspection/><Suspense fallback={null}><CurrentEventCards/></Suspense><WeatherCaption/><Toolbar refractionSupported={refractionSupported} mobile={mobile} flat={flat}/><MapLegend/>{mobile && new URLSearchParams(location.search).get('embed')!=='1' ? <Sheet heading={<TimeDock/>}><Suspense fallback={null}><ChronicleSidebar/></Suspense></Sheet> : <><button className="sidebar-toggle" aria-expanded={sidebar} aria-controls="chronicle-sidebar" onClick={()=>setSidebar(v=>!v)}>{sidebar?(locale==='en'?'Map':'全图'):(locale==='en'?'Chronicle':'史志')}</button>{sidebar&&<aside id="chronicle-sidebar" className="chronicle-sidebar glass"><Suspense fallback={null}><ChronicleSidebar/></Suspense></aside>}<TimeDock/></>}<span className="sr-only" role="status" data-testid="data-status">{t(status === 'ready' ? 'dataReady' : status === 'error' ? 'dataError' : 'loading')}</span></div>
     <Opening/><SharePoster/><EmbedControls/>{debug && <Suspense fallback={null}><DebugConsole snapshot={snapshot}/></Suspense>} {state.about && <Suspense fallback={null}><About/></Suspense>}{selectedPolity&&<Suspense fallback={null}><PolityDossier/></Suspense>}<PlaceCard/><ExploreOverlays/>
   </div></ToastProvider></MotionConfig>;
 }

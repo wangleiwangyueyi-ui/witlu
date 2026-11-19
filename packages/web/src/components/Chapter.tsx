@@ -10,7 +10,8 @@ import { useChronicle } from '../store/chronicle';
 import { resetTimeView, seekYear } from '../store/time';
 import { Calligraphy } from './Calligraphy';
 import { TourControls } from './Tour';
-import { WorldLegend, WorldTracks } from './World';
+import WorldLegend from './WorldLegend';
+import { WorldTracks } from './WorldTracks';
 import { useChronicleText, formatYear } from '../i18n/chronicle';
 import { chapterName, eventTitle, historicalText } from '../i18n/history';
 export function ChapterHeading({ mobile = false }: {mobile?: boolean}) {

@@ -15,6 +15,7 @@ export interface Chronicle {
             color: string;
             strokeOnly: boolean;
             anchor?: [number,number];
+            bounds?: [number,number,number,number];
             role: string;
             title: string;
         }[];

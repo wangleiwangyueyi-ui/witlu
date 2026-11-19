@@ -9,6 +9,7 @@ import { GrowthClient } from './GrowthClient';
 import { Rasterizer, renderTarget, territoryTransform, territoryUV } from './Rasterizer';
 import { resolveFragment, resolveVertex, styleCacheFragment } from './shaders';
 import { Boundaries } from './Boundaries';
+import { FlatTerritories } from './FlatTerritories';
 import { FrontParticles } from './FrontParticles';
 import { DEFAULT_MORPH_EFFECTS, MORPH_QUALITY } from './types';
 import type { Capital, ColorSnapshot, MorphEffects, PolityColor, PolityGeometry, Snapshot } from './types';
@@ -51,6 +52,8 @@ export class Morph {
     private styleScene = new Scene();
     private styleMesh: Mesh;
     private styleStamp = '';
+    vectorEdges = false;
+    private flatTerritories: FlatTerritories | undefined;
     private linesA: Boundaries | null = null;
     private linesB: Boundaries | null = null;
     private particles: FrontParticles | null = null;
@@ -111,6 +114,9 @@ export class Morph {
         this.resolveScene.add(this.resolveMesh);
         this.styleTarget.texture.minFilter=this.styleTarget.texture.magFilter=LinearFilter;
         this.uniforms.flatTerritory={value:Number(this.terrain.flat)};
+        this.uniforms.screenStyle={value:dummy};
+        this.uniforms.screenStyleSize={value:new Vector3(1,1,0)};
+        if (this.terrain.flat) this.flatTerritories = new FlatTerritories(renderer, this.raster, this.uniforms);
         this.uniforms.territoryStyleCache={value:this.styleTarget.texture};this.uniforms.territoryStyleReady={value:0};this.uniforms.territoryStyleSize={value:2048};
         this.styleMesh=new Mesh(new PlaneGeometry(2,2),new ShaderMaterial({glslVersion:GLSL3,depthTest:false,depthWrite:false,uniforms:this.uniforms,vertexShader:resolveVertex,fragmentShader:styleCacheFragment}));this.styleScene.add(this.styleMesh);
         // Dummy is no longer needed after the first pair, but retained for context reset.
@@ -217,6 +223,7 @@ export class Morph {
                 this.field.colorSpace = NoColorSpace;
                 this.field.needsUpdate = true;
                 this.makePalette(this.styles(ca!), this.styles(cb!), result);
+                this.flatTerritories?.setPair(dataA, dataB, this.ids);
                 const uniforms = (this.resolveMesh.material as ShaderMaterial).uniforms;
                 uniforms.fields!.value = this.field;
                 this.uniforms.territoryFields!.value=this.field;
@@ -325,7 +332,7 @@ export class Morph {
             this.trimTargets();
         }
     }
-    update(now: number, quality: Quality) {
+    update(now: number, quality: Quality, camera: OrthographicCamera | undefined = undefined) {
         const active = this.enabled && this.ready;
         this.uniforms.territoryEnabled!.value = Number(active && this.effects.fill);
         this.uniforms.territoryOpacity!.value = this.fillOpacity;
@@ -357,8 +364,10 @@ export class Morph {
             this.dirty = false;
         }
         const lineOn = active && this.effects.boundaries, fadeA = this.crossfade ? 1 - t : 1 - Math.min(1, t / .1), fadeB = this.crossfade ? t : Math.max(0, (t - .9) / .1), trail = active && (t === 0 || t === 1) && this.effects.trails && !this.reducedMotion ? Math.max(0, 1 - (now - this.trailAt) / 3000) * .4 : 0;
+        const vector = camera && this.vectorEdges && active && (t === 0 || t === 1) && this.effects.fill;
+        this.flatTerritories?.update(vector ? camera : undefined, t, quality);
         const stamp=`${this.canonicalA}:${this.canonicalB}:${t}:${this.crossfade}:${this.preview}`;
-        if(active&&stamp!==this.styleStamp&&!this.flight&&now-this.lastDrag>500){this.uniforms.territoryStyleReady!.value=0;this.raster.draw(this.styleScene,this.resolveCamera,this.styleTarget);this.styleStamp=stamp;}
+        if(active&&!vector&&stamp!==this.styleStamp&&!this.flight&&now-this.lastDrag>500){this.uniforms.territoryStyleReady!.value=0;this.raster.draw(this.styleScene,this.resolveCamera,this.styleTarget);this.styleStamp=stamp;}
         this.uniforms.territoryStyleReady!.value=Number(active&&stamp===this.styleStamp&&!this.flight&&now-this.lastDrag>500);
         const previousCanonical = (this.trailSide === 0) !== this.flip ? 0 : 1;
         this.linesA?.update(this.renderer, lineOn ? Math.max(fadeA, previousCanonical === 0 ? trail : 0) : 0, MORPH_QUALITY[quality].glow, fadeA < .01 && trail > 0 && previousCanonical === 0);
@@ -393,5 +402,5 @@ export class Morph {
     restore() { this.styleStamp='';this.uniforms.territoryStyleReady!.value=0;this.field.needsUpdate = this.paletteTexture.needsUpdate = true; this.ready = false; this.targetCache.forEach(t=>t.dispose()); this.targetCache.clear(); this.initializeResolve = true; const a = this.flip ? this.canonicalB : this.canonicalA, b = this.flip ? this.canonicalA : this.canonicalB, t = this.progress; this.canonicalA = ''; this.canonicalB = ''; if (a && b)
         void this.prepare(a, b).then(() => this.setProgress(t, 'seek')).catch(() => { }); }
     private releasePair() { this.linesA?.dispose(); this.linesB?.dispose(); this.particles?.dispose(); this.linesA = this.linesB = null; this.particles = null; }
-    dispose() { this.alive = false; this.generation++; this.client?.dispose(); this.releasePair(); this.targetCache.forEach(t=>t.dispose()); this.targetCache.clear(); this.current.dispose(); this.styleTarget.dispose();this.styleMesh.geometry.dispose();(this.styleMesh.material as ShaderMaterial).dispose();this.field.dispose(); this.paletteTexture.dispose(); this.empty.dispose(); this.resolveMesh.geometry.dispose(); (this.resolveMesh.material as ShaderMaterial).dispose(); }
+    dispose() { this.flatTerritories?.dispose(); this.alive = false; this.generation++; this.client?.dispose(); this.releasePair(); this.targetCache.forEach(t=>t.dispose()); this.targetCache.clear(); this.current.dispose(); this.styleTarget.dispose();this.styleMesh.geometry.dispose();(this.styleMesh.material as ShaderMaterial).dispose();this.field.dispose(); this.paletteTexture.dispose(); this.empty.dispose(); this.resolveMesh.geometry.dispose(); (this.resolveMesh.material as ShaderMaterial).dispose(); }
 }

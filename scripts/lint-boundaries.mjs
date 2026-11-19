@@ -12,7 +12,7 @@ for (const folder of ['core', 'engine', 'web/src']) {
   }
 }
 const tokens = fs.readFileSync(path.join(ROOT, 'packages/web/src/styles/tokens.css'), 'utf8');
-const allowed = new Set('0B1F3A 12345C 1C4F80 4F8FD6 6FB3FF 1A2E3B 26404F 3D5E72 9CC0D6 0F1E28 3C7FBF 0A1830 2C5A8C F2C46D FF8A7A 5FD3B5 7DB8FF B79CFF 8FB0D8 FFFFFF E8553E FFD27A 6CB4FF 849AD6 CF8E66 6EAF98 AC83C8 D38395 A5A66B 67AABF BD93AC A29BB9 9AAF73'.split(' '));
+const allowed = new Set('0B1F3A 12345C 1C4F80 4F8FD6 6FB3FF 1A2E3B 26404F 3D5E72 9CC0D6 0F1E28 3C7FBF 0A1830 2C5A8C F2C46D FF8A7A 5FD3B5 7DB8FF B79CFF 8FB0D8 FFFFFF E8553E FFD27A 6CB4FF 263D4E 6E97F8 F28643 42BB91 BC7BE3 EF7091 A8A627 41B4DD E685C0 A394EE 8DB13C'.split(' '));
 for (const [, hex] of tokens.matchAll(/#([a-f\d]{3,8})\b/gi)) if (!allowed.has(hex.toUpperCase())) failures.push(`Color outside PLAN 1.2: ${hex}`);
 const withoutWhiteText = tokens.replace(/rgb\(255 255 255 \/ (?:72|50)%\)/g, '');
 if (/\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\s*\(/i.test(withoutWhiteText)) failures.push('Color function outside PLAN 1.2 text tokens');

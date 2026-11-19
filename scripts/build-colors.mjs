@@ -11,19 +11,24 @@ const tokens = fs.readFileSync(path.join(ROOT, 'packages/web/src/styles/tokens.c
 const neighbor = tokens.match(/--neighbor:\s*(#[a-f0-9]{6})/i)[1];
 const compatible = (a,b) => separation(a,b) >= minColorDistance;
 const raw = readCache('snapshots-raw'), registry = readJSON('polities');
-const previous = {caowei:palette[0], shuhan:palette[1], sunwu:palette[2]};
+const previous = {caowei:palette[0], shuhan:palette[1], sunwu:palette[7], gongsun_liaodong:palette[2], jin_jurchen:palette[1], dali:palette[6]};
 const output = [], rows = [], frames = {};
 let minimum = Infinity;
 for (const snapshot of readJSON('snapshots')) {
   const items = readJSON(snapshot.file).features.filter(f => f.properties.layer === 'polity');
   const main = items.find(f => f.properties.role === 'main')?.properties.polityId ?? null;
-  const bounds = [Infinity,Infinity,-Infinity,-Infinity];
+  const bounds = [Infinity,Infinity,-Infinity,-Infinity], boundsByPolity = new Map();
   for(const f of items.filter(f=>['main','rival'].includes(f.properties.role))) {
+    const key=f.properties.polityId;
+    const extent=boundsByPolity.get(key)??[Infinity,Infinity,-Infinity,-Infinity];
+    boundsByPolity.set(key,extent);
     const g=f.geometry;
     const polygons=g.type==='Polygon'?[g.coordinates]:g.coordinates;
     for(const poly of polygons) for(const [x,y] of poly[0]??[]) {
-      bounds[0]=Math.min(bounds[0],x);bounds[1]=Math.min(bounds[1],y);
-      bounds[2]=Math.max(bounds[2],x);bounds[3]=Math.max(bounds[3],y);
+      for(const b of [bounds,extent]){
+        b[0]=Math.min(b[0],x);b[1]=Math.min(b[1],y);
+        b[2]=Math.max(b[2],x);b[3]=Math.max(b[3],y);
+      }
     }
   }
   if(bounds.every(Number.isFinite)) frames[snapshot.key]=bounds.map(v=>Number(v.toFixed(4)));
@@ -44,6 +49,10 @@ for (const snapshot of readJSON('snapshots')) {
     edges.push([a.colorId,b.colorId]);
     adjacency.push([a.id,b.id]);
   }
+  // Give these recurring contemporaries distinct hues even where their
+  // polygons do not touch. Physical adjacency is still reported separately.
+  if (ids.includes('jin_jurchen') && ids.includes('dali')) edges.push(['jin_jurchen','dali']);
+  if (ids.includes('gongsun_liaodong') && ids.includes('shuhan')) edges.push(['gongsun_liaodong','shuhan']);
   let active = ids.slice(), assignment = colorGraph(active,edges,palette,previous,compatible,5);
   const outline = [];
   while (!assignment) {
@@ -59,7 +68,9 @@ for (const snapshot of readJSON('snapshots')) {
     const parent = role === 'protectorate' ? main : null, id = parent ?? polityId;
     const fillOpacity = role === 'neighbor' || outline.includes(id) ? 0 : role === 'protectorate' ? .18 : .4;
     const color = role === 'neighbor' ? neighbor : assignment[id] ?? previous[id] ?? palette[0];
-    return { featureId:f.properties.id, polityId, title, anchor:f.properties.anchor, role, color, fill:fillOpacity?color:null, fillOpacity, pattern:role==='protectorate'?'diagonal':null, parent, strokeOnly:fillOpacity===0 };
+    const extent=boundsByPolity.get(polityId);
+    const bounds=extent?.every(Number.isFinite)?extent.map(v=>Number(v.toFixed(4))):undefined;
+    return { featureId:f.properties.id, polityId, title, anchor:f.properties.anchor, bounds, role, color, fill:fillOpacity?color:null, fillOpacity, pattern:role==='protectorate'?'diagonal':null, parent, strokeOnly:fillOpacity===0 };
   });
   const separateModern = registry.find(p => p.occurrences.some(o => o.snapshot === snapshot.key && o.geometrySource === 'modern-provinces'));
   if (separateModern) {
