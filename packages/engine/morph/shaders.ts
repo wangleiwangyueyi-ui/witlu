@@ -99,12 +99,20 @@ vec3 territoryColor(vec3 ground,vec3 world){
   float t=territoryProgress;
   #ifdef FLAT_SCREEN_COVERAGE
   if(screenStyleSize.z>.5){
-    vec4 style=texture2D(screenStyle,gl_FragCoord.xy/screenStyleSize.xy);
+    vec2 sUv=gl_FragCoord.xy/screenStyleSize.xy;
+    vec4 style=texture2D(screenStyle,sUv);
     vec4 premul=style;
     style.rgb/=max(style.a,.001);
     vec3 base=polityEdge(polityBlend(ground,style,uv),style,polityFocus>0.?edgeId(uv):0.,0.);
-    float rim=smoothstep(.04,.28,max(length(fwidth(premul.rgb)),fwidth(premul.a)));
-    if(style.a>.05)base=mix(base,mix(style.rgb,vec3(1.0),.32),rim*.38);
+    if(style.a>.05){
+      float rim=smoothstep(.03,.24,max(length(fwidth(premul.rgb)),fwidth(premul.a)));
+      vec2 stepUv=4.5/screenStyleSize.xy;
+      vec4 n1=texture2D(screenStyle,sUv+vec2(stepUv.x,0.)),n2=texture2D(screenStyle,sUv-vec2(stepUv.x,0.));
+      vec4 n3=texture2D(screenStyle,sUv+vec2(0.,stepUv.y)),n4=texture2D(screenStyle,sUv-vec2(0.,stepUv.y));
+      float innerGlow=clamp((length(premul-n1)+length(premul-n2)+length(premul-n3)+length(premul-n4))*.45,0.,1.);
+      base=mix(base,mix(style.rgb,vec3(1.0),.24),innerGlow*.26);
+      base=mix(base,mix(style.rgb,vec3(1.0),.46),rim*.52);
+    }
     return base;
   }
   #endif

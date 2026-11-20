@@ -18,15 +18,20 @@ export function PolityLabels({flat=false}:{flat?:boolean}) {
   const signature=labels.map(l=>`${l.key}:${l.coord}:${l.name}`).join('|');
   useEffect(()=>{
     if(!enabled)return;
-    let lastLayout=-Infinity, viewportWidth=0, viewportHeight=0;
+    let lastLayout=-Infinity, viewportWidth=0, viewportHeight=0, prevDist=0;
     let mapRect: DOMRect | null = null;
     let cachedObstacles: ReturnType<typeof mapObstacles> = [];
     const sizes=new WeakMap<HTMLElement,{width:number;height:number}>();
+    const chosenOffsets=new WeakMap<HTMLElement,[number,number]>();
     const update=()=>{
       const engine=terrainBridge.engine, surface=root.current;
       if(!engine||!surface)return;
       const now=performance.now();
-      const needsLayout=!mapRect||now-lastLayout>=140;
+      const dist=engine.camera.pose.distance;
+      const zooming=Math.abs(dist-prevDist)>1.5;
+      prevDist=dist;
+      const zoomScale=flat?Math.max(0.76,Math.min(1.24,Math.pow(8200/Math.max(200,dist),0.22))):1;
+      const needsLayout=!mapRect||(!zooming&&now-lastLayout>=160);
       if(needsLayout){
         lastLayout=now;
         mapRect=surface.getBoundingClientRect();
@@ -46,13 +51,21 @@ export function PolityLabels({flat=false}:{flat?:boolean}) {
           sizes.set(node,size);
         }
         const {width,height}=size;
-        const offsets=flat&&node.dataset.neighbor==='false'?[[0,0],[0,-24],[0,24],[-28,0],[28,0],[-24,-19],[24,-19],[-24,19],[24,19]]:[[0,0]];
-        const box=p.visible ? offsets.map(([x,y])=>({x:p.x+x!-width/2,y:p.y+y!-height/2,width,height})).find(box=>
+        const saved=chosenOffsets.get(node);
+        if(zooming&&saved){
+          if(!p.visible){node.hidden=true;continue;}
+          node.hidden=false;
+          node.style.transform=`translate3d(${p.x+saved[0]}px,${p.y+saved[1]}px,0) translate(-50%,-50%) scale(${zoomScale.toFixed(3)})`;
+          continue;
+        }
+        const offsets: [number,number][]=flat&&node.dataset.neighbor==='false'?[[0,0],[0,-24],[0,24],[-28,0],[28,0],[-24,-19],[24,-19],[-24,19],[24,19]]:[[0,0]];
+        const hit=p.visible ? offsets.map(([ox,oy])=>({ox,oy,box:{x:p.x+ox-width/2,y:p.y+oy-height/2,width,height}})).find(({box})=>
           box.x>=8&&box.y>=8&&box.x+width<=map.width-8&&box.y+height<=map.height-8&&!blocked.some(b=>mapOverlap(box,b))) : undefined;
-        node.hidden=!box;
-        if(!box)continue;
-        blocked.push(box);
-        node.style.transform=`translate3d(${box.x+width/2}px,${box.y+height/2}px,0) translate(-50%,-50%)`;
+        node.hidden=!hit;
+        if(!hit)continue;
+        chosenOffsets.set(node,[hit.ox,hit.oy]);
+        blocked.push(hit.box);
+        node.style.transform=`translate3d(${hit.box.x+width/2}px,${hit.box.y+height/2}px,0) translate(-50%,-50%) scale(${zoomScale.toFixed(3)})`;
       }
     };
     let unbindFrame: (() => void) | null = null;

@@ -114,7 +114,7 @@ export default function ParallelTimeline() {
     const sparkPalette=[sparkWhite,sparkGold,sparkEmber];
     interface Spark{x:number;y:number;vx:number;vy:number;life:number;maxLife:number;size:number;tone:string}
     const sparks:Spark[]=[];
-    let raf=0, lastTime=0, prevX=NaN, width=0, height=0, dpr=1;
+    let raf=0, lastTime=0, lastIdleSpawn=0, prevX=NaN, width=0, height=0, dpr=1;
     const syncSize=()=>{
       const rect=host.getBoundingClientRect();
       dpr=Math.min(2,window.devicePixelRatio||1);
@@ -128,21 +128,21 @@ export default function ParallelTimeline() {
     observer.observe(host);
     const spawn=(originX:number,originY:number,count:number,boost:number)=>{
       for(let i=0;i<count;i++){
-        const angle=-Math.PI*(0.18+Math.random()*0.68);
-        const speed=(26+Math.random()*58)*boost;
+        const angle=-Math.PI*(0.12+Math.random()*0.78);
+        const speed=(32+Math.random()*68)*boost;
         const pick=Math.random();
         sparks.push({
           x:originX+(Math.random()-0.5)*3,
           y:originY+(Math.random()-0.5)*4,
-          vx:Math.cos(angle)*speed-(Math.random()*18+6),
-          vy:Math.sin(angle)*speed-12,
+          vx:Math.cos(angle)*speed-(Math.random()*24+8),
+          vy:Math.sin(angle)*speed-16,
           life:0,
-          maxLife:0.28+Math.random()*0.34,
-          size:1.1+Math.random()*1.6,
-          tone:sparkPalette[pick<0.22?0:pick<0.78?1:2]!,
+          maxLife:0.32+Math.random()*0.38,
+          size:1.35+Math.random()*1.85,
+          tone:sparkPalette[pick<0.28?0:pick<0.76?1:2]!,
         });
       }
-      if(sparks.length>64)sparks.splice(0,sparks.length-64);
+      if(sparks.length>96)sparks.splice(0,sparks.length-96);
     };
     const tick=(now:number)=>{
       raf=0;
@@ -154,22 +154,28 @@ export default function ParallelTimeline() {
       const headY=height-10;
       const moved=Number.isFinite(prevX)&&Math.abs(headX-prevX)>0.35;
       prevX=headX;
-      if(!reduced&&(playing||(scrubbing&&moved))){
-        spawn(headX,headY,playing?3:2,playing?1:0.85);
+      if(!reduced){
+        if(playing||(scrubbing&&moved)){
+          spawn(headX,headY,playing?5:4,playing?1.15:0.95);
+        } else if(now-lastIdleSpawn>=75&&!document.hidden){
+          lastIdleSpawn=now;
+          spawn(headX,headY,2,0.68);
+        }
       }
       ctx.setTransform(dpr,0,0,dpr,0,0);
       ctx.clearRect(0,0,width,height);
-      if(!reduced&&(playing||scrubbing)){
+      if(!reduced){
+        const pulse=0.85+0.15*Math.sin(now*0.014);
         ctx.save();
-        ctx.globalAlpha=0.55;
+        ctx.globalAlpha=(playing||scrubbing?0.75:0.48)*pulse;
         ctx.fillStyle=sparkGold;
         ctx.beginPath();
-        ctx.arc(headX,headY,7.5,0,Math.PI*2);
+        ctx.arc(headX,headY,playing||scrubbing?9.5:6.5,0,Math.PI*2);
         ctx.fill();
-        ctx.globalAlpha=0.92;
+        ctx.globalAlpha=0.95;
         ctx.fillStyle=sparkWhite;
         ctx.beginPath();
-        ctx.arc(headX,headY,2.6,0,Math.PI*2);
+        ctx.arc(headX,headY,playing||scrubbing?3.2:2.2,0,Math.PI*2);
         ctx.fill();
         ctx.restore();
       }
@@ -179,12 +185,12 @@ export default function ParallelTimeline() {
         if(p.life>=p.maxLife){sparks.splice(i,1);continue;}
         const px=p.x, py=p.y;
         p.vx*=Math.pow(0.28,dt);
-        p.vy+=155*dt;
+        p.vy+=150*dt;
         p.x+=p.vx*dt;
         p.y+=p.vy*dt;
         const alpha=1-p.life/p.maxLife;
         ctx.save();
-        ctx.globalAlpha=alpha*0.92;
+        ctx.globalAlpha=alpha*0.96;
         ctx.strokeStyle=p.tone;
         ctx.lineWidth=p.size*alpha;
         ctx.lineCap='round';
@@ -192,21 +198,26 @@ export default function ParallelTimeline() {
         ctx.moveTo(px,py);
         ctx.lineTo(p.x,p.y);
         ctx.stroke();
+        ctx.fillStyle=sparkWhite;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,Math.max(0.7,p.size*alpha*0.55),0,Math.PI*2);
+        ctx.fill();
         ctx.restore();
       }
-      if((!reduced&&(playing||scrubbing))||sparks.length>0){
+      if(!reduced&&!document.hidden){
         raf=requestAnimationFrame(tick);
       } else {
         lastTime=0;
       }
     };
     const wake=()=>{
-      const {playing,scrubbing}=timeStore.getState();
-      if(!raf&&(playing||scrubbing||sparks.length>0))raf=requestAnimationFrame(tick);
+      const reduced=useShell.getState().reducedMotion||matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(!raf&&!reduced&&!document.hidden)raf=requestAnimationFrame(tick);
     };
     wake();
     const off=timeStore.subscribe(wake);
-    return()=>{cancelAnimationFrame(raf);observer.disconnect();off();};
+    document.addEventListener('visibilitychange',wake);
+    return()=>{cancelAnimationFrame(raf);observer.disconnect();off();document.removeEventListener('visibilitychange',wake);};
   },[]);
   useEffect(()=>{
     const lanes=guide.current;

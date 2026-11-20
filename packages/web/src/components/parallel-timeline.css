@@ -41,50 +41,51 @@
   z-index: 1;
   pointer-events: none;
   border-radius: 4px 0 0 4px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-glow) 8%, transparent) 0%, color-mix(in srgb, var(--gold-glow) 20%, transparent) 78%, color-mix(in srgb, var(--cinnabar) 42%, var(--gold-glow)) 100%);
-  box-shadow: inset 0 -2px 0 0 color-mix(in srgb, var(--gold-glow) 75%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-glow) 18%, transparent) 0%, color-mix(in srgb, var(--gold-glow) 38%, transparent) 74%, color-mix(in srgb, var(--cinnabar) 62%, var(--gold-glow)) 100%);
+  box-shadow: inset 0 -3px 0 0 var(--gold-glow), inset 0 -4px 8px color-mix(in srgb, var(--cinnabar) 70%, transparent);
   transition: opacity 0.25s ease;
 }
 .timeline-burn-trail[data-burning='true'] {
-  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-glow) 10%, transparent) 0%, color-mix(in srgb, var(--gold-glow) 28%, transparent) 72%, color-mix(in srgb, var(--cinnabar) 56%, var(--gold-glow)) 100%);
-  box-shadow: inset 0 -2px 4px color-mix(in srgb, var(--gold-glow) 90%, transparent), 0 0 8px color-mix(in srgb, var(--gold-glow) 35%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-glow) 22%, transparent) 0%, color-mix(in srgb, var(--gold-glow) 46%, transparent) 70%, color-mix(in srgb, var(--cinnabar) 75%, var(--gold-glow)) 100%);
+  box-shadow: inset 0 -3px 6px var(--gold-glow), 0 0 12px color-mix(in srgb, var(--gold-glow) 55%, transparent);
 }
 .timeline-handle {
   position: absolute;
   z-index: 4;
   pointer-events: none;
-  width: 3px;
+  width: 4px;
   height: 100%;
   transform: translateX(-50%);
-  background: linear-gradient(180deg, var(--text) 0%, var(--gold-glow) 55%, var(--cinnabar) 100%);
+  background: linear-gradient(180deg, var(--text) 0%, var(--gold-glow) 50%, var(--cinnabar) 100%);
   border-radius: 2px;
-  box-shadow: 0 0 8px color-mix(in srgb, var(--gold-glow) 85%, transparent), 0 0 14px color-mix(in srgb, var(--cinnabar) 50%, transparent);
+  box-shadow: 0 0 10px var(--gold-glow), 0 0 18px color-mix(in srgb, var(--cinnabar) 75%, transparent);
 }
 .timeline-arrow {
   position: absolute;
-  top: -7px;
-  left: 50%;
+  top: 50%;
+  left: 1px;
   width: 0;
   height: 0;
-  transform: translateX(-50%);
-  border-left: 5.5px solid transparent;
-  border-right: 5.5px solid transparent;
-  border-top: 7px solid var(--gold-glow);
-  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--gold-glow) 95%, transparent));
+  transform: translateY(-50%);
+  border-top: 6.5px solid transparent;
+  border-bottom: 6.5px solid transparent;
+  border-left: 9px solid var(--gold-glow);
+  filter: drop-shadow(0 0 5px var(--gold-glow)) drop-shadow(0 0 2px var(--text));
 }
 .timeline-fuse-core {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   background: radial-gradient(circle, var(--text) 0%, var(--gold-glow) 48%, var(--cinnabar) 100%);
-  box-shadow: 0 0 6px var(--gold-glow), 0 0 12px color-mix(in srgb, var(--cinnabar) 85%, transparent);
+  box-shadow: 0 0 8px var(--gold-glow), 0 0 14px color-mix(in srgb, var(--cinnabar) 90%, transparent);
+  animation: fusePulse 0.55s ease-in-out infinite alternate;
 }
 .timeline-handle[data-burning='true'] .timeline-fuse-core {
-  animation: fusePulse 0.42s ease-in-out infinite alternate;
+  animation: fusePulse 0.28s ease-in-out infinite alternate;
 }
 .timeline-sparks {
   position: absolute;

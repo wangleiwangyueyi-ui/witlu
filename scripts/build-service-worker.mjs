@@ -10,7 +10,7 @@ const hash=createHash('sha256');for(const asset of ['index.html',...assets.map(s
 const version=hash.digest('hex').slice(0,12);
 const worker=`const PREFIX='witlu-v1-',STATIC=PREFIX+'${version}',RUNTIME=PREFIX+'runtime-${version}';
 const SHELL=${JSON.stringify(shell)};
-self.addEventListener('install',event=>event.waitUntil(caches.open(STATIC).then(cache=>cache.addAll(SHELL))));
+self.addEventListener('install',event=>event.waitUntil(caches.open(STATIC).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith(PREFIX)&&key!==STATIC&&key!==RUNTIME)await caches.delete(key);await self.clients.claim();})()));
 let queue=Promise.resolve();
 self.addEventListener('fetch',event=>{const request=event.request,url=new URL(request.url);if(request.method!=='GET'||url.origin!==self.location.origin||request.headers.has('range'))return;

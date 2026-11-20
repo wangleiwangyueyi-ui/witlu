@@ -31,16 +31,18 @@ void main(){
   float coverage=smoothstep(.23,.77,landMask);
   if (coverage > 0.) {
     float luma = dot(relief.rgb,vec3(.2126,.7152,.0722));
-    float ridge = smoothstep(.010,.085,luma);
-    vec3 land = landColor * mix(1.0,.76+.68*ridge,reliefEnabled);
-    land += vec3(.004,.009,.016) * smoothstep(.55,1.0,ridge) * reliefEnabled;
+    float ridge = smoothstep(.008,.082,luma);
+    float slope = clamp((dFdx(luma) + dFdy(luma)) * -18.0, -.22, .28) * reliefEnabled;
+    vec3 land = landColor * mix(1.0,.72+.76*ridge + slope,reliefEnabled);
+    land += vec3(.008,.018,.030) * smoothstep(.42,1.0,ridge) * reliefEnabled;
     if (envEnabled > .5) land *= cloudShadow(vWorld);
     vec3 shaded = territoryColor(land,vWorld);
     float coastEdge = 4.0 * coverage * (1.0 - coverage);
-    color = mix(color, shaded, coverage) + vec3(.018,.042,.068) * coastEdge;
+    float shelfGlow = smoothstep(.02,.95,coverage) * (1.0 - smoothstep(.65,1.0,coverage));
+    color = mix(color, shaded, coverage) + vec3(.026,.058,.092) * coastEdge + vec3(.010,.024,.040) * shelfGlow;
   } else if (flatWater > .5 && waterMotion > .5) {
-    float shimmer = .028 * sin(dot(vWorld.xz,vec2(.007,.006)) + envTime*.24)
-                  + .016 * cos(dot(vWorld.xz,vec2(-.004,.009)) - envTime*.18);
+    float shimmer = .032 * sin(dot(vWorld.xz,vec2(.007,.006)) + envTime*.24)
+                  + .018 * cos(dot(vWorld.xz,vec2(-.004,.009)) - envTime*.18);
     color *= 1.0 + shimmer;
   }
   gl_FragColor = vec4(weatherGrade(color,vWorld),1.0);
