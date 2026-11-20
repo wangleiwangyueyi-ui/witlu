@@ -17,9 +17,9 @@ describe('historical input and chronology', () => {
     });
     it.each([['元', 1], ['十', 10], ['十一', 11], ['二十三', 23], ['一百零二', 102]])('Chinese number %s', (text, n) => expect(chineseNumber(text)).toBe(n));
     it('slows at dynasty boundaries and caps suspended frames', () => {
-        expect(playbackDelta(.02, 1, 220, [220])).toBeCloseTo(.02);
-        expect(playbackDelta(.02, 4, 230, [220])).toBeCloseTo(.32);
-        expect(playbackDelta(30, 1, 230, [])).toBe(.2);
+        expect(playbackDelta(.02, 1, 220, [220])).toBeCloseTo(.01);
+        expect(playbackDelta(.02, 4, 230, [220])).toBeCloseTo(.16);
+        expect(playbackDelta(30, 1, 230, [])).toBe(.1);
     });
 });
 describe('data-driven tributaries', () => {

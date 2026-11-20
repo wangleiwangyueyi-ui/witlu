@@ -17,17 +17,25 @@ export function PolityLabels({flat=false}:{flat?:boolean}) {
   const labels=[...new Map([...regimes,...neighbors].map(label=>[label.key,label])).values()];
   const signature=labels.map(l=>`${l.key}:${l.coord}:${l.name}`).join('|');
   useEffect(()=>{
-    let frame=0,last=-Infinity,viewportWidth=0;
+    if(!enabled)return;
+    let lastLayout=-Infinity, viewportWidth=0, viewportHeight=0;
+    let mapRect: DOMRect | null = null;
+    let cachedObstacles: ReturnType<typeof mapObstacles> = [];
     const sizes=new WeakMap<HTMLElement,{width:number;height:number}>();
-    const update=(now:number)=>{
-      frame=requestAnimationFrame(update);
+    const update=()=>{
       const engine=terrainBridge.engine, surface=root.current;
-      if(!engine||!surface||now-last<90)return;
-      last=now;
-      const map=surface.getBoundingClientRect();
-      const resized=viewportWidth!==map.width;
-      viewportWidth=map.width;
-      const blocked=flat?mapObstacles(map,'.app-header,.chapter-sheet,.map-legend,.flat-map-controls,.sidebar-toggle,.welcome-strip'):[];
+      if(!engine||!surface)return;
+      const now=performance.now();
+      const needsLayout=!mapRect||now-lastLayout>=140;
+      if(needsLayout){
+        lastLayout=now;
+        mapRect=surface.getBoundingClientRect();
+        cachedObstacles=flat?mapObstacles(mapRect,'.app-header,.chapter-sheet,.map-legend,.flat-map-controls,.sidebar-toggle,.welcome-strip'):[];
+      }
+      const map=mapRect!;
+      const resized=viewportWidth!==map.width||viewportHeight!==map.height;
+      viewportWidth=map.width; viewportHeight=map.height;
+      const blocked=[...cachedObstacles];
       for(const node of surface.querySelectorAll<HTMLElement>('[data-site]')){
         const coord=node.dataset.site!.split(',').map(Number) as [number,number];
         const p=engine.projectSite(coord);
@@ -44,12 +52,18 @@ export function PolityLabels({flat=false}:{flat?:boolean}) {
         node.hidden=!box;
         if(!box)continue;
         blocked.push(box);
-        node.style.transform=`translate(${box.x+width/2}px,${box.y+height/2}px) translate(-50%,-50%)`;
-
+        node.style.transform=`translate3d(${box.x+width/2}px,${box.y+height/2}px,0) translate(-50%,-50%)`;
       }
     };
-    if(enabled)frame=requestAnimationFrame(update);
-    return()=>cancelAnimationFrame(frame);
+    let unbindFrame: (() => void) | null = null;
+    const attach=()=>{
+      unbindFrame?.();
+      unbindFrame=terrainBridge.engine?.onFrame(update)??null;
+      update();
+    };
+    attach();
+    const offBridge=terrainBridge.subscribe(attach);
+    return()=>{unbindFrame?.();offBridge();};
   },[signature,flat,enabled]);
   return <div className="polity-labels" ref={root} aria-hidden="true" hidden={!enabled}>{labels.map(l=><div hidden key={l.key} data-site={l.coord.join(',')} data-polity={l.key} data-neighbor={l.neighbor}><strong>{l.name}</strong></div>)}</div>;
 }

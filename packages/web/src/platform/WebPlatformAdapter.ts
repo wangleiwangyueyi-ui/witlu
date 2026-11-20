@@ -44,7 +44,7 @@ export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Wo
     surface.addEventListener('pointercancel', () => { active.clear();starts.clear();handlers.cancel(); }, options);
     surface.addEventListener('lostpointercapture', event => { const e=event as PointerEvent;if(active.has(e.pointerId)){active.clear();starts.clear();handlers.cancel();} }, options);
     surface.addEventListener('click', e => {if(isMapTarget(e.target)&&performance.now()<suppressClickUntil){e.preventDefault();e.stopPropagation();}}, {...options,capture:true});
-    surface.addEventListener('wheel', event => {const e=event as WheelEvent;if(!isMapTarget(e.target))return;e.preventDefault();handlers.wheel(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?canvas.clientHeight:1));}, {...options,passive:false});
+    surface.addEventListener('wheel', event => {const e=event as WheelEvent;if(!isMapTarget(e.target))return;e.preventDefault();const box=canvas.getBoundingClientRect();handlers.wheel(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?canvas.clientHeight:1),e.clientX-box.left,e.clientY-box.top);}, {...options,passive:false});
     canvas.addEventListener('contextmenu', e => e.preventDefault(), options);
     canvas.addEventListener('keydown', e => { if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-', 'Home'].includes(e.key)) { e.preventDefault(); handlers.key(e.key); } }, options);
     return () => controller.abort();

@@ -30,24 +30,29 @@ export default function CurrentEventCards() {
   }
   useEffect(() => {
     if (!choices.length || placeOpen || exploring) return;
-    let frame = 0, last = -Infinity;
-    const update = (now:number) => {
-      frame = requestAnimationFrame(update);
+    let lastLayout = -Infinity;
+    let surface: DOMRect | null = null;
+    let bottom = 0;
+    let cachedObstacles: MapRect[] = [];
+    const update = () => {
       const engine = terrainBridge.engine, layer = root.current;
-      if (!engine || !layer || now-last < 70) return;
-      last = now;
-
-      const surface = layer.getBoundingClientRect(), {width,height} = surface;
+      if (!engine || !layer) return;
+      const now = performance.now();
       const mobile = engine.camera.mobile;
       const top = mobile ? 58 : 8;
-      const sheet = mobile ? document.querySelector('.chapter-sheet') : null;
-      const bottom = Math.min(height,sheet ? sheet.getBoundingClientRect().top-surface.top : height)-8;
-      const blocked = mapObstacles(surface,
-        '.polity-labels [data-neighbor="false"]:not([hidden]),.map-legend,.flat-map-controls,.camera-controls,.sidebar-toggle,.welcome-strip');
-      if (mobile) {
-        // Leave the central map open even when the event itself lies there.
-        blocked.push({x:width*.22,y:height*.29,width:width*.56,height:height*.40});
+      if (!surface || now - lastLayout >= 140) {
+        lastLayout = now;
+        surface = layer.getBoundingClientRect();
+        const sheet = mobile ? document.querySelector('.chapter-sheet') : null;
+        bottom = Math.min(surface.height, sheet ? sheet.getBoundingClientRect().top - surface.top : surface.height) - 8;
+        cachedObstacles = mapObstacles(surface,
+          '.polity-labels [data-neighbor="false"]:not([hidden]),.map-legend,.flat-map-controls,.camera-controls,.sidebar-toggle,.welcome-strip');
+        if (mobile) {
+          cachedObstacles.push({x:surface.width*.22,y:surface.height*.29,width:surface.width*.56,height:surface.height*.40});
+        }
       }
+      const {width} = surface;
+      const blocked = [...cachedObstacles];
 
       for (const node of layer.querySelectorAll<HTMLElement>('.map-event-projection')) {
         const coord = node.dataset.coordinate!.split(',').map(Number) as [number,number];
@@ -57,7 +62,7 @@ export default function CurrentEventCards() {
         const leader = node.querySelector<HTMLElement>('.map-event-leader')!;
         node.hidden = !pt.visible || pt.y < top || pt.y > bottom;
         if (node.hidden) continue;
-        pin.style.transform = `translate(${pt.x}px,${pt.y}px) translate(-50%,-50%)`;
+        pin.style.transform = `translate3d(${pt.x}px,${pt.y}px,0) translate(-50%,-50%)`;
         card.hidden = false;
         const w = card.offsetWidth, h = card.offsetHeight;
         const left = 8, right = width-w-8;
@@ -74,15 +79,22 @@ export default function CurrentEventCards() {
         card.hidden = leader.hidden = !box;
         if (!box) continue;
         blocked.push(box);
-        card.style.transform = `translate(${box.x}px,${box.y}px)`;
+        card.style.transform = `translate3d(${box.x}px,${box.y}px,0)`;
         const endX = Math.min(box.x+w,Math.max(box.x,pt.x)), endY = Math.min(box.y+h,Math.max(box.y,pt.y));
         const dx = endX-pt.x, dy = endY-pt.y;
         leader.style.width = `${Math.hypot(dx,dy)}px`;
-        leader.style.transform = `translate(${pt.x}px,${pt.y}px) rotate(${Math.atan2(dy,dx)}rad)`;
+        leader.style.transform = `translate3d(${pt.x}px,${pt.y}px,0) rotate(${Math.atan2(dy,dx)}rad)`;
       }
     };
-    frame = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(frame);
+    let unbindFrame: (() => void) | null = null;
+    const attach = () => {
+      unbindFrame?.();
+      unbindFrame = terrainBridge.engine?.onFrame(update) ?? null;
+      update();
+    };
+    attach();
+    const offBridge = terrainBridge.subscribe(attach);
+    return () => { unbindFrame?.(); offBridge(); };
   },[nearby.length,year,choices.length,placeOpen,exploring]);
   if (!data || !choices.length || placeOpen || exploring) return null;
 

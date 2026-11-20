@@ -100,8 +100,12 @@ vec3 territoryColor(vec3 ground,vec3 world){
   #ifdef FLAT_SCREEN_COVERAGE
   if(screenStyleSize.z>.5){
     vec4 style=texture2D(screenStyle,gl_FragCoord.xy/screenStyleSize.xy);
+    vec4 premul=style;
     style.rgb/=max(style.a,.001);
-    return polityEdge(polityBlend(ground,style,uv),style,polityFocus>0.?edgeId(uv):0.,0.);
+    vec3 base=polityEdge(polityBlend(ground,style,uv),style,polityFocus>0.?edgeId(uv):0.,0.);
+    float rim=smoothstep(.04,.28,max(length(fwidth(premul.rgb)),fwidth(premul.a)));
+    if(style.a>.05)base=mix(base,mix(style.rgb,vec3(1.0),.32),rim*.38);
+    return base;
   }
   #endif
   // A stationary point in time can reuse palette reconstruction as the camera

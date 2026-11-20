@@ -11,9 +11,10 @@ export class MapCamera implements InputHandlers {
   readonly camera: AtlasCamera;
   private frame = {nw:homeNW,se:homeSE};
   pose: CameraPose;
-  width = 1; height = 1; reducedMotion = false;
+  width = 1; height = 1; reducedMotion = false; userAdjusted = false;
   private pointers = new Map<number, PointerInput>();
   private velocity = { x: 0, y: 0 }; private targetDistance = 0;
+  private zoomAnchor: { sx: number; sy: number; wx: number; wz: number } | null = null;
   private flight: { from: CameraPose; to: CameraPose; elapsed: number; duration: number } | null = null;
   private travel = 0; private downPoint: PointerInput | null = null;
   onPick: ((x: number, y: number) => void) | null = null;
@@ -48,7 +49,7 @@ export class MapCamera implements InputHandlers {
     if (this.camera instanceof PerspectiveCamera) { this.camera.aspect = width / height; this.camera.updateProjectionMatrix(); }
     else { if (first) this.pose = this.initial(); this.sync(); }
   }
-  reset() { this.flyTo(this.initial()); }
+  reset() { this.userAdjusted = false; this.zoomAnchor = null; this.flyTo(this.initial()); }
   flyTo(pose: Partial<CameraPose>, duration = 1100) { this.cancel(); const to = { ...this.pose, ...pose }; this.constrain(to); if (this.reducedMotion || duration <= 0) { this.pose = to; this.targetDistance = to.distance; this.sync(); } else this.flight = { from: { ...this.pose }, to, elapsed: 0, duration }; }
   constrain(pose = this.pose) { pose.lon = clamp(pose.lon, BOUNDS.west + 1, BOUNDS.east - 1); pose.lat = clamp(pose.lat, BOUNDS.south + 1, BOUNDS.north - 1); pose.distance = clamp(pose.distance, 180, 11000); pose.pitch = this.flat ? 90 : clamp(pose.pitch, 25, 65); pose.bearing = this.flat ? 0 : ((pose.bearing + 180) % 360 + 360) % 360 - 180; }
   private sync() {
@@ -76,10 +77,12 @@ export class MapCamera implements InputHandlers {
     const point = unproject(p.x + x * Math.cos(theta) + z * Math.sin(theta), p.z - x * Math.sin(theta) + z * Math.cos(theta));
     this.pose.lon = point.lon; this.pose.lat = point.lat;
   }
-  down(e: PointerInput) { this.flight = null; this.velocity = { x: 0, y: 0 }; this.pointers.set(e.id, e); this.travel = 0; this.downPoint = e; }
+  down(e: PointerInput) { this.flight = null; this.zoomAnchor = null; this.velocity = { x: 0, y: 0 }; this.pointers.set(e.id, e); this.travel = 0; this.downPoint = e; }
   move(e: PointerInput) {
     const previous = this.pointers.get(e.id); if (!previous) return;
     const dx = e.x - previous.x, dy = e.y - previous.y; this.travel += Math.hypot(dx, dy);
+    if (this.travel > 3 || this.pointers.size > 1) this.userAdjusted = true;
+    this.zoomAnchor = null;
     if (this.pointers.size === 1) {
       if (!this.flat && (e.button === 2 || e.shift)) { this.pose.bearing -= dx * .25; this.pose.pitch += dy * .18; }
       else { this.pan(dx, dy); const dt = Math.max(8, e.time - previous.time); this.velocity = { x: dx / dt, y: dy / dt }; }
@@ -94,9 +97,32 @@ export class MapCamera implements InputHandlers {
     this.pointers.set(e.id, e); this.sync();
   }
   up(e: PointerInput) { this.pointers.delete(e.id); if (!this.pointers.size && this.travel < 6 && this.downPoint && e.time - this.downPoint.time < 500) this.onPick?.(e.x, e.y); this.downPoint = null; if (this.reducedMotion) this.velocity = { x: 0, y: 0 }; }
-  cancel() { this.pointers.clear(); this.velocity = { x: 0, y: 0 }; this.flight = null; this.targetDistance = this.pose.distance; }
-  wheel(delta: number) { this.flight = null; this.targetDistance = clamp(this.targetDistance * Math.exp(clamp(delta, -240, 240) * .0015), 180, 11000); if (this.reducedMotion) this.pose.distance = this.targetDistance; }
-  key(key: string) { const step = 50; if (key === 'ArrowLeft') this.pan(-step, 0); if (key === 'ArrowRight') this.pan(step, 0); if (key === 'ArrowUp') this.pan(0, -step); if (key === 'ArrowDown') this.pan(0, step); if (key === '+' || key === '=') this.wheel(-150); if (key === '-') this.wheel(150); if (key === 'Home') this.reset(); this.sync(); }
+  cancel() { this.pointers.clear(); this.velocity = { x: 0, y: 0 }; this.flight = null; this.zoomAnchor = null; this.targetDistance = this.pose.distance; }
+  wheel(delta: number, x?: number, y?: number) {
+    this.flight = null;
+    this.userAdjusted = true;
+    this.velocity = { x: 0, y: 0 };
+    const nextDistance = clamp(this.targetDistance * Math.exp(clamp(delta, -240, 240) * .00135), 180, 11000);
+    if (this.flat && x !== undefined && y !== undefined && this.width > 1 && this.height > 1) {
+      const scale = this.metresPerPixel(this.pose.distance) / 1000;
+      const center = project(this.pose.lon, this.pose.lat);
+      this.zoomAnchor = { sx: x, sy: y, wx: center.x + (x - this.width / 2) * scale, wz: center.z + (y - this.height / 2) * scale };
+    } else {
+      this.zoomAnchor = null;
+    }
+    this.targetDistance = nextDistance;
+    if (this.reducedMotion) {
+      this.pose.distance = this.targetDistance;
+      if (this.flat && this.zoomAnchor) {
+        const nextScale = this.metresPerPixel(this.pose.distance) / 1000;
+        const nextCenter = unproject(this.zoomAnchor.wx - (this.zoomAnchor.sx - this.width / 2) * nextScale, this.zoomAnchor.wz - (this.zoomAnchor.sy - this.height / 2) * nextScale);
+        this.pose.lon = nextCenter.lon; this.pose.lat = nextCenter.lat;
+      }
+      this.zoomAnchor = null;
+      this.sync();
+    }
+  }
+  key(key: string) { const step = 50; if (key === 'Home') { this.reset(); return; } this.userAdjusted = true; this.zoomAnchor = null; if (key === 'ArrowLeft') this.pan(-step, 0); if (key === 'ArrowRight') this.pan(step, 0); if (key === 'ArrowUp') this.pan(0, -step); if (key === 'ArrowDown') this.pan(0, step); if (key === '+' || key === '=') this.wheel(-150); if (key === '-') this.wheel(150); this.sync(); }
   update(dt: number) {
     dt = Math.min(dt, 50);
     if (this.flight) {
@@ -104,7 +130,18 @@ export class MapCamera implements InputHandlers {
       for (const key of ['lon', 'lat', 'distance', 'pitch', 'bearing'] as const) { let delta = this.flight.to[key] - this.flight.from[key]; if (key === 'bearing') delta = ((delta + 540) % 360) - 180; this.pose[key] = this.flight.from[key] + delta * k; }
       this.targetDistance = this.pose.distance; if (t === 1) this.flight = null;
     } else {
-      this.pose.distance += (this.targetDistance - this.pose.distance) * (this.reducedMotion ? 1 : 1 - Math.exp(-dt / 90));
+      const diff = this.targetDistance - this.pose.distance;
+      if (Math.abs(diff) > 0.05) {
+        this.pose.distance += diff * (this.reducedMotion ? 1 : 1 - Math.exp(-dt / 75));
+        if (this.flat && this.zoomAnchor) {
+          const scale = this.metresPerPixel(this.pose.distance) / 1000;
+          const nextCenter = unproject(this.zoomAnchor.wx - (this.zoomAnchor.sx - this.width / 2) * scale, this.zoomAnchor.wz - (this.zoomAnchor.sy - this.height / 2) * scale);
+          this.pose.lon = nextCenter.lon; this.pose.lat = nextCenter.lat;
+        }
+      } else {
+        this.pose.distance = this.targetDistance;
+        this.zoomAnchor = null;
+      }
       if (!this.pointers.size && !this.reducedMotion) { this.pan(this.velocity.x * dt, this.velocity.y * dt); const drag = Math.exp(-dt / 220); this.velocity.x *= drag; this.velocity.y *= drag; if (Math.hypot(this.velocity.x, this.velocity.y) < .001) this.velocity = { x: 0, y: 0 }; }
     }
     this.sync();

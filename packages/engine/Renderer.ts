@@ -24,9 +24,11 @@ export class AtlasRenderer {
   private previous = 0; private lastLod = -Infinity; private lastReport = 0; private samples: number[] = []; private cpu: number[] = [];
   private loadingEnvironment = false;
   private cleanup: (() => void)[] = [];
+  private frameListeners = new Set<() => void>();
   onStats: ((stats: EngineStats) => void) | null = null;
   onQuality: ((quality: Quality) => void) | null = null;
   onPick: ((pick: TerrainPick | null) => void) | null = null;
+  onFrame(listener: () => void) { this.frameListeners.add(listener); return () => { this.frameListeners.delete(listener); }; }
   constructor(private platform: PlatformAdapter, palette: TerrainPalette, initialQuality: Quality = 'high', readonly flat = false) {
     const viewport = platform.viewport(); this.camera = new MapCamera(viewport.mobile,flat); this.quality = new QualityController(initialQuality);
     this.renderer = new WebGLRenderer({ canvas: platform.canvas as NonNullable<WebGLRendererParameters['canvas']>, antialias: false, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: false });
@@ -89,6 +91,7 @@ export class AtlasRenderer {
     this.morph.update(now,this.quality.level,this.camera.camera instanceof OrthographicCamera ? this.camera.camera : undefined);
     this.cartography.update(now,this.camera,this.quality.level,this.environment.reducedMotion,this.renderer.getPixelRatio());
     if (!this.openingCovered) this.renderer.render(this.scene, this.camera.camera);
+    for (const listener of this.frameListeners) listener();
     if (dt > 0) { this.samples.push(dt); this.cpu.push(this.platform.now() - start); }
     const change = this.quality.sample(dt); if (change) { this.terrain.setQuality(change); this.resize(); this.onQuality?.(change); }
     if (now - this.lastReport >= 500) this.report(now);

@@ -49,11 +49,12 @@ export default function ParallelTimeline() {
   const {data,error}=useChronicle(),locale=useShell(s=>s.locale),t=useChronicleText();
   const view=useStore(timeStore,s=>s.view),cropped=useStore(timeStore,s=>s.cropped);
   const range=cropped?view:timeBounds;
-  const rail=useRef<HTMLDivElement>(null), playhead=useRef<HTMLSpanElement>(null), guide=useRef<HTMLDivElement>(null);
+  const rail=useRef<HTMLDivElement>(null), playhead=useRef<HTMLSpanElement>(null), burnTrail=useRef<HTMLSpanElement>(null), sparkCanvas=useRef<HTMLCanvasElement>(null), guide=useRef<HTMLDivElement>(null);
   const axis=useRef<HTMLDivElement>(null), tip=useRef<HTMLOutputElement>(null);
   const scrub=useRef<Scrub|null>(null), crop=useRef<Crop|null>(null), tap=useRef<{edge:Edge;x:number;at:number}|undefined>(undefined);
   const frame=useRef(0), pending=useRef<{index:number;velocity:number}|null>(null);
   const tipKind=useRef<'year'|'event'|'crop'|null>(null);
+  const handlePct=useRef(0);
   const initial=indexToYear(Math.floor(timeStore.getState().index));
   const model=useMemo(()=>data&&timelineRows(data),[data]);
   const rows=useMemo(()=>model?.(view)??[],[model,view]);
@@ -78,11 +79,15 @@ export default function ParallelTimeline() {
     let last=NaN,spoken='';
     const update=()=>{
       if(!rail.current||!playhead.current||!guide.current)return;
-      const {index}=timeStore.getState(), year=Math.floor(index);
+      const {index,playing,scrubbing}=timeStore.getState(), year=Math.floor(index);
+      const x=clamp(position(index,range),0,100);
+      handlePct.current=x;
+      playhead.current.dataset.burning=String(playing||scrubbing);
+      if(burnTrail.current)burnTrail.current.dataset.burning=String(playing||scrubbing);
       if(index===last)return;
       last=index;
-      const x=clamp(position(index,range),0,100);
       playhead.current.style.left=`${x}%`;
+      if(burnTrail.current)burnTrail.current.style.width=`${x}%`;
       guide.current.style.setProperty('--timeline-position',`${clamp(position(index,view),0,100)}%`);
       guide.current.dataset.inView=String(index>=view[0]&&index<=view[1]);
       const current=String(indexToYear(year));
@@ -97,6 +102,112 @@ export default function ParallelTimeline() {
     return timeStore.subscribe(update);
     // Current formatters and positioning share these data, locale and range inputs.
   },[data, locale, range, view]);
+  useEffect(()=>{
+    const canvas=sparkCanvas.current, host=axis.current;
+    if(!canvas||!host)return;
+    const ctx=canvas.getContext('2d');
+    if(!ctx)return;
+    const css=getComputedStyle(document.documentElement);
+    const sparkWhite=css.getPropertyValue('--text').trim()||'currentColor';
+    const sparkGold=css.getPropertyValue('--gold-glow').trim()||'currentColor';
+    const sparkEmber=css.getPropertyValue('--cinnabar').trim()||'currentColor';
+    const sparkPalette=[sparkWhite,sparkGold,sparkEmber];
+    interface Spark{x:number;y:number;vx:number;vy:number;life:number;maxLife:number;size:number;tone:string}
+    const sparks:Spark[]=[];
+    let raf=0, lastTime=0, prevX=NaN, width=0, height=0, dpr=1;
+    const syncSize=()=>{
+      const rect=host.getBoundingClientRect();
+      dpr=Math.min(2,window.devicePixelRatio||1);
+      width=Math.max(1,rect.width);
+      height=Math.max(1,rect.height+28);
+      canvas.width=Math.round(width*dpr);
+      canvas.height=Math.round(height*dpr);
+    };
+    syncSize();
+    const observer=new ResizeObserver(syncSize);
+    observer.observe(host);
+    const spawn=(originX:number,originY:number,count:number,boost:number)=>{
+      for(let i=0;i<count;i++){
+        const angle=-Math.PI*(0.18+Math.random()*0.68);
+        const speed=(26+Math.random()*58)*boost;
+        const pick=Math.random();
+        sparks.push({
+          x:originX+(Math.random()-0.5)*3,
+          y:originY+(Math.random()-0.5)*4,
+          vx:Math.cos(angle)*speed-(Math.random()*18+6),
+          vy:Math.sin(angle)*speed-12,
+          life:0,
+          maxLife:0.28+Math.random()*0.34,
+          size:1.1+Math.random()*1.6,
+          tone:sparkPalette[pick<0.22?0:pick<0.78?1:2]!,
+        });
+      }
+      if(sparks.length>64)sparks.splice(0,sparks.length-64);
+    };
+    const tick=(now:number)=>{
+      raf=0;
+      const dt=Math.min(0.05,lastTime?(now-lastTime)/1000:0.016);
+      lastTime=now;
+      const reduced=useShell.getState().reducedMotion||matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const {playing,scrubbing}=timeStore.getState();
+      const headX=handlePct.current/100*width;
+      const headY=height-10;
+      const moved=Number.isFinite(prevX)&&Math.abs(headX-prevX)>0.35;
+      prevX=headX;
+      if(!reduced&&(playing||(scrubbing&&moved))){
+        spawn(headX,headY,playing?3:2,playing?1:0.85);
+      }
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.clearRect(0,0,width,height);
+      if(!reduced&&(playing||scrubbing)){
+        ctx.save();
+        ctx.globalAlpha=0.55;
+        ctx.fillStyle=sparkGold;
+        ctx.beginPath();
+        ctx.arc(headX,headY,7.5,0,Math.PI*2);
+        ctx.fill();
+        ctx.globalAlpha=0.92;
+        ctx.fillStyle=sparkWhite;
+        ctx.beginPath();
+        ctx.arc(headX,headY,2.6,0,Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+      }
+      for(let i=sparks.length-1;i>=0;i--){
+        const p=sparks[i]!;
+        p.life+=dt;
+        if(p.life>=p.maxLife){sparks.splice(i,1);continue;}
+        const px=p.x, py=p.y;
+        p.vx*=Math.pow(0.28,dt);
+        p.vy+=155*dt;
+        p.x+=p.vx*dt;
+        p.y+=p.vy*dt;
+        const alpha=1-p.life/p.maxLife;
+        ctx.save();
+        ctx.globalAlpha=alpha*0.92;
+        ctx.strokeStyle=p.tone;
+        ctx.lineWidth=p.size*alpha;
+        ctx.lineCap='round';
+        ctx.beginPath();
+        ctx.moveTo(px,py);
+        ctx.lineTo(p.x,p.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+      if((!reduced&&(playing||scrubbing))||sparks.length>0){
+        raf=requestAnimationFrame(tick);
+      } else {
+        lastTime=0;
+      }
+    };
+    const wake=()=>{
+      const {playing,scrubbing}=timeStore.getState();
+      if(!raf&&(playing||scrubbing||sparks.length>0))raf=requestAnimationFrame(tick);
+    };
+    wake();
+    const off=timeStore.subscribe(wake);
+    return()=>{cancelAnimationFrame(raf);observer.disconnect();off();};
+  },[]);
   useEffect(()=>{
     const lanes=guide.current;
     if(!lanes)return;
@@ -250,8 +361,13 @@ export default function ParallelTimeline() {
             return <div key={d.key} className="dynasty-band" data-short={name.length===1} aria-hidden="true" title={full}
               style={{left:`${position(a,range)}%`,width:`${position(b,range)-position(a,range)}%`,'--band-tone':tone??'var(--sea-flow)'} as CSSProperties}><span>{name}</span></div>;
           })}
-          <span ref={playhead} className="timeline-handle" aria-hidden="true"/>
+          <span ref={burnTrail} className="timeline-burn-trail" aria-hidden="true"/>
+          <span ref={playhead} className="timeline-handle" aria-hidden="true">
+            <span className="timeline-arrow"/>
+            <span className="timeline-fuse-core"/>
+          </span>
         </div>
+        <canvas ref={sparkCanvas} className="timeline-sparks" aria-hidden="true"/>
         {[0,1].map(edge=>{
           const side=edge as Edge, caption=t(side===0?'timelineCropStart':'timelineCropEnd');
           return <div key={side} className="timeline-edge" data-edge={side===0?'left':'right'} role="slider" tabIndex={0} aria-label={caption} title={`${caption} · ${t('timelineRestore')}`}

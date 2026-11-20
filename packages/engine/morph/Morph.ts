@@ -291,7 +291,7 @@ export class Morph {
         if (!Number.isFinite(t))
             return;
         this.crossfade = this.preview || this.reducedMotion || !this.effects.growth;
-        this.flight = { start: this.platform.now(), from: this.progress, to: Math.max(0, Math.min(1, t)), duration: this.crossfade ? 120 : Math.max(900, Math.min(1400, duration)) };
+        this.flight = { start: this.platform.now(), from: this.progress, to: Math.max(0, Math.min(1, t)), duration: this.crossfade ? (this.reducedMotion ? 120 : 380) : Math.max(900, Math.min(1400, duration)) };
         this.effectUntil = this.platform.now() + this.flight.duration;
     }
     async play(a: string,b: string,duration=1200,target=1) {
@@ -339,7 +339,8 @@ export class Morph {
         this.uniforms.territoryEdges!.value = Number(active && this.effects.boundaries && !this.preview && !this.crossfade && !this.flight && now-this.lastDrag>200);
         if (this.flight) {
             const f = this.flight, t = Math.min(1, (now - f.start) / f.duration);
-            this.progress = f.from + (f.to - f.from) * t;
+            const ease = t * t * t * (t * (t * 6 - 15) + 10);
+            this.progress = f.from + (f.to - f.from) * ease;
             this.dirty = true;
             if (t === 1) {
                 this.flight = null;

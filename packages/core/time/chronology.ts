@@ -76,7 +76,7 @@ export function eraAt(index: number, spans: Era[], until = 2027) {
 export function playbackDelta(seconds: number, speed: number, index: number, boundaries: number[]) {
     // Slow across both sides of a chapter boundary; cap time after background suspension.
     const proximity = boundaries.reduce((d, b) => Math.min(d, Math.abs(b - index)), Infinity);
-    return Math.min(.05, Math.max(0, seconds)) * speed * 4 * (.25 + .75 * Math.min(1, proximity / 4));
+    return Math.min(.05, Math.max(0, seconds)) * speed * 2 * (.25 + .75 * Math.min(1, proximity / 4));
 }
 export interface RiverPolity {
     key: string;

@@ -31,11 +31,17 @@ void main(){
   float coverage=smoothstep(.23,.77,landMask);
   if (coverage > 0.) {
     float luma = dot(relief.rgb,vec3(.2126,.7152,.0722));
-    vec3 land = landColor * mix(1.0,.79+.63*smoothstep(.012,.087,luma),reliefEnabled);
+    float ridge = smoothstep(.010,.085,luma);
+    vec3 land = landColor * mix(1.0,.76+.68*ridge,reliefEnabled);
+    land += vec3(.004,.009,.016) * smoothstep(.55,1.0,ridge) * reliefEnabled;
     if (envEnabled > .5) land *= cloudShadow(vWorld);
-    color = mix(color,territoryColor(land,vWorld),coverage);
+    vec3 shaded = territoryColor(land,vWorld);
+    float coastEdge = 4.0 * coverage * (1.0 - coverage);
+    color = mix(color, shaded, coverage) + vec3(.018,.042,.068) * coastEdge;
   } else if (flatWater > .5 && waterMotion > .5) {
-    color *= 1.0 + .035 * sin(dot(vWorld.xz,vec2(.007,.006)) + envTime*.28);
+    float shimmer = .028 * sin(dot(vWorld.xz,vec2(.007,.006)) + envTime*.24)
+                  + .016 * cos(dot(vWorld.xz,vec2(-.004,.009)) - envTime*.18);
+    color *= 1.0 + shimmer;
   }
   gl_FragColor = vec4(weatherGrade(color,vWorld),1.0);
   #include <colorspace_fragment>
