@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useChronicle } from '../store/chronicle';
 import { useTour } from '../store/tour';
 import { startQuiz, useExplore } from '../state/explore';
+import { openSearch } from './Explore';
 import { useShell } from '../state/shell';
 import './welcome-strip.css';
 
@@ -39,7 +40,7 @@ export default function WelcomeStrip() {
         window.dispatchEvent(new Event('atlas:open-tour'));
       });
     }}>{guide}</button>
-    <button type="button" onClick={() => choose(() => useExplore.setState({searchOpen:true,query:''}))}>{search}</button>
+    <button type="button" onClick={() => choose(() => { useExplore.setState({query:''}); openSearch(); })}>{search}</button>
     <button type="button" onClick={() => choose(() => { void startQuiz(); })}>{quiz}</button>
     <button type="button" aria-label={dismiss} onClick={() => setVisible(false)}>×</button>
   </aside>;

@@ -49,10 +49,11 @@
   .atlas-app { --sidebar-width: 0px; }
   .atlas-app .terrain-scene { inset: 0; }
   .atlas-app .polity-labels, .atlas-app .place-labels { inset: 0; }
-  .atlas-app .app-header { padding-top: var(--space-safe-top); height: calc(52px + var(--space-safe-top)); }
+  .atlas-app .app-header { padding-top: var(--space-safe-top); padding-left: max(12px,var(--space-safe-left)); padding-right: max(12px,var(--space-safe-right)); height: calc(52px + var(--space-safe-top)); }
   .atlas-app .brand-capsule { width: auto; }
+  .header-search input { font-size: 16px; }
   .atlas-app .brand-text span { display: none; }
-  .atlas-app .chapter-sheet { display: flex; flex-direction: column; position: absolute; z-index: 15; inset: auto 0 0; padding-bottom: var(--space-safe-bottom); border-radius: 16px 16px 0 0; }
+  .atlas-app .chapter-sheet { display: flex; flex-direction: column; position: absolute; z-index: 15; inset: auto 0 0; padding: 0 var(--space-safe-right) var(--space-safe-bottom) var(--space-safe-left); border-radius: 16px 16px 0 0; }
   .atlas-app .sheet-grabber { flex-shrink: 0; height: 24px; }
   .atlas-app .sheet-heading { padding: 0; flex-shrink: 0; height: 96px; }
   .atlas-app .sheet-toggle { right: 0; top: -28px; }
@@ -82,7 +83,7 @@
 
 .atlas-app .map-legend :is(summary, p, small) { font-size: 12px; }
 @media (width <= 768px) {
-  .atlas-app:has(.chapter-sheet[data-snap='1']) :is(.map-legend, .flat-map-controls) { bottom: calc(48dvh + 10px); }
+  .atlas-app:has(.chapter-sheet[data-snap='1']) :is(.map-legend, .flat-map-controls) { bottom: calc(var(--viewport-height, 100dvh) * .48 + 10px); }
   .atlas-app:has(.chapter-sheet[data-snap='2']) :is(.map-legend:not([open]), .flat-map-controls) { visibility: hidden; }
   .atlas-app:has(.chapter-sheet[data-snap='2']) .map-legend[open] { top: calc(60px + var(--space-safe-top)); bottom: auto; }
 }

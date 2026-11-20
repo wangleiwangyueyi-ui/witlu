@@ -1,5 +1,4 @@
 html { overscroll-behavior: none; }
-.atlas-app, .app-content { height: var(--viewport-height, 100dvh); }
 .atlas-app { top: var(--viewport-top, 0px); }
 .skip-link { position: absolute; top: -100px; left: 16px; z-index: 300; padding: 12px; background: var(--sky); border-radius: var(--radius-sm); }
 .skip-link:focus { top: calc(8px + var(--space-safe-top)); }
@@ -13,11 +12,6 @@ html { overscroll-behavior: none; }
 .static-atlas figure { margin: 0; width: 100%; height: 100%; }
 .static-atlas button { display: block; margin-top: 8px; background: var(--sea-shelf); color: var(--text); padding: 12px; border-radius: var(--radius-sm); }
 #__vconsole .vc-switch { bottom: calc(8px + var(--space-safe-bottom)); }
-@media (max-width: 767px) {
-  .share-backdrop { padding: var(--space-safe-top) 0 var(--space-safe-bottom); }
-  .share-dialog { width: 100%; max-height: var(--viewport-height, 100dvh); min-height: 100%; border-radius: 0; }
-  .share-poster { -webkit-touch-callout: default; user-select: auto; }
-}
 @media (pointer: coarse) {
   button, select, .text-button, .share-dialog a { min-height: 44px; min-width: 44px; }
 }

@@ -4,13 +4,19 @@ import { animate, motion, useDragControls, useMotionValue } from 'motion/react';
 import { useI18n } from '../i18n';
 import { useReducedEffects } from './Glass';
 import { closestSheetSnap, sheetOffsets } from './sheet-model';
+function sheetLayout() {
+  const viewport = window.visualViewport;
+  const css = getComputedStyle(document.documentElement);
+  const inset = (side: string) => parseFloat(css.getPropertyValue('--space-safe-' + side)) || 0;
+  return sheetOffsets(viewport?.height ?? innerHeight,inset('top'),inset('bottom'));
+}
+
 export function Sheet({ children, heading }: { children: ReactNode; heading: ReactNode }) {
   const { t } = useI18n(); const reduced = useReducedEffects();
-  const [height, setHeight] = useState(() => window.visualViewport?.height ?? innerHeight);
+  const [{ height: sheetHeight, offsets }, setLayout] = useState(sheetLayout);
   const [snap, setSnap] = useState(0); const y = useMotionValue(0); const drag = useDragControls();
   const dragOrigin = useRef(0);
-  const { height: sheetHeight, offsets } = sheetOffsets(height);
-  useEffect(() => { const resize = () => setHeight(window.visualViewport?.height ?? innerHeight); window.visualViewport?.addEventListener('resize', resize); window.addEventListener('resize', resize); return () => { window.visualViewport?.removeEventListener('resize', resize); window.removeEventListener('resize', resize); }; }, []);
+  useEffect(() => { const resize = () => setLayout(sheetLayout()); window.visualViewport?.addEventListener('resize', resize); window.addEventListener('resize', resize); return () => { window.visualViewport?.removeEventListener('resize', resize); window.removeEventListener('resize', resize); }; }, []);
   useEffect(()=>{const open=()=>setSnap(2);window.addEventListener('atlas:open-chronicle',open);return()=>window.removeEventListener('atlas:open-chronicle',open);},[]);
   useEffect(()=>{
     const peek=()=>setSnap(current=>Math.min(current,1));

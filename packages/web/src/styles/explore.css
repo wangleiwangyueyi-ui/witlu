@@ -25,10 +25,19 @@
 .quiz-rings path { fill: none; stroke: var(--gold-glow); stroke-width: 2; opacity: .7; }
 :root[data-quiz=true] .place-labels,:root[data-quiz=true] .polity-labels,:root[data-quiz=true] .world-tracks,:root[data-quiz=true] .chapter-panel,:root[data-quiz=true] .sheet,:root[data-quiz=true] .map-bubble { visibility: hidden; }
 .atlas-app:has(.exploration-panel) .chapter-panel { visibility: hidden; }
-@media(max-width:767px) {
+@media (width <= 768px) {
  .exploration-panel,.quiz-panel { left: 12px; right: 12px; top: auto; bottom: calc(100px + env(safe-area-inset-bottom)); width: auto; max-height: 39dvh; padding: 12px; }
  .exploration-panel h2,.quiz-panel h2 { font-size: 20px; }.exploration-copy { max-height: 17dvh; }.atlas-app:has(.exploration-panel) .sheet { visibility: hidden; }
- .search-dialog { padding: 12px; }.search-dialog h2 { font-size: 21px; }.search-dialog .search-results { max-height: 42dvh; }
+ .explore-backdrop {
+   position: absolute;
+   grid-template-rows: minmax(0,1fr);
+   padding: max(8px,var(--space-safe-top)) max(12px,var(--space-safe-right)) max(8px,var(--space-safe-bottom)) max(12px,var(--space-safe-left));
+ }
+ .search-dialog { display: flex; flex-direction: column; padding: 12px; max-height: 100%; overscroll-behavior: contain; }
+ .search-dialog h2 { font-size: 21px; }
+ .search-dialog input { font-size: 16px; }
+ .search-dialog > :not(.search-results) { flex-shrink: 0; }
+ .search-dialog .search-results { min-height: 0; flex: 1 1 auto; max-height: none; overscroll-behavior: contain; }
 }
 
 .atlas-app[data-embed=true] .app-header,.atlas-app[data-embed=true] .chapter-panel,.atlas-app[data-embed=true] .world-tracks,.atlas-app[data-embed=true] .map-meta { display: none; }
@@ -41,7 +50,7 @@
 .exploration-copy { flex: 1 1 auto; min-height: 48px; }
 .exploration-panel details { max-height: 180px; overflow: auto; flex-shrink: 0; }
 .exploration-panel summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
-@media(max-width:767px) {
+@media (width <= 768px) {
  .exploration-panel { bottom: calc(20px + env(safe-area-inset-bottom)); max-height: 46dvh; }
  .exploration-panel header h2 { font-size: 18px; }.exploration-panel header small { font-size: 12px; }
  .exploration-copy { max-height: 23dvh; font-size: 13px; }.camp-legend { margin: 6px 0; font-size: 12px; }

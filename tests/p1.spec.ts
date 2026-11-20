@@ -28,7 +28,7 @@ test('language, quality, popovers and debug console work', async ({ page }, info
 });
 test('sheet settles across all three states and handles a swipe', async ({ page }, info) => {
   test.skip(info.project.name === 'desktop', 'Phone sheet only');
-  await page.goto('/');
+  await page.goto('/?year=230');
   const handle = page.getByRole('slider', { name: '收起 / 半开 / 全开' });
   await handle.focus(); await page.keyboard.press('Home');
   await expect(page.locator('.chapter-sheet')).toHaveAttribute('data-snap', '0');
