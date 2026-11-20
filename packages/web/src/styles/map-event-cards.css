@@ -33,3 +33,16 @@
 .map-event-card button { pointer-events: auto; }
 .event-close { font-size: 20px; min-height: 44px; min-width: 44px; color: var(--text); }
 .event-sites { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.map-event-projection { position: absolute; inset: 0; pointer-events: none; }
+.map-event-pin, .map-event-leader { position: absolute; inset: 0 auto auto 0; pointer-events: none; }
+.map-event-pin { width: 10px; height: 10px; border: 2px solid var(--track-color); border-radius: 50%; background: var(--sky); }
+.map-event-leader { border-top: 1px dashed var(--track-color); transform-origin: left; opacity: .69; }
+.map-event-card header > span { min-width: 0; }
+
+@media (width <= 768px) {
+  .map-event-card { width: min(224px, 58%); padding: 0 7px 4px; }
+  .map-event-card header > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .map-event-card p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden; margin: 0; }
+  .map-event-card .event-sites { flex-wrap: nowrap; overflow-x: auto; }
+}

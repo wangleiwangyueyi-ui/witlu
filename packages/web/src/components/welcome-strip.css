@@ -1,0 +1,25 @@
+.welcome-strip {
+  position: absolute;
+  z-index: 13;
+  top: 62px;
+  left: 12px;
+  max-width: calc(100% - 24px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 3px;
+  padding-inline: 8px 2px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: var(--sky);
+  color: var(--text);
+  font-size: 12px;
+}
+.welcome-strip button { min-width: 44px; min-height: 44px; padding-inline: 4px; white-space: nowrap; }
+.welcome-strip button:last-child { font-size: 20px; }
+.welcome-strip button:disabled { color: var(--text-secondary); }
+.atlas-app:has(.opening-screen) .welcome-strip { visibility: hidden; }
+
+@media (width <= 768px) {
+  .welcome-strip { left: 8px; max-width: calc(100% - 16px); }
+}

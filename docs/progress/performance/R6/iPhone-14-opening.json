@@ -1,0 +1,2242 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 664
+  },
+  "elapsed": 5416.400000000001,
+  "meanFps": 57.40953368643283,
+  "p95Ms": 16.799999999999272,
+  "framing": {
+    "target": [
+      195,
+      332,
+      13536.64
+    ],
+    "center": [
+      195,
+      332
+    ],
+    "pose": {
+      "lon": 108.91000000000003,
+      "lat": 26.74723384459185,
+      "distance": 8200,
+      "bearing": 0,
+      "pitch": 90
+    }
+  },
+  "audit": {
+    "readout": {
+      "frames": [
+        {
+          "timestamp": 4412.8,
+          "elapsed": 0,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4529.4,
+          "elapsed": 216.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4546.1,
+          "elapsed": 333.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4562.8,
+          "elapsed": 350,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4579.4,
+          "elapsed": 366.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4596.1,
+          "elapsed": 383.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4612.8,
+          "elapsed": 400,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4629.5,
+          "elapsed": 416.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4646.1,
+          "elapsed": 433.4,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4662.8,
+          "elapsed": 450,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4679.4,
+          "elapsed": 466.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4696.1,
+          "elapsed": 483.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4712.8,
+          "elapsed": 500,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4729.5,
+          "elapsed": 516.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4746.1,
+          "elapsed": 533.4,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4762.8,
+          "elapsed": 550,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4779.4,
+          "elapsed": 566.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4796.1,
+          "elapsed": 583.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4812.8,
+          "elapsed": 600,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4829.4,
+          "elapsed": 616.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4846.1,
+          "elapsed": 633.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4862.8,
+          "elapsed": 650,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4879.4,
+          "elapsed": 666.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4896.1,
+          "elapsed": 683.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4912.8,
+          "elapsed": 700,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4929.4,
+          "elapsed": 716.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4946.1,
+          "elapsed": 733.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4962.8,
+          "elapsed": 750,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4979.4,
+          "elapsed": 766.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 4996.1,
+          "elapsed": 783.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5012.8,
+          "elapsed": 800,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5029.4,
+          "elapsed": 816.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5046,
+          "elapsed": 833.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5062.8,
+          "elapsed": 849.9,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5079.4,
+          "elapsed": 866.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5096.1,
+          "elapsed": 883.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5112.7,
+          "elapsed": 900,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5129.4,
+          "elapsed": 916.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5146.1,
+          "elapsed": 933.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5162.8,
+          "elapsed": 950,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5179.4,
+          "elapsed": 966.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5196.1,
+          "elapsed": 983.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5212.7,
+          "elapsed": 1000,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5229.4,
+          "elapsed": 1016.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5246.1,
+          "elapsed": 1033.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5262.7,
+          "elapsed": 1050,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5279.4,
+          "elapsed": 1066.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5296.1,
+          "elapsed": 1083.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5312.7,
+          "elapsed": 1100,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5329.4,
+          "elapsed": 1116.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5346.1,
+          "elapsed": 1133.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5362.7,
+          "elapsed": 1150,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5379.5,
+          "elapsed": 1166.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5396.1,
+          "elapsed": 1183.4,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5412.8,
+          "elapsed": 1200,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5429.4,
+          "elapsed": 1216.7,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5446.1,
+          "elapsed": 1233.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5462.7,
+          "elapsed": 1250,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5479.4,
+          "elapsed": 1266.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5496.1,
+          "elapsed": 1283.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5512.7,
+          "elapsed": 1300,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5529.4,
+          "elapsed": 1316.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5546,
+          "elapsed": 1333.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5562.7,
+          "elapsed": 1349.9,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5579.4,
+          "elapsed": 1366.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5596,
+          "elapsed": 1383.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5612.7,
+          "elapsed": 1399.9,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5629.4,
+          "elapsed": 1416.6,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5646.1,
+          "elapsed": 1433.3,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5662.7,
+          "elapsed": 1450,
+          "blend": 0,
+          "title": 0
+        },
+        {
+          "timestamp": 5679.4,
+          "elapsed": 1466.6,
+          "blend": 0,
+          "title": 0.00618262
+        },
+        {
+          "timestamp": 5696.1,
+          "elapsed": 1483.3,
+          "blend": 0,
+          "title": 0.0240858
+        },
+        {
+          "timestamp": 5712.7,
+          "elapsed": 1500,
+          "blend": 0,
+          "title": 0.052512
+        },
+        {
+          "timestamp": 5729.4,
+          "elapsed": 1516.6,
+          "blend": 0,
+          "title": 0.0900117
+        },
+        {
+          "timestamp": 5746.1,
+          "elapsed": 1533.3,
+          "blend": 0,
+          "title": 0.135845
+        },
+        {
+          "timestamp": 5762.7,
+          "elapsed": 1550,
+          "blend": 0,
+          "title": 0.188615
+        },
+        {
+          "timestamp": 5779.4,
+          "elapsed": 1566.6,
+          "blend": 0,
+          "title": 0.246758
+        },
+        {
+          "timestamp": 5796,
+          "elapsed": 1583.3,
+          "blend": 0,
+          "title": 0.309783
+        },
+        {
+          "timestamp": 5812.8,
+          "elapsed": 1599.9,
+          "blend": 0,
+          "title": 0.375752
+        },
+        {
+          "timestamp": 5829.4,
+          "elapsed": 1616.7,
+          "blend": 0,
+          "title": 0.444684
+        },
+        {
+          "timestamp": 5846,
+          "elapsed": 1633.3,
+          "blend": 0,
+          "title": 0.513748
+        },
+        {
+          "timestamp": 5862.8,
+          "elapsed": 1649.9,
+          "blend": 0,
+          "title": 0.582579
+        },
+        {
+          "timestamp": 5879.4,
+          "elapsed": 1666.7,
+          "blend": 0,
+          "title": 0.650798
+        },
+        {
+          "timestamp": 5896,
+          "elapsed": 1683.3,
+          "blend": 0,
+          "title": 0.715592
+        },
+        {
+          "timestamp": 5912.8,
+          "elapsed": 1699.9,
+          "blend": 0,
+          "title": 0.77661
+        },
+        {
+          "timestamp": 5929.4,
+          "elapsed": 1716.7,
+          "blend": 0,
+          "title": 0.833313
+        },
+        {
+          "timestamp": 5946,
+          "elapsed": 1733.3,
+          "blend": 0,
+          "title": 0.883164
+        },
+        {
+          "timestamp": 5962.7,
+          "elapsed": 1749.9,
+          "blend": 0,
+          "title": 0.925694
+        },
+        {
+          "timestamp": 5979.3,
+          "elapsed": 1766.6,
+          "blend": 0,
+          "title": 0.959903
+        },
+        {
+          "timestamp": 5996.1,
+          "elapsed": 1783.2,
+          "blend": 0,
+          "title": 0.984199
+        },
+        {
+          "timestamp": 6012.8,
+          "elapsed": 1800,
+          "blend": 0,
+          "title": 0.997728
+        },
+        {
+          "timestamp": 6029.4,
+          "elapsed": 1816.7,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6046.1,
+          "elapsed": 1833.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6062.8,
+          "elapsed": 1850,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6079.4,
+          "elapsed": 1866.7,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6096.1,
+          "elapsed": 1883.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6112.7,
+          "elapsed": 1900,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6129.4,
+          "elapsed": 1916.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6146,
+          "elapsed": 1933.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6162.7,
+          "elapsed": 1949.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6179.3,
+          "elapsed": 1966.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6196.1,
+          "elapsed": 1983.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6212.7,
+          "elapsed": 2000,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6229.4,
+          "elapsed": 2016.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6246,
+          "elapsed": 2033.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6262.7,
+          "elapsed": 2049.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6279.4,
+          "elapsed": 2066.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6296.1,
+          "elapsed": 2083.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6312.7,
+          "elapsed": 2100,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6329.4,
+          "elapsed": 2116.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6346,
+          "elapsed": 2133.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6362.7,
+          "elapsed": 2149.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6379.4,
+          "elapsed": 2166.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6396,
+          "elapsed": 2183.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6412.7,
+          "elapsed": 2199.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6429.4,
+          "elapsed": 2216.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6446.1,
+          "elapsed": 2233.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6462.7,
+          "elapsed": 2250,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6479.4,
+          "elapsed": 2266.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6496.1,
+          "elapsed": 2283.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6512.7,
+          "elapsed": 2300,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6529.4,
+          "elapsed": 2316.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6546.1,
+          "elapsed": 2333.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6562.7,
+          "elapsed": 2350,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6579.4,
+          "elapsed": 2366.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6596,
+          "elapsed": 2383.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6612.7,
+          "elapsed": 2399.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6629.4,
+          "elapsed": 2416.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6646.1,
+          "elapsed": 2433.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6662.7,
+          "elapsed": 2450,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6679.4,
+          "elapsed": 2466.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6696,
+          "elapsed": 2483.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6712.7,
+          "elapsed": 2499.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6729.3,
+          "elapsed": 2516.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6746,
+          "elapsed": 2533.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6762.6,
+          "elapsed": 2549.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6779.3,
+          "elapsed": 2566.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6796,
+          "elapsed": 2583.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6812.7,
+          "elapsed": 2599.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6829.4,
+          "elapsed": 2616.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6846.1,
+          "elapsed": 2633.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6862.7,
+          "elapsed": 2650,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6879.3,
+          "elapsed": 2666.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6896,
+          "elapsed": 2683.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6912.7,
+          "elapsed": 2699.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6929.4,
+          "elapsed": 2716.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6946,
+          "elapsed": 2733.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6962.7,
+          "elapsed": 2749.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6979.4,
+          "elapsed": 2766.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 6996,
+          "elapsed": 2783.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7012.7,
+          "elapsed": 2799.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7029.3,
+          "elapsed": 2816.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7046,
+          "elapsed": 2833.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7062.6,
+          "elapsed": 2849.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7079.4,
+          "elapsed": 2866.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7096,
+          "elapsed": 2883.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7112.7,
+          "elapsed": 2899.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7129.4,
+          "elapsed": 2916.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7146,
+          "elapsed": 2933.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7162.6,
+          "elapsed": 2949.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7179.3,
+          "elapsed": 2966.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7196,
+          "elapsed": 2983.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7212.6,
+          "elapsed": 2999.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7229.4,
+          "elapsed": 3016.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7246,
+          "elapsed": 3033.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7262.7,
+          "elapsed": 3049.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7279.4,
+          "elapsed": 3066.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7296,
+          "elapsed": 3083.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7312.7,
+          "elapsed": 3099.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7329.4,
+          "elapsed": 3116.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7346,
+          "elapsed": 3133.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7362.7,
+          "elapsed": 3149.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7379.3,
+          "elapsed": 3166.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7396,
+          "elapsed": 3183.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7412.6,
+          "elapsed": 3199.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7429.4,
+          "elapsed": 3216.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7446,
+          "elapsed": 3233.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7462.6,
+          "elapsed": 3249.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7479.4,
+          "elapsed": 3266.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7496,
+          "elapsed": 3283.3,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7512.6,
+          "elapsed": 3299.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7529.3,
+          "elapsed": 3316.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7546,
+          "elapsed": 3333.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7562.7,
+          "elapsed": 3349.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7579.3,
+          "elapsed": 3366.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7596,
+          "elapsed": 3383.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7612.7,
+          "elapsed": 3399.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7629.3,
+          "elapsed": 3416.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7646,
+          "elapsed": 3433.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7662.7,
+          "elapsed": 3449.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7679.3,
+          "elapsed": 3466.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7696,
+          "elapsed": 3483.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7712.6,
+          "elapsed": 3499.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7729.3,
+          "elapsed": 3516.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7746,
+          "elapsed": 3533.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7762.7,
+          "elapsed": 3549.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7779.3,
+          "elapsed": 3566.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7796,
+          "elapsed": 3583.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7812.6,
+          "elapsed": 3599.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7829.3,
+          "elapsed": 3616.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7846,
+          "elapsed": 3633.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7862.6,
+          "elapsed": 3649.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7879.3,
+          "elapsed": 3666.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7896,
+          "elapsed": 3683.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7912.7,
+          "elapsed": 3699.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7929.3,
+          "elapsed": 3716.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7945.9,
+          "elapsed": 3733.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7962.7,
+          "elapsed": 3749.8,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7979.3,
+          "elapsed": 3766.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 7996,
+          "elapsed": 3783.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8012.6,
+          "elapsed": 3799.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8029.3,
+          "elapsed": 3816.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8046,
+          "elapsed": 3833.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8062.6,
+          "elapsed": 3849.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8079.3,
+          "elapsed": 3866.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8096,
+          "elapsed": 3883.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8112.6,
+          "elapsed": 3899.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8129.3,
+          "elapsed": 3916.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8145.9,
+          "elapsed": 3933.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8162.7,
+          "elapsed": 3949.8,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8179.3,
+          "elapsed": 3966.6,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8196,
+          "elapsed": 3983.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8212.6,
+          "elapsed": 3999.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8229.3,
+          "elapsed": 4016.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8246,
+          "elapsed": 4033.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8262.6,
+          "elapsed": 4049.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8279.3,
+          "elapsed": 4066.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8296,
+          "elapsed": 4083.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8312.6,
+          "elapsed": 4099.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8329.3,
+          "elapsed": 4116.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8346,
+          "elapsed": 4133.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8362.6,
+          "elapsed": 4149.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8379.3,
+          "elapsed": 4166.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8396,
+          "elapsed": 4183.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8412.6,
+          "elapsed": 4199.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8496,
+          "elapsed": 4216.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8512.6,
+          "elapsed": 4299.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8529.3,
+          "elapsed": 4316.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8546,
+          "elapsed": 4333.2,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8562.6,
+          "elapsed": 4349.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8579.2,
+          "elapsed": 4366.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8596,
+          "elapsed": 4383.1,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8612.6,
+          "elapsed": 4399.9,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8646,
+          "elapsed": 4416.5,
+          "blend": 0,
+          "title": 1
+        },
+        {
+          "timestamp": 8662.6,
+          "elapsed": 4449.9,
+          "blend": 0.002,
+          "title": 1
+        },
+        {
+          "timestamp": 8679.2,
+          "elapsed": 4466.5,
+          "blend": 0.005,
+          "title": 1
+        },
+        {
+          "timestamp": 8696,
+          "elapsed": 4483.1,
+          "blend": 0.009,
+          "title": 1
+        },
+        {
+          "timestamp": 8712.6,
+          "elapsed": 4499.9,
+          "blend": 0.015,
+          "title": 1
+        },
+        {
+          "timestamp": 8729.3,
+          "elapsed": 4516.5,
+          "blend": 0.021,
+          "title": 1
+        },
+        {
+          "timestamp": 8746,
+          "elapsed": 4533.2,
+          "blend": 0.029,
+          "title": 1
+        },
+        {
+          "timestamp": 8762.6,
+          "elapsed": 4549.9,
+          "blend": 0.037,
+          "title": 1
+        },
+        {
+          "timestamp": 8779.3,
+          "elapsed": 4566.5,
+          "blend": 0.047,
+          "title": 1
+        },
+        {
+          "timestamp": 8795.9,
+          "elapsed": 4583.2,
+          "blend": 0.058,
+          "title": 1
+        },
+        {
+          "timestamp": 8812.6,
+          "elapsed": 4599.8,
+          "blend": 0.069,
+          "title": 1
+        },
+        {
+          "timestamp": 8829.3,
+          "elapsed": 4616.5,
+          "blend": 0.082,
+          "title": 1
+        },
+        {
+          "timestamp": 8845.9,
+          "elapsed": 4633.2,
+          "blend": 0.095,
+          "title": 1
+        },
+        {
+          "timestamp": 8862.6,
+          "elapsed": 4649.8,
+          "blend": 0.109,
+          "title": 1
+        },
+        {
+          "timestamp": 8879.3,
+          "elapsed": 4666.5,
+          "blend": 0.124,
+          "title": 1
+        },
+        {
+          "timestamp": 8896,
+          "elapsed": 4683.2,
+          "blend": 0.14,
+          "title": 1
+        },
+        {
+          "timestamp": 8912.6,
+          "elapsed": 4699.9,
+          "blend": 0.156,
+          "title": 1
+        },
+        {
+          "timestamp": 8929.3,
+          "elapsed": 4716.5,
+          "blend": 0.173,
+          "title": 1
+        },
+        {
+          "timestamp": 8945.9,
+          "elapsed": 4733.2,
+          "blend": 0.191,
+          "title": 1
+        },
+        {
+          "timestamp": 8962.6,
+          "elapsed": 4749.8,
+          "blend": 0.209,
+          "title": 1
+        },
+        {
+          "timestamp": 8979.3,
+          "elapsed": 4766.5,
+          "blend": 0.228,
+          "title": 1
+        },
+        {
+          "timestamp": 8995.9,
+          "elapsed": 4783.2,
+          "blend": 0.247,
+          "title": 1
+        },
+        {
+          "timestamp": 9012.6,
+          "elapsed": 4799.8,
+          "blend": 0.267,
+          "title": 1
+        },
+        {
+          "timestamp": 9029.2,
+          "elapsed": 4816.5,
+          "blend": 0.287,
+          "title": 1
+        },
+        {
+          "timestamp": 9046,
+          "elapsed": 4833.1,
+          "blend": 0.308,
+          "title": 1
+        },
+        {
+          "timestamp": 9062.6,
+          "elapsed": 4849.9,
+          "blend": 0.329,
+          "title": 1
+        },
+        {
+          "timestamp": 9079.3,
+          "elapsed": 4866.5,
+          "blend": 0.35,
+          "title": 1
+        },
+        {
+          "timestamp": 9095.9,
+          "elapsed": 4883.2,
+          "blend": 0.372,
+          "title": 1
+        },
+        {
+          "timestamp": 9112.6,
+          "elapsed": 4899.8,
+          "blend": 0.393,
+          "title": 1
+        },
+        {
+          "timestamp": 9129.2,
+          "elapsed": 4916.5,
+          "blend": 0.415,
+          "title": 1
+        },
+        {
+          "timestamp": 9145.9,
+          "elapsed": 4933.1,
+          "blend": 0.437,
+          "title": 1
+        },
+        {
+          "timestamp": 9162.6,
+          "elapsed": 4949.8,
+          "blend": 0.46,
+          "title": 1
+        },
+        {
+          "timestamp": 9179.3,
+          "elapsed": 4966.5,
+          "blend": 0.482,
+          "title": 1
+        },
+        {
+          "timestamp": 9196,
+          "elapsed": 4983.2,
+          "blend": 0.504,
+          "title": 1
+        },
+        {
+          "timestamp": 9212.6,
+          "elapsed": 4999.9,
+          "blend": 0.527,
+          "title": 1
+        },
+        {
+          "timestamp": 9229.3,
+          "elapsed": 5016.5,
+          "blend": 0.549,
+          "title": 1
+        },
+        {
+          "timestamp": 9246,
+          "elapsed": 5033.2,
+          "blend": 0.571,
+          "title": 1
+        },
+        {
+          "timestamp": 9262.6,
+          "elapsed": 5049.9,
+          "blend": 0.593,
+          "title": 1
+        },
+        {
+          "timestamp": 9279.2,
+          "elapsed": 5066.5,
+          "blend": 0.615,
+          "title": 1
+        },
+        {
+          "timestamp": 9295.9,
+          "elapsed": 5083.1,
+          "blend": 0.637,
+          "title": 1
+        },
+        {
+          "timestamp": 9312.6,
+          "elapsed": 5099.8,
+          "blend": 0.658,
+          "title": 1
+        },
+        {
+          "timestamp": 9329.3,
+          "elapsed": 5116.5,
+          "blend": 0.679,
+          "title": 1
+        },
+        {
+          "timestamp": 9345.9,
+          "elapsed": 5133.2,
+          "blend": 0.7,
+          "title": 1
+        },
+        {
+          "timestamp": 9362.6,
+          "elapsed": 5149.8,
+          "blend": 0.72,
+          "title": 0.998534
+        },
+        {
+          "timestamp": 9379.3,
+          "elapsed": 5166.5,
+          "blend": 0.741,
+          "title": 0.989555
+        },
+        {
+          "timestamp": 9395.9,
+          "elapsed": 5183.2,
+          "blend": 0.76,
+          "title": 0.972974
+        },
+        {
+          "timestamp": 9412.6,
+          "elapsed": 5199.8,
+          "blend": 0.779,
+          "title": 0.949607
+        },
+        {
+          "timestamp": 9429.3,
+          "elapsed": 5216.5,
+          "blend": 0.798,
+          "title": 0.919826
+        },
+        {
+          "timestamp": 9445.9,
+          "elapsed": 5233.2,
+          "blend": 0.816,
+          "title": 0.884406
+        },
+        {
+          "timestamp": 9479.3,
+          "elapsed": 5249.8,
+          "blend": 0.833,
+          "title": 0.844261
+        },
+        {
+          "timestamp": 9512.6,
+          "elapsed": 5283.2,
+          "blend": 0.866,
+          "title": 0.751183
+        },
+        {
+          "timestamp": 9529.2,
+          "elapsed": 5316.5,
+          "blend": 0.896,
+          "title": 0.646363
+        },
+        {
+          "timestamp": 9562.6,
+          "elapsed": 5333.1,
+          "blend": 0.91,
+          "title": 0.591248
+        },
+        {
+          "timestamp": 9579.3,
+          "elapsed": 5366.5,
+          "blend": 0.935,
+          "title": 0.477847
+        },
+        {
+          "timestamp": 9595.9,
+          "elapsed": 5383.2,
+          "blend": 0.947,
+          "title": 0.421202
+        },
+        {
+          "timestamp": 9612.6,
+          "elapsed": 5399.8,
+          "blend": 0.957,
+          "title": 0.365798
+        },
+        {
+          "timestamp": 9629.2,
+          "elapsed": 5416.5,
+          "blend": 0.966,
+          "title": 0.311621
+        },
+        {
+          "timestamp": 9645.9,
+          "elapsed": 5433.1,
+          "blend": 0.974,
+          "title": 0.259967
+        },
+        {
+          "timestamp": 9662.6,
+          "elapsed": 5449.8,
+          "blend": 0.982,
+          "title": 0.210866
+        },
+        {
+          "timestamp": 9679.2,
+          "elapsed": 5466.5,
+          "blend": 0.988,
+          "title": 0.165293
+        },
+        {
+          "timestamp": 9695.9,
+          "elapsed": 5483.1,
+          "blend": 0.993,
+          "title": 0.124138
+        },
+        {
+          "timestamp": 9712.6,
+          "elapsed": 5499.8,
+          "blend": 0.996,
+          "title": 0.0875586
+        },
+        {
+          "timestamp": 9729.2,
+          "elapsed": 5516.5,
+          "blend": 0.999,
+          "title": 0.0564716
+        },
+        {
+          "timestamp": 9745.9,
+          "elapsed": 5533.1,
+          "blend": 1,
+          "title": 0.0316628
+        },
+        {
+          "timestamp": 9762.5,
+          "elapsed": 5549.8,
+          "blend": 1,
+          "title": 0.0134862
+        },
+        {
+          "timestamp": 9779.2,
+          "elapsed": 5566.4,
+          "blend": 1,
+          "title": 0.00280706
+        },
+        {
+          "timestamp": 9795.9,
+          "elapsed": 5583.1,
+          "blend": 1,
+          "title": 0
+        },
+        {
+          "timestamp": 9812.6,
+          "elapsed": 5599.8,
+          "blend": 1,
+          "title": 0
+        }
+      ],
+      "mapReady": 2902.5,
+      "end": 9829.2
+    },
+    "assets": [
+      {
+        "file": "/brand/opening/day-2048.webp",
+        "start": 3873.100000023842,
+        "end": 3896
+      },
+      {
+        "file": "/brand/opening/masks-2048.webp",
+        "start": 3873.5,
+        "end": 3896.100000023842
+      },
+      {
+        "file": "/brand/opening/day-2048.webp",
+        "start": 3878.800000011921,
+        "end": 4070.900000035763
+      },
+      {
+        "file": "/brand/opening/masks-2048.webp",
+        "start": 3879.100000023842,
+        "end": 4072
+      }
+    ],
+    "pose": {
+      "lon": 108.91000000000003,
+      "lat": 26.74723384459185,
+      "distance": 8200,
+      "bearing": 0,
+      "pitch": 90
+    }
+  },
+  "deltas": [
+    116.59999999999945,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.600000000000364,
+    16.800000000000182,
+    16.599999999999454,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.800000000000182,
+    16.600000000000364,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.800000000000182,
+    16.599999999999454,
+    16.600000000000364,
+    16.800000000000182,
+    16.599999999999454,
+    16.600000000000364,
+    16.800000000000182,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.800000000000182,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.699999999999818,
+    16.599999999999454,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.800000000000182,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.699999999999818,
+    16.699999999999818,
+    16.700000000000728,
+    16.599999999999454,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.599999999999454,
+    16.800000000000182,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.699999999999818,
+    16.600000000000364,
+    16.699999999999818,
+    16.599999999999454,
+    16.800000000000182,
+    16.600000000000364,
+    16.699999999999818,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    83.39999999999964,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    33.399999999999636,
+    16.600000000000364,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.799999999999272,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.600000000000364,
+    33.399999999999636,
+    33.30000000000109,
+    16.600000000000364,
+    33.399999999999636,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.700000000000728,
+    16.600000000000364,
+    16.69999999999891,
+    16.600000000000364,
+    16.700000000000728,
+    16.69999999999891,
+    16.700000000000728
+  ]
+}

@@ -67,6 +67,6 @@ vConsole 3.15.1，Tencent / THL A29 Limited，MIT License。仅在 `?debug=1` �
 - 白天为 NASA Earth Observatory 的 Blue Marble Next Generation，使用 2004 年 7 月的地形和海底地形合成图。致谢 Reto Stöckli（NASA Goddard Space Flight Center）及 Terra MODIS 团队。[图集与下载](https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography-bathymetry/)
 - 夜间城市灯光为 Black Marble 2016 全地球 3 km 灰度数据，来自 Suomi NPP 的 VIIRS。致谢 NASA Goddard、Miguel Román、Joshua Stevens 和 NOAA。[图集与下载](https://science.nasa.gov/earth/earth-observatory/earth-at-night/maps/)
 - 云贴图为 NOAA Climate Prediction Center 的全球云量合成，采用 NASA Goddard Scientific Visualization Studio 发布的 2014 年 6 月 2 日 00:00 UTC 帧 `01000`，提取影像的覆盖度通道。[数据与致谢](https://svs.gsfc.nasa.gov/4439/)
-- 中国区域描边为 Natural Earth 公有领域 `ne_110m_admin_0_countries.geojson` 中的 CHN 要素，与底图采用同一固定提交。Made with Natural Earth。[源文件](https://github.com/nvkelso/natural-earth-vector/blob/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson)
+- 中国区域描边为 Natural Earth 公有领域 `ne_110m_admin_0_countries.geojson` 中的 CHN 要素和台湾岛轮廓（TWN 要素），与底图采用同一固定提交。Made with Natural Earth。[源文件](https://github.com/nvkelso/natural-earth-vector/blob/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson)
 
 上述卫星数据与云量影像为美国政府公有领域素材。本站将其转为自托管的 2K/4K WebP，运行时应用色调与光照。星空和菲涅尔效果为程序生成。全套原图地址及 SHA-256 记录在 `scripts/build-opening.mjs`。[NASA 影像使用说明](https://www.nasa.gov/nasa-brand-center/images-and-media/) · [NASA Earth Science 影像再利用说明](https://science.nasa.gov/earth/faq/)

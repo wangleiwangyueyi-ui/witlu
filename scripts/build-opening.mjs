@@ -27,9 +27,13 @@ async function source([filename, url, hash]) {
 }
 
 const [day, night, clouds, countries] = await Promise.all(Object.values(sources).map(source));
-const china = JSON.parse(countries).features.find(f => f.properties.ADM0_A3 === 'CHN');
-if (!china || !['Polygon', 'MultiPolygon'].includes(china.geometry.type)) throw new Error('Could not find the Natural Earth China outline');
-const outlines = china.geometry.type === 'Polygon' ? [china.geometry.coordinates] : china.geometry.coordinates;
+const features = JSON.parse(countries).features;
+const outlines = ['CHN', 'TWN'].flatMap(code => {
+  const feature = features.find(candidate => candidate.properties.ADM0_A3 === code);
+  if (feature?.geometry.type === 'Polygon') return [feature.geometry.coordinates];
+  if (feature?.geometry.type === 'MultiPolygon') return feature.geometry.coordinates;
+  throw new Error(`Could not find outline ${code} in Natural Earth`);
+});
 const output = path.join(ROOT, 'packages/web/public/brand/opening');
 
 for (const width of [2048, 4096]) {

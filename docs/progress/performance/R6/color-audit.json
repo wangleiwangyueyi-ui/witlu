@@ -1,0 +1,140 @@
+{
+  "palette": [
+    {
+      "hex": "#6E97F8",
+      "lightness": 63.52662916046357
+    },
+    {
+      "hex": "#F28643",
+      "lightness": 66.77728686556107
+    },
+    {
+      "hex": "#42BB91",
+      "lightness": 68.56290675054818
+    },
+    {
+      "hex": "#BC7BE3",
+      "lightness": 62.00136484459303
+    },
+    {
+      "hex": "#EF7091",
+      "lightness": 63.33313616036496
+    },
+    {
+      "hex": "#A8A627",
+      "lightness": 66.32441815657697
+    },
+    {
+      "hex": "#41B4DD",
+      "lightness": 68.73908548506172
+    },
+    {
+      "hex": "#E685C0",
+      "lightness": 67.58138048752437
+    },
+    {
+      "hex": "#A394EE",
+      "lightness": 65.85635600425769
+    },
+    {
+      "hex": "#8DB13C",
+      "lightness": 67.60060664868755
+    }
+  ],
+  "modes": [
+    "normal",
+    "protanopia",
+    "deuteranopia",
+    "tritanopia"
+  ],
+  "snapshots": 198,
+  "samples": [
+    {
+      "year": -350,
+      "key": "s_zhanguo_a"
+    },
+    {
+      "year": -221,
+      "key": "s_qin_a"
+    },
+    {
+      "year": -100,
+      "key": "s_xihan_b"
+    },
+    {
+      "year": 100,
+      "key": "s_donghan"
+    },
+    {
+      "year": 230,
+      "key": "s_sanguo_a"
+    },
+    {
+      "year": 300,
+      "key": "s_xijin_a"
+    },
+    {
+      "year": 383,
+      "key": "s_dongjin_c"
+    },
+    {
+      "year": 500,
+      "key": "s_nanbei_b"
+    },
+    {
+      "year": 589,
+      "key": "s_sui"
+    },
+    {
+      "year": 750,
+      "key": "s_tang_a5"
+    },
+    {
+      "year": 950,
+      "key": "s_wudai_d"
+    },
+    {
+      "year": 1080,
+      "key": "s_beisong_b1"
+    },
+    {
+      "year": 1140,
+      "key": "s_nansong_a0"
+    },
+    {
+      "year": 1300,
+      "key": "s_yuan"
+    },
+    {
+      "year": 1450,
+      "key": "s_ming_b0"
+    },
+    {
+      "year": 1700,
+      "key": "s_qing_b"
+    },
+    {
+      "year": 1936,
+      "key": "s_roc"
+    },
+    {
+      "year": 2020,
+      "key": "s_prc"
+    }
+  ],
+  "edges": 1292,
+  "minimum": {
+    "snapshot": "s_zhanguo_a",
+    "a": "qin_state",
+    "b": "han_state",
+    "deltaE": 8.078629850273524
+  },
+  "jinAndDali": {
+    "snapshot": "s_nansong_a0",
+    "jin": "#6E97F8",
+    "dali": "#42BB91",
+    "deltaE": 17.78191184650704
+  },
+  "minColorDistance": 8,
+  "passes": true
+}

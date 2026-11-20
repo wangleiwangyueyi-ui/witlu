@@ -6,7 +6,7 @@
 .weather-controls > .glass-button { margin-block: 4px; }
 .weather-controls details { margin-block: 12px; }
 .weather-controls summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
-.weather-story-caption { position: absolute; left: 30px; top: 130px; max-width: min(440px, 50vw); padding: 10px 16px; font-size: 13px; line-height: 1.5; pointer-events: none; }
+.weather-story-caption { position: absolute; left: 30px; top: 130px; max-width: min(440px, 50vw); background: var(--sky); color: var(--text); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 13px; line-height: 1.5; pointer-events: none; }
 [data-weather-mood='solemn'] .track-event[data-current='true'], [data-weather-mood='solemn'] .chronicle-event[data-current='true'] { background: var(--glass-light); box-shadow: inset 2px 0 var(--land-snow); }
 [data-weather-mood='solemn'] .calligraphy-stamp, [data-weather-mood='solemn'] .calligraphy-stroke { animation: none; }
 @media (width < 768px) {

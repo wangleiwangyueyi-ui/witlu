@@ -5,7 +5,9 @@
   font-size: clamp(15px, 2.1vw, 26px);
   line-height: 1.25;
   letter-spacing: .035em;
-  white-space: nowrap;
+  max-inline-size: min(200px, 32vw);
+  white-space: normal;
+  overflow-wrap: anywhere;
   -webkit-text-stroke: 3px var(--sky);
   paint-order: stroke fill;
 }
@@ -34,7 +36,7 @@
 .map-scale { display: block; height: 14px; margin-bottom: 6px; border: solid var(--text-secondary); border-width: 0 1px 1px; color: var(--text); white-space: nowrap; text-align: center; font-size: 12px; text-shadow: 0 1px 3px var(--sky); line-height: 1; }
 .atlas-app[data-map-mode='flat'] .map-legend { display: block; bottom: calc(var(--dock-height) + 12px); background: var(--sky); backdrop-filter: none; }
 .phase-dots { display: flex; flex-wrap: wrap; gap: 2px; }
-.phase-dots button { min-width: 24px; min-height: 32px; border-color: transparent; color: var(--text-muted); }
+.phase-dots button { min-width: 24px; min-height: 32px; border-color: transparent; color: var(--text-secondary); }
 .phase-dots button[aria-current='step'] { color: var(--gold-glow); }
 .map-legend .legend-entry button { min-height: 44px; min-width: 44px; }
 @media (max-width: 768px) {

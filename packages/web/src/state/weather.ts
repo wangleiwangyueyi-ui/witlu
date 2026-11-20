@@ -11,8 +11,22 @@ import { useShell } from './shell';
 import { frameSites } from './camera-story';
 export const useWeatherSettings=create<{enabled:boolean;effects:Record<WeatherEffect,boolean>;busy:boolean;caption:string;error:string;sequence:string;toggle:(key:WeatherEffect)=>void}>(set=>({enabled:true,effects:Object.fromEntries(WEATHER_EFFECTS.map(k=>[k,true]))as Record<WeatherEffect,boolean>,busy:false,caption:'',error:'',sequence:'',toggle:key=>set(s=>({effects:{...s.effects,[key]:!s.effects[key]}}))}));
 export const storyLock={active:false,generation:0};
-let moods:Promise<WeatherEvent[]>|null=null;
-export function loadMoods():Promise<WeatherEvent[]>{return moods??=Promise.all([fetch('/data/moods.json').then(r=>{if(!r.ok)throw Error('moods.json');return r.json()as Promise<WeatherEvent[]>;}),loadChronicle() as Promise<Chronicle>]).then(([entries,chronicle])=>{const coords=new Map(chronicle.events.map(e=>[e.id,e.coord]));return entries.map(e=>({...e,...(coords.get(e.id)?{coord:coords.get(e.id)!}:{}),mood:safeMood(e)}));}).catch(e=>{moods=null;throw e;});}
+type RatedEvent = WeatherEvent & { major: boolean };
+let moods: Promise<RatedEvent[]> | null = null;
+export function loadMoods(): Promise<RatedEvent[]> {
+  return moods ??= Promise.all([
+    fetch('/data/moods.json').then(r => { if (!r.ok) throw Error('moods.json'); return r.json() as Promise<WeatherEvent[]>; }),
+    loadChronicle(),
+  ]).then(([entries,chronicle]) => {
+    const events = new Map(chronicle.events.map(event => [event.id,event]));
+    const featured = new Set<string>(WEATHER_SCENARIOS.map(scenario => scenario.id));
+    return entries.map(entry => {
+      const event = events.get(entry.id), mood = safeMood(entry);
+      return {...entry, ...(event?.coord ? {coord:event.coord} : {}), mood,
+        major: mood === 'solemn' || featured.has(entry.id) || (event?.importance ?? 0) >= 3};
+    });
+  }).catch(error => { moods = null; throw error; });
+}
 export const WEATHER_SCENARIOS = [
   {key:'qin',id:'milestones:zhanguo:28',year:-230,title:['秦灭六国','秦滅六國','Qin unification'],story:'qin'},
   {key:'jingkang',id:'milestones:beisong:34',year:1127,title:['靖康之变','靖康之變','Jingkang'],story:'jingkang'},

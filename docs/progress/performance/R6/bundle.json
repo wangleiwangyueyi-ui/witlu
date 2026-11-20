@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-20T05:03:06.309Z",
+  "definition": "Entry static dependencies plus the 3D engine and their CSS; excludes opt-in labs/debug/export chunks.",
+  "gzipBytes": 355947,
+  "limitBytes": 358400,
+  "files": [
+    {
+      "file": "assets/engine-p6fsH3r8.js",
+      "bytes": 114873,
+      "gzip": 36551
+    },
+    {
+      "file": "assets/index-BffZ6zsR.css",
+      "bytes": 75350,
+      "gzip": 15771
+    },
+    {
+      "file": "assets/index-DDzmqQe8.js",
+      "bytes": 515940,
+      "gzip": 173947
+    },
+    {
+      "file": "assets/three.module-tbp3DQdj.js",
+      "bytes": 514426,
+      "gzip": 129678
+    }
+  ],
+  "fileCount": 10799,
+  "largest": [
+    {
+      "file": "assets\\audio\\yangguan_sandie.mp3",
+      "bytes": 5021845
+    },
+    {
+      "file": "assets\\audio\\liu_shui.mp3",
+      "bytes": 4978302
+    },
+    {
+      "file": "assets\\audio\\zuiyu_changwan.mp3",
+      "bytes": 4177788
+    },
+    {
+      "file": "assets\\audio\\pingsha_luoyan.mp3",
+      "bytes": 4164130
+    },
+    {
+      "file": "data\\coexistence.json",
+      "bytes": 2169802
+    }
+  ],
+  "checks": {
+    "coreGzip": true,
+    "fileCount": true,
+    "maxFile": true
+  },
+  "passed": true
+}

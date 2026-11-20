@@ -1,0 +1,577 @@
+[
+  {
+    "year": -350,
+    "chapter": "图例 · 战国 1/15",
+    "snapshot": "s_zhanguo_a2",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "楚国",
+      "古蜀国",
+      "赵国",
+      "巴国",
+      "越国",
+      "秦国",
+      "魏国",
+      "燕国",
+      "齐国（田齐）",
+      "韩国",
+      "义渠",
+      "宋国",
+      "中山国"
+    ],
+    "placeCount": 0,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 8,
+        "top": 58,
+        "right": 232,
+        "bottom": 171.59375,
+        "name": "前350年 · 周显王 显王十九年×秦孝公与商鞅自栎阳迁都咸阳，废井田、设县制、统一度量衡咸阳"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": -221,
+    "chapter": "图例 · 秦 1/6",
+    "snapshot": "s_qin_b",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "秦"
+    ],
+    "placeCount": 4,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 8,
+        "top": 58,
+        "right": 232,
+        "bottom": 171.59375,
+        "name": "前221年 · 秦始皇 始皇二十六年×王贲受齐王建降，秦王嬴政统一六国称始皇帝，行郡县、书同文车同轨咸阳"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": -100,
+    "chapter": "图例 · 西汉 7/10",
+    "snapshot": "s_xihan_c",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "汉"
+    ],
+    "placeCount": 3,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 8,
+        "top": 58,
+        "right": 232,
+        "bottom": 171.59375,
+        "name": "前100年 · 西汉武帝 天汉元年×中郎将苏武奉汉武帝命持节出使匈奴，因副使牵连被扣留北庭长安"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 100,
+    "chapter": "图例 · 东汉 6/14",
+    "snapshot": "s_donghan_d1",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "东汉"
+    ],
+    "placeCount": 4,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 180,
+        "top": 58,
+        "right": 404,
+        "bottom": 171.59375,
+        "name": "100年 · 东汉和帝 永元十二年×经学家许慎博采篆文古籀，撰成世界首部系统字书《说文解字》汝南召陵（漯河）"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 230,
+    "chapter": "图例 · 三国 1/4",
+    "snapshot": "s_sanguo",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "孙吴",
+      "曹魏",
+      "蜀汉",
+      "燕（公孙氏）"
+    ],
+    "placeCount": 3,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 180,
+        "top": 58,
+        "right": 404,
+        "bottom": 171.59375,
+        "name": "230年 · 吴大帝 黄龙二年×孙权遣卫温、诸葛直率万人航海至夷洲夷洲（台湾）"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 300,
+    "chapter": "图例 · 西晋 1/4",
+    "snapshot": "s_xijin",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "晋"
+    ],
+    "placeCount": 4,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 383,
+    "chapter": "图例 · 东晋十六国 10/21",
+    "snapshot": "s_dongjin_384",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "前秦",
+      "东晋",
+      "吐谷浑"
+    ],
+    "placeCount": 4,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 180,
+        "top": 58,
+        "right": 404,
+        "bottom": 171.59375,
+        "name": "383年 · 东晋孝武帝 太元八年×淝水之战：谢安、谢玄率八万北府兵大破苻坚大军，前秦瓦解淝水（寿阳）"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 500,
+    "chapter": "图例 · 南北朝 7/15",
+    "snapshot": "s_nanbei_c",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "南齐",
+      "北魏",
+      "吐谷浑"
+    ],
+    "placeCount": 6,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 180,
+        "top": 58,
+        "right": 404,
+        "bottom": 171.59375,
+        "name": "500年 · 南朝齐东昏侯 永元二年×齐明帝与东昏侯大诛高武子孙及朝臣，雍州刺史萧衍于襄阳起兵建康 · 襄阳建康 · 襄阳 2"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 589,
+    "chapter": "图例 · 隋 3/5",
+    "snapshot": "s_sui_c",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "隋",
+      "吐谷浑"
+    ],
+    "placeCount": 4,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 180,
+        "top": 58,
+        "right": 404,
+        "bottom": 171.59375,
+        "name": "589年 · 隋文帝 开皇九年×晋王杨广统军渡江，韩擒虎、贺若弼攻克建康擒陈后主，隋灭陈统一全国建康"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 750,
+    "chapter": "图例 · 唐 20/28",
+    "snapshot": "s_tang_b0a",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "唐",
+      "吐蕃",
+      "南诏"
+    ],
+    "placeCount": 1,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 180,
+        "top": 58,
+        "right": 404,
+        "bottom": 171.59375,
+        "name": "750年 · 唐玄宗 天宝九年×王维购得宋之问蓝田辋川别业，与裴迪泛舟弹琴赋《辋川集》二十首蓝田辋川"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 950,
+    "chapter": "图例 · 五代十国 8/11",
+    "snapshot": "s_wudai_e",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "辽（契丹）",
+      "后汉",
+      "大理",
+      "楚（马楚）",
+      "南汉",
+      "南唐",
+      "后蜀",
+      "吴越",
+      "沙州归义军",
+      "西夏"
+    ],
+    "placeCount": 1,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 8,
+        "top": 58,
+        "right": 232,
+        "bottom": 171.59375,
+        "name": "950年 · 后汉隐帝 乾祐三年×后汉隐帝刘承祐于开封诛枢密使杨邠等并害郭威家眷，郭威自邺举兵东都开封府"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 1080,
+    "chapter": "图例 · 北宋 9/12",
+    "snapshot": "s_beisong_b2",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "宋",
+      "辽（契丹）",
+      "西夏",
+      "大理"
+    ],
+    "placeCount": 2,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 8,
+        "top": 58,
+        "right": 232,
+        "bottom": 171.59375,
+        "name": "1080年 · 北宋神宗 元丰三年×大理国崇奉佛教定为国教，段氏诸帝多禅位为僧修行于点苍崇圣寺大理崇圣寺"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 1140,
+    "chapter": "图例 · 南宋 1/8",
+    "snapshot": "s_nansong_a",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "金",
+      "南宋",
+      "西夏",
+      "大理"
+    ],
+    "placeCount": 2,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 8,
+        "top": 58,
+        "right": 232,
+        "bottom": 171.59375,
+        "name": "1140年 · 南宋高宗 绍兴十年×岳飞北伐，郾城、颍昌大捷，进兵朱仙镇郾城 · 朱仙镇郾城 · 朱仙镇 2"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 1300,
+    "chapter": "图例 · 元 2/4",
+    "snapshot": "s_yuan_b",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "元"
+    ],
+    "placeCount": 2,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 1450,
+    "chapter": "图例 · 明 8/12",
+    "snapshot": "s_ming_b",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "明"
+    ],
+    "placeCount": 5,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 1700,
+    "chapter": "图例 · 清 8/18",
+    "snapshot": "s_qing_c",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "清"
+    ],
+    "placeCount": 3,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 1936,
+    "chapter": "图例 · 中华民国 8/10",
+    "snapshot": "s_roc_c",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "中华民国",
+      "伪满洲国（日占）",
+      "台湾（日占）"
+    ],
+    "placeCount": 2,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [
+      {
+        "left": 180,
+        "top": 58,
+        "right": 404,
+        "bottom": 171.59375,
+        "name": "1936年 · 中华民国 民国二十五年×张学良、杨虎城发动西安事变，促成抗日民族统一战线西安"
+      }
+    ],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  },
+  {
+    "year": 2020,
+    "chapter": "图例 · 中华人民共和国 1/1",
+    "snapshot": "s_prc",
+    "fontMin": 12,
+    "small": [],
+    "contrasts": {
+      "card": 17.703000126224993,
+      "control": 16.51824183536946,
+      "outline": 17.703000126224993,
+      "secondary": 9.047196359947856
+    },
+    "coreLabels": [
+      "中华人民共和国"
+    ],
+    "placeCount": 3,
+    "labelClashes": [],
+    "eventClashes": [],
+    "cards": [],
+    "centralCards": 0,
+    "dockHeight": 96,
+    "laneFont": 13,
+    "glassOutside": 0
+  }
+]

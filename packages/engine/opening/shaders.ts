@@ -109,7 +109,9 @@ void main() {
     float cloudRay = nearRay - sqrt(max(0., 1.022 * 1.022 - closestSquared));
     vec2 cloudUv = earthUv(normalize(eye + ray * cloudRay));
     cloudUv = mix(cloudUv, uv, flatten) + vec2(-time*.0016, time*.00035);
-    float cloud = smoothstep(.08,.94,globeSample(earthLayers,cloudUv).g);
+    // The NOAA composite cuts off at 60° N. Feather inside the last observed band.
+    float polarFade = 1. - smoothstep(52. / 180. + .5, 59.6 / 180. + .5, cloudUv.y);
+    float cloud = smoothstep(.08,.94,globeSample(earthLayers,cloudUv).g) * polarFade;
     color = mix(color,mist * (.21 + day * .47),cloud * .54);
 
     float fresnel = pow(1. - max(0.,dot(normal,-ray)),3.4);

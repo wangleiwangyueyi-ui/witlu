@@ -36,16 +36,17 @@ export function safeMood(event: WeatherEvent): Mood {
 export class WeatherDirector {
   event: WeatherEvent | null = null; story: Story | null = null; started = -Infinity; lastTrigger = -Infinity; speed = 1; reduced = false;
   private pausedAt:number|null=null;
+  private light = false;
   effects = Object.fromEntries(WEATHER_EFFECTS.map(k=>[k,true])) as Record<WeatherEffect,boolean>;
-  trigger(event: WeatherEvent, now: number, story: Story | null = null) {
+  trigger(event: WeatherEvent, now: number, story: Story | null = null, light = false) {
     const next={...event,mood:safeMood(event)};
     if (now-this.lastTrigger<10000) {
       // Protection interrupts the current performance, retaining its remaining
       // duration and cooldown instead of starting a second performance.
       if(next.mood!=='solemn'||!this.event||this.event.mood==='solemn')return false;
-      this.resume(now);this.event=next;this.story=null;return true;
+      this.resume(now);this.event=next;this.story=null;this.light=light;return true;
     }
-    this.event=next;this.story=this.event.mood==='solemn'?null:story;this.started=now;this.lastTrigger=now;this.pausedAt=null;return true;
+    this.event=next;this.story=this.event.mood==='solemn'?null:story;this.started=now;this.lastTrigger=now;this.pausedAt=null;this.light=light;return true;
   }
   cancel() { this.event=null;this.story=null;this.pausedAt=null; }
   pause(now:number){this.pausedAt??=now;}
@@ -53,12 +54,12 @@ export class WeatherDirector {
   sample(now:number,quality: keyof typeof WEATHER_BUDGET) {
     const seconds=this.event?Math.max(0,((this.pausedAt??now)-this.started)/1000):0, cues=this.story?STORIES[this.story]:[];
     const cue=cues.filter(c=>c.at<=seconds).at(-1), duration=this.story==='qin'?13:this.story==='jingkang'?6:6;
-    const strength=this.event?smooth(seconds/1.2)*(1-smooth((seconds-duration)/1.2)):0;
+    const strength=this.event?smooth(seconds/1.2)*(1-smooth((seconds-duration)/1.2))*(this.light?.32:1):0;
     const mood: Mood=this.event?.mood==='solemn'?'solemn':cue?.mood??this.event?.mood??'none';
     const skyOnly=this.speed>=4||this.reduced, active=strength>0&&!skyOnly;
-    const has=(effect:WeatherEffect)=>active&&this.effects[effect];
+    const has=(effect:WeatherEffect)=>active&&this.effects[effect]&&(!this.light||['rain','snow','petals','dust','sparks','smoke'].includes(effect));
     const title=this.event?.title??'', particles:Record<ParticleKind,number>={rain:0,snow:0,petals:0,dust:0,sparks:0,smoke:0}, budget=WEATHER_BUDGET[quality];
-    const assign=(k:ParticleKind,scale=1)=>{if(has(k))particles[k]=Math.floor(budget[k]*scale*strength);};
+    const assign=(k:ParticleKind,scale=1)=>{if(has(k))particles[k]=Math.floor(budget[k]*scale*strength*(this.light?.24:1));};
     if(mood==='sorrow')assign('rain');
     if(mood==='solemn'){assign('rain',.22);assign('petals',.12);}
     if(mood==='war'){assign('smoke');assign('sparks');}

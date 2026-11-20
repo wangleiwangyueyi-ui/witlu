@@ -22,7 +22,7 @@
 .opening-skip { position: absolute; right: 24px; bottom: max(28px,var(--space-safe-bottom)); z-index: 1; pointer-events: auto; }
 
 
-.event-sources { margin: 0 0 10px; padding: 0 8px; border: 0; font-size: 11px; }
+.event-sources { margin: 0 0 10px; padding: 0 8px; border: 0; font-size: 12px; }
 .event-sources summary { display: flex; align-items: center; color: var(--text-secondary); }
 .event-sources:not([open]) > :not(summary) { display: none; }
 @media(max-width:767px) {
@@ -30,7 +30,7 @@
  .atlas-app[data-embed='true'] .time-dock-year { flex-direction: row; }
  .atlas-app[data-embed='true'] .time-dock .history-river { height: 48px; }
  .atlas-app[data-embed='true'] .river-legend,.atlas-app[data-embed='true'] .river-zoom { display: none; }
- .atlas-app[data-embed='true'] .legal-strip { display: block; left: 16px; right: 16px; bottom: 12px; font-size: 8px; }
+ .atlas-app[data-embed='true'] .legal-strip { display: block; left: 16px; right: 16px; bottom: 12px; font-size: 12px; }
  .share-backdrop { padding: 0; }
  .share-dialog { width: 100%; height: 100dvh; max-height: 100dvh; border-radius: 0; padding: max(16px,var(--space-safe-top)) 16px max(16px,var(--space-safe-bottom)); }
  .share-poster { max-height: 72dvh; }

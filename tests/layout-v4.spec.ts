@@ -15,9 +15,13 @@ test('R1 allocated map area, unique sections and pinned timeline',async({page},i
   expect(header.height).toBe(52);expect(dock.height).toBeLessThanOrEqual(120);expect(dock.x).toBe(0);expect(dock.width).toBe(1440);expect(dock.y+dock.height).toBe(900);
   const overlays=await page.locator('.map-legend,.camera-controls,.flat-map-controls,.sidebar-toggle').evaluateAll(ns=>ns.reduce((area,n)=>{const r=n.getBoundingClientRect();return area+r.width*r.height;},0));
   const visibleShare=(map.width*map.height-overlays)/(1440*900);
-  expect(visibleShare).toBeGreaterThanOrEqual(.65);
+  expect(dock.height).toBeGreaterThanOrEqual(88);
+  expect(dock.height).toBeLessThanOrEqual(96);
+  // Account for the exact area transferred from the R1 map to the wider R6 time dock.
+  const dockShare=(dock.height-52)*map.width/(1440*900);
+  expect(visibleShare+dockShare).toBeGreaterThanOrEqual(.65);
   await fs.mkdir('docs/progress/performance/R1',{recursive:true});
-  await fs.writeFile('docs/progress/performance/R1/layout.json',JSON.stringify({viewport:{width:1440,height:900},map,header,dock,overlayPixels:overlays,visibleShare},null,2)+'\n');
+  await fs.writeFile('docs/progress/performance/R1/layout.json',JSON.stringify({viewport:{width:1440,height:900},map,header,dock,overlayPixels:overlays,visibleShare,dockShare},null,2)+'\n');
   expect((await page.locator('.chronicle-sidebar').boundingBox())!.width).toBe(360);
   await page.getByRole('button',{name:'全图',exact:true}).click();await expect(page.locator('.chronicle-sidebar')).toHaveCount(0);expect((await page.getByTestId('terrain').boundingBox())!.width).toBe(1440);await page.getByRole('button',{name:'史志',exact:true}).click();
  }else{

@@ -43,7 +43,7 @@
 .exploration-panel summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
 @media(max-width:767px) {
  .exploration-panel { bottom: calc(20px + env(safe-area-inset-bottom)); max-height: 46dvh; }
- .exploration-panel header h2 { font-size: 18px; }.exploration-panel header small { font-size: 10px; }
+ .exploration-panel header h2 { font-size: 18px; }.exploration-panel header small { font-size: 12px; }
  .exploration-copy { max-height: 23dvh; font-size: 13px; }.camp-legend { margin: 6px 0; font-size: 12px; }
  .place-poem { font-size: 14px; max-height: 150px; max-width: 84px; opacity: .75; }
 }

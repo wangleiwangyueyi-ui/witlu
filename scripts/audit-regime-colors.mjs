@@ -5,7 +5,8 @@ import {lightness,minColorDistance,regimeTokens,separation,simulatedColor} from 
 const read=async name=>JSON.parse(await fs.readFile(`packages/web/public/data/${name}.json`,'utf8'));
 const [snapshots,phases]=await Promise.all([read('polity-colors'),read('phases')]);
 const colors=regimeTokens(), modes=['normal','protanopia','deuteranopia','tritanopia'];
-const samples=(process.env.ATLAS_PERF_OUT ? [230,383,1127,1279] : [-221,230,589,1127,1700]).map(year=>({year,key:phases.slice().reverse().find(p=>p.from<=year).snapshot}));
+const years=process.env.ATLAS_COLOR_YEARS?.split(',').map(Number)??(process.env.ATLAS_PERF_OUT ? [230,383,1127,1279] : [-221,230,589,1127,1700]);
+const samples=years.map(year=>({year,key:phases.slice().reverse().find(p=>p.from<=year).snapshot}));
 const edges=[];
 for(const snapshot of snapshots){
  const filled=new Map(snapshot.colors.filter(s=>s.fill).map(s=>[s.polityId,s.color]));
@@ -21,7 +22,7 @@ const jin=comparison.colors.find(c=>c.polityId==='jin_jurchen').color;
 const dali=comparison.colors.find(c=>c.polityId==='dali').color;
 const jinAndDali={snapshot:comparison.snapshot,jin,dali,deltaE:separation(jin,dali)};
 await fs.mkdir(out,{recursive:true});
-await fs.writeFile(`${out}/color-audit.json`,JSON.stringify({palette:colors.map(hex=>({hex,lightness:lightness(hex)})),modes,snapshots:snapshots.length,edges:edges.length,minimum,jinAndDali,minColorDistance,passes:minimum.deltaE>=minColorDistance&&jinAndDali.deltaE>=minColorDistance},null,2)+'\n');
+await fs.writeFile(`${out}/color-audit.json`,JSON.stringify({palette:colors.map(hex=>({hex,lightness:lightness(hex)})),modes,snapshots:snapshots.length,samples,edges:edges.length,minimum,jinAndDali,minColorDistance,passes:minimum.deltaE>=minColorDistance&&jinAndDali.deltaE>=minColorDistance},null,2)+'\n');
 
 const rows=[{title:'Complete palette',swatches:colors},...samples.map(({year,key})=>({title:String(year),swatches:[...new Set(snapshots.find(s=>s.snapshot===key).colors.filter(p=>p.fill).map(p=>p.color))]}))];
 const width=1000,rowHeight=108,head=70,height=head+rowHeight*rows.length+16;

@@ -1,4 +1,4 @@
-.timeline-chart { --lane-key: 82px; --overview-height: 14px; min-width: 0; position: relative; }
+.timeline-chart { --lane-key: 114px; --overview-height: 19px; min-width: 0; position: relative; }
 .timeline-overview, .timeline-lane { display: grid; grid-template-columns: var(--lane-key) minmax(0,1fr); }
 .timeline-overview { height: var(--overview-height); grid-template-rows: minmax(0,1fr); margin-inline-end: var(--timeline-scrollbar, 0px); }
 .timeline-full {
@@ -96,14 +96,14 @@
   scrollbar-color: var(--glass-border) var(--sky);
   scrollbar-width: thin;
 }
-.timeline-lane { height: 12px; align-items: center; }
+.timeline-lane { height: 21px; align-items: center; }
 .lane-name {
   padding-inline: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--text);
-  font: 12px/12px var(--font-ui);
+  font: 13px/1.3 var(--font-ui);
 }
 .lane-name i { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--lane-tone); margin-right: 4px; }
 .lane-band { position: relative; height: 100%; margin-inline: 8px; }

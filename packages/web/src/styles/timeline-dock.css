@@ -4,7 +4,7 @@
   gap: 8px;
   place-items: center stretch;
 }
-.atlas-app { --dock-height: 52px; }
+.atlas-app { --dock-height: 92px; }
 .atlas-app .time-dock.timeline-dock { padding-block: 0; gap: 8px; }
 .timeline-dock .playback { grid-area: play; display: flex; align-items: center; gap: 4px; }
 .timeline-dock :is(.timeline-narration, .year-stepper > button) {
@@ -42,7 +42,7 @@
   background: var(--sea-deep);
 }
 .timeline-dock .year-results { right: 0; }
-.timeline-dock .timeline-chart { grid-area: chart; height: 50px; }
+.timeline-dock .timeline-chart { grid-area: chart; height: 82px; }
 .atlas-app .place-card { bottom: var(--dock-height); }
 
 @media (width <= 768px) {
@@ -54,5 +54,6 @@
     padding: 0 8px;
     gap: 0 4px;
   }
+  .timeline-dock .timeline-chart { height: 50px; }
   .atlas-app .place-card { bottom: 140px; }
 }

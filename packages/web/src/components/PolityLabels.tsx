@@ -3,6 +3,7 @@ import { useWorld } from './World';
 import { polityName, historicalText } from '../i18n/history';
 import { useShell } from '../state/shell';
 import { terrainBridge } from '../state/terrain';
+import { mapObstacles, mapOverlap } from './map-placement';
 /** Label text stays in React; screen positions are updated directly, never through setState. */
 export function PolityLabels({flat=false}:{flat?:boolean}) {
   const {tracks,data,phase}=useWorld(),locale=useShell(s=>s.locale),root=useRef<HTMLDivElement>(null);
@@ -26,9 +27,7 @@ export function PolityLabels({flat=false}:{flat?:boolean}) {
       const map=surface.getBoundingClientRect();
       const resized=viewportWidth!==map.width;
       viewportWidth=map.width;
-      const blocked=flat?[...document.querySelectorAll('.app-header,.chapter-sheet,.map-legend,.flat-map-controls,.sidebar-toggle')].filter(n=>n.getClientRects().length).map(node=>{
-        const r=node.getBoundingClientRect();return {x:r.x-map.x,y:r.y-map.y,width:r.width,height:r.height};
-      }):[];
+      const blocked=flat?mapObstacles(map,'.app-header,.chapter-sheet,.map-legend,.flat-map-controls,.sidebar-toggle,.welcome-strip'):[];
       for(const node of surface.querySelectorAll<HTMLElement>('[data-site]')){
         const coord=node.dataset.site!.split(',').map(Number) as [number,number];
         const p=engine.projectSite(coord);
@@ -39,15 +38,18 @@ export function PolityLabels({flat=false}:{flat?:boolean}) {
           sizes.set(node,size);
         }
         const {width,height}=size;
-        const box={x:p.x-width/2,y:p.y-height/2,width,height};
-        node.hidden=!p.visible||box.x<8||box.x+width>map.width-8||box.y<8||box.y+height>map.height-8||blocked.some(b=>box.x<b.x+b.width&&b.x<box.x+width&&box.y<b.y+b.height&&b.y<box.y+height);
-        if(node.hidden)continue;
+        const offsets=flat&&node.dataset.neighbor==='false'?[[0,0],[0,-24],[0,24],[-28,0],[28,0],[-24,-19],[24,-19],[-24,19],[24,19]]:[[0,0]];
+        const box=p.visible ? offsets.map(([x,y])=>({x:p.x+x!-width/2,y:p.y+y!-height/2,width,height})).find(box=>
+          box.x>=8&&box.y>=8&&box.x+width<=map.width-8&&box.y+height<=map.height-8&&!blocked.some(b=>mapOverlap(box,b))) : undefined;
+        node.hidden=!box;
+        if(!box)continue;
         blocked.push(box);
-        node.style.transform=`translate(${p.x}px,${p.y}px) translate(-50%,-50%)`;
+        node.style.transform=`translate(${box.x+width/2}px,${box.y+height/2}px) translate(-50%,-50%)`;
+
       }
     };
     if(enabled)frame=requestAnimationFrame(update);
     return()=>cancelAnimationFrame(frame);
   },[signature,flat,enabled]);
-  return <div className="polity-labels" ref={root} aria-hidden="true" hidden={!enabled}>{labels.map(l=><div hidden key={l.key} data-site={l.coord.join(',')} data-neighbor={l.neighbor}><strong>{l.name}</strong></div>)}</div>;
+  return <div className="polity-labels" ref={root} aria-hidden="true" hidden={!enabled}>{labels.map(l=><div hidden key={l.key} data-site={l.coord.join(',')} data-polity={l.key} data-neighbor={l.neighbor}><strong>{l.name}</strong></div>)}</div>;
 }

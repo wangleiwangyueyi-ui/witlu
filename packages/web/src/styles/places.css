@@ -1,7 +1,8 @@
 .place-labels { position: absolute; inset: 0; pointer-events: none; z-index: 9; overflow: hidden; }
 .place-label { position: absolute; left: 0; top: 0; padding: 4px 9px; border-radius: var(--radius-sm); font-family: 'Songti SC', SimSun, serif; font-size: 12px; pointer-events: auto; touch-action: none; white-space: nowrap; min-height: 32px; }
 .place-label[hidden] { display: none; }
-.place-label:hover { border-color: var(--gold-glow); }
+.place-label:hover { color: var(--gold-glow); }
+[data-map-mode='terrain'] .place-label { color: var(--text); background: transparent; text-shadow: 0 2px 5px var(--sky), 0 0 4px var(--sky); }
 .place-card { position: absolute; z-index: 45; right: 28px; top: 112px; width: min(420px,calc(100vw - 32px)); max-height: calc(100dvh - 160px); display: flex; flex-direction: column; padding: 20px; border-radius: var(--radius-lg); }
 .place-card header { display: flex; justify-content: space-between; gap: 14px; }
 .place-card h2 { font: 28px 'Songti SC', SimSun, serif; margin: 8px 0; }
