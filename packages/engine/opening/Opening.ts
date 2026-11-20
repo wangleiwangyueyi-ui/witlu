@@ -1,20 +1,136 @@
-import {Scene,PerspectiveCamera,Mesh,SphereGeometry,ShaderMaterial,Color,DataTexture,RGBAFormat,SRGBColorSpace,Vector3} from 'three';
-import type {WebGLRenderer} from 'three';
-import type {PlatformAdapter} from '../platform/PlatformAdapter';
-import type {Quality} from '../Quality';
-/** Standalone globe scene: environment access stays behind PlatformAdapter. */
+import { Camera, Color, DataTexture, LinearFilter, LinearMipmapLinearFilter, Mesh, PlaneGeometry, RepeatWrapping, RGBAFormat, Scene, ShaderMaterial, SRGBColorSpace, Vector2, Vector3, WebGLRenderer } from 'three';
+import type { WebGLRendererParameters } from 'three';
+import type { PlatformAdapter } from '../platform/PlatformAdapter';
+import type { Quality } from '../Quality';
+import { openingFragment, openingVertex } from './shaders';
+
+export const OPENING_MS = 5600;
+export const STATIC_OPENING_MS = 1500;
+const radians = Math.PI / 180;
+const earthRadius = 6378137;
+
+export interface OpeningTarget {
+  lon: number;
+  lat: number;
+  metresPerPixel: number;
+  x: number;
+  y: number;
+}
+
+interface OpeningPalette { sky: string; blue: string; mist: string; gold: string }
+
+export function openingEase(start: number, end: number, value: number) {
+  const p = Math.min(1, Math.max(0, (value - start) / (end - start)));
+  return p * p * (3 - 2 * p);
+}
+
+function direction(lon: number, lat: number, target: Vector3) {
+  return target.set(Math.cos(lon) * Math.cos(lat), Math.sin(lat), Math.sin(lon) * Math.cos(lat));
+}
+
+/** A lazy, independent scene so the atlas can finish its first frame before any globe work. */
 export class Opening {
- readonly scene=new Scene();readonly camera=new PerspectiveCamera(42,1,.001,30);
- active=false;progress=0;reduced=false;private elapsed=0;private texture:DataTexture|null=null;private disposed=false;
- private globe:Mesh<SphereGeometry,ShaderMaterial>;private clouds:Mesh<SphereGeometry,ShaderMaterial>;
- constructor(private platform:PlatformAdapter,sky:string,light:string){
-  this.scene.background=new Color(sky);
-  this.globe=new Mesh(new SphereGeometry(1,96,48),new ShaderMaterial({uniforms:{map:{value:null},light:{value:new Color(light)}},vertexShader:'varying vec2 vUv;varying vec3 vN;void main(){vUv=uv;vN=normal;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform sampler2D map;uniform vec3 light;varying vec2 vUv;varying vec3 vN;void main(){float n=dot(normalize(vN),normalize(vec3(-.5,.8,-.9)));vec3 c=texture2D(map,vUv).rgb*(.55+.45*max(0.,n));float rim=pow(1.-abs(dot(normalize(vN),normalize(vec3(-.29,.53,-.8)))),3.);gl_FragColor=vec4(c+light*rim*.065,1.);#include <colorspace_fragment> }'.replace(';#',';\n#').replace('> }','>\n}') }));this.scene.add(this.globe);
-  this.clouds=new Mesh(new SphereGeometry(1.027,64,32),new ShaderMaterial({transparent:true,depthWrite:false,uniforms:{time:{value:0},tint:{value:new Color(light)}},vertexShader:'varying vec3 p;void main(){p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform float time;uniform vec3 tint;varying vec3 p;float h(vec3 q){return fract(sin(dot(q,vec3(17.3,47.7,31.1)))*43758.54);}float n(vec3 q){vec3 i=floor(q),f=fract(q);f=f*f*(3.-2.*f);return mix(mix(mix(h(i),h(i+vec3(1,0,0)),f.x),mix(h(i+vec3(0,1,0)),h(i+vec3(1,1,0)),f.x),f.y),mix(mix(h(i+vec3(0,0,1)),h(i+vec3(1,0,1)),f.x),mix(h(i+vec3(0,1,1)),h(i+vec3(1,1,1)),f.x),f.y),f.z);}void main(){vec3 q=p*9.+vec3(time*.02,0,0);float cloud=n(q)*.65+n(q*2.)*.35;gl_FragColor=vec4(tint,smoothstep(.43,.72,cloud)*.3);}' }));this.scene.add(this.clouds);
- }
- async start(reduced=false){this.reduced=reduced;this.elapsed=0;this.progress=0;if(!this.texture){const image=await this.platform.decodeImage(await this.platform.readBytes('/brand/earth.webp'));if(this.disposed)return;this.texture=new DataTexture(image.data,image.width,image.height,RGBAFormat);this.texture.colorSpace=SRGBColorSpace;this.texture.flipY=true;this.texture.needsUpdate=true;this.globe.material.uniforms.map!.value=this.texture;}this.active=true;}
- update(dt:number,quality:Quality){if(!this.active)return;this.elapsed+=Math.min(dt,100);this.progress=Math.min(1,this.elapsed/(this.reduced?1800:7200));const t=this.reduced?0:this.progress,tween=t*t*(3-2*t),lon=(65+45*tween)*Math.PI/180,lat=(18+14*tween)*Math.PI/180,distance=4.3*(1-tween)+1.042*tween;this.camera.position.set(Math.cos(lon)*Math.cos(lat),Math.sin(lat),-Math.sin(lon)*Math.cos(lat)).multiplyScalar(distance);this.camera.lookAt(new Vector3(0,0,0));this.clouds.visible=quality!=='eco'&&!this.reduced;this.clouds.material.uniforms.time!.value=this.elapsed*.001;if(this.progress===1)this.active=false;}
- render(renderer:WebGLRenderer,width:number,height:number){this.camera.aspect=width/height;this.camera.updateProjectionMatrix();renderer.render(this.scene,this.camera);}
- stop(){this.active=false;this.progress=1;}
- dispose(){this.disposed=true;this.globe.geometry.dispose();this.globe.material.dispose();this.clouds.geometry.dispose();this.clouds.material.dispose();this.texture?.dispose();}
+  private readonly renderer: WebGLRenderer;
+  private readonly scene = new Scene();
+  private readonly camera = new Camera();
+  private readonly geometry = new PlaneGeometry(2, 2);
+  private readonly uniforms;
+  private readonly material: ShaderMaterial;
+  private disposed = false;
+  readonly resolution: number;
+
+  constructor(private readonly platform: PlatformAdapter, palette: OpeningPalette) {
+    const { mobile } = platform.viewport();
+    this.resolution = mobile ? 2048 : 4096;
+    this.renderer = new WebGLRenderer({
+      canvas: platform.canvas as NonNullable<WebGLRendererParameters['canvas']>,
+      antialias: false,
+      alpha: false,
+      powerPreference: 'high-performance',
+    });
+    this.renderer.outputColorSpace = SRGBColorSpace;
+    this.uniforms = {
+      dayMap: {value: null as DataTexture | null}, earthLayers: {value: null as DataTexture | null},
+      viewport: {value: new Vector2()}, focus: {value: new Vector2()}, mapFocus: {value: new Vector2()}, mapOrigin: {value: new Vector2()},
+      orbit: {value: new Vector3()}, east: {value: new Vector3()}, north: {value: new Vector3()}, sun: {value: new Vector3()},
+      sky: {value: new Color(palette.sky)}, blue: {value: new Color(palette.blue)}, mist: {value: new Color(palette.mist)}, gold: {value: new Color(palette.gold)},
+      focal: {value: 0}, altitude: {value: 0}, mapScale: {value: 0}, time: {value: 0},
+      reveal: {value: 0}, flatten: {value: 0}, passage: {value: 0}, outline: {value: 0},
+    };
+    this.material = new ShaderMaterial({ uniforms: this.uniforms, vertexShader: openingVertex, fragmentShader: openingFragment, depthTest: false, depthWrite: false });
+    const plane = new Mesh(this.geometry, this.material);
+    plane.frustumCulled = false;
+    this.scene.add(plane);
+  }
+
+  async load() {
+    const images = await Promise.all(['day', 'masks'].map(async layer =>
+      this.platform.decodeImage(await this.platform.readBytes(`/brand/opening/${layer}-${this.resolution}.webp`))));
+    if (this.disposed) return;
+    for (const image of images) {
+      if (image.width !== this.resolution || image.height !== this.resolution / 2) throw new Error('Invalid Earth texture dimensions');
+    }
+    const textures = images.map((image, index) => {
+      const texture = new DataTexture(image.data, image.width, image.height, RGBAFormat);
+      if (index === 0) texture.colorSpace = SRGBColorSpace;
+      texture.flipY = true;
+      texture.wrapS = RepeatWrapping;
+      texture.magFilter = LinearFilter;
+      texture.minFilter = LinearMipmapLinearFilter;
+      texture.generateMipmaps = true;
+      texture.needsUpdate = true;
+      this.renderer.initTexture(texture);
+      return texture;
+    });
+    this.uniforms.dayMap.value = textures[0]!;
+    this.uniforms.earthLayers.value = textures[1]!;
+    // The opening can be skipped immediately. A polling compile would outlive disposal.
+    this.renderer.compile(this.scene, this.camera);
+  }
+
+  resize(quality: Quality) {
+    const {width,height,pixelRatio,mobile} = this.platform.viewport();
+    this.uniforms.viewport.value.set(width,height);
+    const limit = mobile ? .95 : quality === 'ultra' ? 1.25 : 1;
+    this.renderer.setPixelRatio(Math.min(pixelRatio, limit));
+    this.renderer.setSize(Math.max(1,width),Math.max(1,height),false);
+  }
+
+  draw(ms: number, target: OpeningTarget, still: boolean) {
+    const u = this.uniforms, {x: width, y: height} = u.viewport.value;
+    const turn = still ? 0 : openingEase(1050,3880,ms);
+    const zoom = still ? 0 : openingEase(1450,4510,ms);
+    const longitude = still ? target.lon + 22 : 164 + (target.lon - 164) * turn;
+    const latitude = still ? target.lat - 4 : 15 + (target.lat - 15) * turn;
+    const lon = longitude * radians, lat = latitude * radians, mapLat = target.lat * radians;
+    const focal = height / (2 * Math.tan(21 * radians));
+    const diameter = Math.min(width,height) * .76;
+    const startAltitude = Math.hypot(1,2 * focal / diameter) - 1;
+    const endAltitude = focal * Math.cos(mapLat) * target.metresPerPixel / earthRadius;
+    direction(lon,lat,u.orbit.value);
+    u.east.value.set(-Math.sin(lon),0,Math.cos(lon));
+    u.north.value.crossVectors(u.east.value,u.orbit.value);
+    direction((46 + 41 * turn) * radians,(-12 + 26 * turn) * radians,u.sun.value);
+    u.focal.value = focal;
+    u.altitude.value = startAltitude * (endAltitude / startAltitude) ** zoom;
+    u.mapFocus.value.set(target.x,height-target.y);
+    u.focus.value.set(width*.5 + (target.x-width*.5)*zoom,height*.59 + (height-target.y-height*.59)*zoom);
+    u.mapOrigin.value.set(target.lon*radians,Math.asinh(Math.tan(mapLat)));
+    u.mapScale.value = target.metresPerPixel / earthRadius;
+    u.time.value = still ? 0 : ms / 1000;
+    u.reveal.value = still ? 1 : .13 + .87 * openingEase(0,1420,ms);
+    u.flatten.value = still ? 0 : openingEase(4020,4560,ms);
+    u.passage.value = still ? 0 : openingEase(3910,4450,ms) * (1 - openingEase(4590,5450,ms));
+    u.outline.value = still ? 0 : openingEase(2080,3100,ms) * (1 - openingEase(4080,4670,ms));
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  dispose() {
+    this.disposed = true;
+    this.uniforms.dayMap.value?.dispose();
+    this.uniforms.earthLayers.value?.dispose();
+    this.material.dispose();
+    this.geometry.dispose();
+    this.renderer.dispose();
+  }
 }

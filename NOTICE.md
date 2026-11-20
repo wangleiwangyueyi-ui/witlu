@@ -53,10 +53,20 @@ Make Me a Hanzi（https://github.com/skishore/makemeahanzi），固定提交 `bd
 
 35 个专题页正文、llms.txt、jiangshan-atlas Skill 文案及 MCP 查询实现衍生自固定提交的 DeanChensj/jiangshan-map，保留 GPL-3.0 许可和上游致谢。witlu contributors 于 2026-11-14 修改域名、展示样式与运行适配，未修改 upstream/。新 CLI 适配器只读上游数据。
 
-开场地球的海陆贴图使用上述 Natural Earth 公有领域数据，重新投影为等经纬图并采用 PLAN 色板。书法子集现为 45 个字，新增「两千四百年 · 一图观之」及简繁所需笔画，沿用 Make Me a Hanzi 固定提交和 Arphic Public License。
+书法子集现为 45 个字，包含「两千四百年 · 一图观之」及简繁所需笔画，沿用 Make Me a Hanzi 固定提交和 Arphic Public License。
 
 分享海报的二维码由 [node-qrcode](https://github.com/soldair/node-qrcode) 生成，MIT License；二维码只编码 witlu.com 的公开深链，不请求第三方二维码服务。玻璃印章、OG 排版与程序化地球云层由本项目生成。
 
 ## P11 调试工具
 
 vConsole 3.15.1，Tencent / THL A29 Limited，MIT License。仅在 `?debug=1` 时动态加载，自托管；生产离线预缓存不包含该调试包。源码：https://github.com/Tencent/vConsole ，许可证副本：`packages/web/public/licenses/vconsole-MIT.txt`。
+
+
+## R5 开场地球贴图
+
+- 白天为 NASA Earth Observatory 的 Blue Marble Next Generation，使用 2004 年 7 月的地形和海底地形合成图。致谢 Reto Stöckli（NASA Goddard Space Flight Center）及 Terra MODIS 团队。[图集与下载](https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography-bathymetry/)
+- 夜间城市灯光为 Black Marble 2016 全地球 3 km 灰度数据，来自 Suomi NPP 的 VIIRS。致谢 NASA Goddard、Miguel Román、Joshua Stevens 和 NOAA。[图集与下载](https://science.nasa.gov/earth/earth-observatory/earth-at-night/maps/)
+- 云贴图为 NOAA Climate Prediction Center 的全球云量合成，采用 NASA Goddard Scientific Visualization Studio 发布的 2014 年 6 月 2 日 00:00 UTC 帧 `01000`，提取影像的覆盖度通道。[数据与致谢](https://svs.gsfc.nasa.gov/4439/)
+- 中国区域描边为 Natural Earth 公有领域 `ne_110m_admin_0_countries.geojson` 中的 CHN 要素，与底图采用同一固定提交。Made with Natural Earth。[源文件](https://github.com/nvkelso/natural-earth-vector/blob/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson)
+
+上述卫星数据与云量影像为美国政府公有领域素材。本站将其转为自托管的 2K/4K WebP，运行时应用色调与光照。星空和菲涅尔效果为程序生成。全套原图地址及 SHA-256 记录在 `scripts/build-opening.mjs`。[NASA 影像使用说明](https://www.nasa.gov/nasa-brand-center/images-and-media/) · [NASA Earth Science 影像再利用说明](https://science.nasa.gov/earth/faq/)

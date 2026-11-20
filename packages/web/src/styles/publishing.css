@@ -17,20 +17,10 @@
 .sources a { color: var(--link); }
 .sources li { margin-bottom: 12px; }
 
-.opening-screen { position: fixed; inset: 0; z-index: 150; display: grid; place-items: center; pointer-events: auto; }
-body:has(.opening-screen) .app-content > :not(.terrain-scene) { visibility: hidden; }
-body:has(.opening-screen) .terrain-canvas { visibility: visible; }
-.opening-title { text-align: center; margin-top: 24vh; text-shadow: 0 3px 20px var(--sky); opacity: calc(1 - var(--descent,0)); }
-.opening-title small { letter-spacing: .6em; color: var(--polity-main); }
-.opening-title .calligraphy { display: flex; margin: 28px auto; font-size: clamp(24px,4vw,58px); }
-.opening-title .calligraphy-glyphs svg { width: 1em; height: 1em; }
-.opening-title .calligraphy-stamp { display: none; }
-.opening-cloud { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse,transparent 15%,var(--land-snow) 100%); opacity: calc(var(--descent,0) * .35); }
-.opening-skip { position: absolute; right: 24px; bottom: max(32px,var(--space-safe-bottom)); z-index: 1; }
-.opening-error { position: absolute; bottom: 100px; }
+.opening-screen { position: fixed; inset: 0; z-index: 150; pointer-events: none; }
+.opening-screen[aria-modal='true'] { pointer-events: auto; }
+.opening-skip { position: absolute; right: 24px; bottom: max(28px,var(--space-safe-bottom)); z-index: 1; pointer-events: auto; }
 
-.opening-title .calligraphy-glyphs { max-width: none; justify-content: center; }
-@media(max-width:767px) { .opening-title { padding: 20px; } .opening-title .calligraphy-glyphs { max-width: 310px; } }
 
 .event-sources { margin: 0 0 10px; padding: 0 8px; border: 0; font-size: 11px; }
 .event-sources summary { display: flex; align-items: center; color: var(--text-secondary); }

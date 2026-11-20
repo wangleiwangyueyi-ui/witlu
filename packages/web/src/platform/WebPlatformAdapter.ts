@@ -8,7 +8,7 @@ export class WebPlatformAdapter implements PlatformAdapter<HTMLCanvasElement, Wo
   requestFrame(callback: (timestamp: number) => void) { return requestAnimationFrame(callback); }
   cancelFrame(handle: number) { cancelAnimationFrame(handle); }
   now() { return performance.now(); }
-  async readBytes(path: string) { const result = await fetch(path.startsWith('/tiles/')?__TILE_ROOT__+path.slice(6):path, { signal: this.abort.signal, priority: path.startsWith('/tiles/')?'high':'auto' } as RequestInit); if (!result.ok) throw new Error(`Tile ${result.status}: ${path}`); return new Uint8Array(await result.arrayBuffer()); }
+  async readBytes(path: string) { const result = await fetch(path.startsWith('/tiles/')?__TILE_ROOT__+path.slice(6):path, { signal: this.abort.signal, priority: path.startsWith('/tiles/')?'high':path.startsWith('/brand/opening/')?'low':'auto' } as RequestInit); if (!result.ok) throw new Error(`Tile ${result.status}: ${path}`); return new Uint8Array(await result.arrayBuffer()); }
   async readJSON<T>(path: string): Promise<T> { const result = await fetch(path.startsWith('/tiles/')?__TILE_ROOT__+path.slice(6):path, { signal: this.abort.signal }); if (!result.ok) throw new Error(`Manifest ${result.status}`); return result.json() as Promise<T>; }
   async decodeImage(bytes: Uint8Array) {
     const blob=new Blob([bytes.slice().buffer]);
